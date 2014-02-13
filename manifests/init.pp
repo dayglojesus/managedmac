@@ -36,6 +36,9 @@
 # Copyright 2014 Your name here, unless otherwise noted.
 #
 class mmv3 {
-
-
+	
+	if $::osfamily != 'Darwin' {
+		fail("unsupported osfamily: $::osfamily")
+	}
+	
 }
