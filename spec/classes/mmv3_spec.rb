@@ -33,4 +33,18 @@ describe 'mmv3', :type => 'class' do
     end
   end
   
+  # The remainder of our specs will go inside this context block
+  context "on a supported operating system and product version" do
+    # On our target platform, we should have green lights.
+    let :facts do
+      { 
+        :osfamily => 'Darwin',
+        :macosx_productversion_major => '10.9',
+      }
+    end
+    
+    # Simple. Everything should work and all dependencies should be met.
+    it { should compile.with_all_deps }
+  end
+  
 end
