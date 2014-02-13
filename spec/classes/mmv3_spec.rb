@@ -17,4 +17,20 @@ describe 'mmv3', :type => 'class' do
     end
   end
   
+  context "on an unsupported product version" do
+    # here we setup two fake facts:
+    # yes, we are Darwin
+    # no, we are not Mavericks (10.9)
+    let :facts do
+      { 
+        :osfamily => 'Darwin',
+        :macosx_productversion_major => '10.8',
+      }
+    end
+    # Test the Puppet fail directive
+    it "should raise a Puppet:Error" do 
+      expect { should compile }.to raise_error(Puppet::Error, /unsupported product version/)
+    end
+  end
+  
 end
