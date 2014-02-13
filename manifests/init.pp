@@ -36,13 +36,13 @@
 # Copyright 2014 Your name here, unless otherwise noted.
 #
 class mmv3 {
-	
-	if $::osfamily != 'Darwin' {
-		fail("unsupported osfamily: $::osfamily")
-	}
-	
-	if $::macosx_productversion_major < 10.9 {
-		fail("unsupported product version: $::macosx_productversion_major")
-	}
-	
+
+  if $::osfamily != 'Darwin' {
+    fail("unsupported osfamily: ${::osfamily}")
+  }
+
+  if $::macosx_productversion_major < 10.9 {
+    fail("unsupported product version: ${::macosx_productversion_major}")
+  }
+
 }
