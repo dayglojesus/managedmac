@@ -41,4 +41,8 @@ class mmv3 {
 		fail("unsupported osfamily: $::osfamily")
 	}
 	
+	if $::macosx_productversion_major != 10.9 {
+		fail("unsupported product version: $::macosx_productversion_major")
+	}
+	
 }
