@@ -1,3 +1,10 @@
+# ChangeLog: mmv3
+
+## Resources
+
+- http://puppetlabs.com/blog/the-next-generation-of-puppet-module-testing
+- http://rspec-puppet.com/matchers/
+
 ## Initial Setup:
 
 ---
