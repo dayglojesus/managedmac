@@ -1,6 +1,6 @@
-# Class: mmv3::ntp inherits mmv3
+# Class: managedmac::ntp inherits managedmac
 #
 #
-class mmv3::ntp inherits mmv3 {
+class managedmac::ntp inherits managedmac {
   # resources
 }

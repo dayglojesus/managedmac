@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'mmv3::ntp', :type => 'class' do
+describe 'managedmac::ntp', :type => 'class' do
 
   # The remainder of our specs will go inside this context block
   context "on a supported operating system and product version" do

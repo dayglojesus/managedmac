@@ -1,4 +1,4 @@
-# ChangeLog: mmv3
+# ChangeLog: managedmac
 
 ## Resources
 
@@ -22,8 +22,8 @@ _Use ^H to display Markdown Cheat Sheet._
   * install yaml bundle
   * configure preferences to taste
 - sudo gem install bundle
-- puppet module generate sfu-mmv3
-- cd sfu-mmv3/
+- puppet module generate sfu-managedmac
+- cd sfu-managedmac/
 - bundle init
 - mate .
   * edit Gemfile to include our dependencies
@@ -59,7 +59,7 @@ _Use ^H to display Markdown Cheat Sheet._
           repositories:
             stdlib: git://github.com/puppetlabs/puppetlabs-stdlib.git
           symlinks:
-          mmv3: "#{source_dir}"
+          managedmac: "#{source_dir}"
     </code>
   </pre>
 - add new file “spec/spec.opts” with contents
@@ -70,9 +70,9 @@ _Use ^H to display Markdown Cheat Sheet._
 - create the bare repo on radmind.sfu.ca
   * ssh git@radmind
   * cd /repo
-  * mkdir sfu-mmv3.git
-  * cd sfu-mmv3.git && git init —bare
-- git remote add origin ssh://git@radmind.sfu.ca/repo/sfu-mmv3.git
+  * mkdir sfu-managedmac.git
+  * cd sfu-managedmac.git && git init —bare
+- git remote add origin ssh://git@radmind.sfu.ca/repo/sfu-managedmac.git
 - git push -f origin master
 
 ## Version Branch: 0.0.1

@@ -1,4 +1,4 @@
-name    'sfu-mmv3'
+name    'sfu-managedmac'
 version '0.1.0'
 source 'UNKNOWN'
 author 'sfu'

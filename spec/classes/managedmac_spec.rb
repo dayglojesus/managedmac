@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe 'mmv3', :type => 'class' do
+describe 'managedmac', :type => 'class' do
   
-  # mmv3 is for Darwin and more specfically, macosx_productversion_major >= 10.9
+  # managedmac is for Darwin and more specfically, macosx_productversion_major >= 10.9
   context "on an unsupported operating system" do
     # setup some variables
     unsupported_examples = ['Debian', 'RedHat', 'CentOS', 'Windows', 'OpenSuSE', 'SuSE']

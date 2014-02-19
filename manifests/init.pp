@@ -1,6 +1,6 @@
-# == Class: mmv3
+# == Class: managedmac
 #
-# Full description of class mmv3 here.
+# Full description of class managedmac here.
 #
 # === Parameters
 #
@@ -23,7 +23,7 @@
 #
 # === Examples
 #
-#  class { mmv3:
+#  class { managedmac:
 #    servers => [ 'pool.ntp.org', 'ntp.local.company.com' ],
 #  }
 #
@@ -35,7 +35,7 @@
 #
 # Copyright 2014 Your name here, unless otherwise noted.
 #
-class mmv3 {
+class managedmac {
 
   if $::osfamily != 'Darwin' {
     fail("unsupported osfamily: ${::osfamily}")
