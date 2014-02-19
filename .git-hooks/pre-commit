@@ -1,0 +1,30 @@
+#!/usr/bin/env ruby
+
+require 'rake'
+require 'puppetlabs_spec_helper/rake_tasks'
+
+require 'puppet-lint/tasks/puppet-lint'
+PuppetLint.configuration.ignore_paths = ["spec/**/*.pp", "vendor/**/*.pp"]
+
+div_line = "=" * 65
+
+puts div_line
+puts "Running: pre-commit hook..."
+puts "puppet-lint: "
+puts div_line
+
+result = true
+begin
+  if Rake.application['lint'].invoke
+    puts "PASSED: You are good looking and write stylish Puppet code!"
+    puts div_line
+  end
+rescue RuntimeError
+  puts div_line
+  puts "FAILED: puppet-lint style error(s)!!!"
+  puts "You must repair these errors before you can commit."
+  puts div_line
+  result = false
+end
+
+exit result
