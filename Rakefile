@@ -27,3 +27,21 @@ begin
   end
 rescue Gem::LoadError
 end
+
+desc "Setup the repo's development and testing environment"
+task :setup => [:install_hooks]
+
+# Installs the git-hooks for this repo
+task :install_hooks do
+  puts "Installing git-hooks..."
+  hooks_destination = File.expand_path(File.join(__FILE__, '..', '.git', 'hooks'))
+  hooks_source      = File.expand_path(File.join(__FILE__, '..', '.git-hooks'))
+  raise "Source directory not found, #{hooks_source}" unless Dir.exists? hooks_source
+  unless File.symlink? hooks_destination
+    FileUtils.mv hooks_destination, hooks_destination + ".orignal"
+    FileUtils.ln_s hooks_source, hooks_destination
+  end
+  puts "Done."
+end
+
+
