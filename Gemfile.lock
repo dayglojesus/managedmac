@@ -1,3 +1,9 @@
+GIT
+  remote: git://github.com/mmz-srf/hiera-puppet-helper.git
+  revision: 6f43f7a0cdba69161b70ee61f525a8579ac5069b
+  specs:
+    hiera-puppet-helper (2.0.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -27,5 +33,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  hiera-puppet-helper!
   puppet-lint
   puppetlabs_spec_helper
