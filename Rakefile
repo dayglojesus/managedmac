@@ -52,3 +52,8 @@ end
 task :bundle_install_again do
   system "bundle", "install"
 end
+
+# Jim Weirich died today
+task :thanks_Jim do
+  puts "I <3 Rake. Thanks, Jim."
+end
