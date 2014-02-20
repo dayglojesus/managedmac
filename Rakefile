@@ -46,8 +46,8 @@ end
 
 # We need to run `bundle install` twice:
 # The first time, we do it manually and we get all the gems from RubyGems.
-# The second time, we ne do it to get bundler to install the one gem we 
-# need from GitHub. It's a long story...
+# The second time, we need do it to get bundler to install the one gem we 
+# need from GitHub. It's a long stupid story...
 # https://github.com/bundler/bundler/issues/2492
 task :bundle_install_again do
   system "bundle", "install"
