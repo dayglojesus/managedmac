@@ -29,7 +29,7 @@ rescue Gem::LoadError
 end
 
 desc "Setup the repo's development and testing environment"
-task :setup => [:install_hooks]
+task :setup => [:install_hooks, :spec_prep]
 
 # Installs the git-hooks for this repo
 task :install_hooks do
