@@ -29,7 +29,7 @@ rescue Gem::LoadError
 end
 
 desc "Setup the repo's development and testing environment"
-task :setup => [:install_hooks, :spec_prep]
+task :setup => [:install_hooks, :spec_prep, :bundle_install_again]
 
 # Installs the git-hooks for this repo
 task :install_hooks do
@@ -44,4 +44,11 @@ task :install_hooks do
   puts "Done."
 end
 
-
+# We need to run `bundle install` twice:
+# The first time, we do it manually and we get all the gems from RubyGems.
+# The second time, we ne do it to get bundler to install the one gem we 
+# need from GitHub. It's a long story...
+# https://github.com/bundler/bundler/issues/2492
+task :bundle_install_again do
+  system "bundle", "install"
+end
