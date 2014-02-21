@@ -1,12 +1,5 @@
 # ChangeLog: managedmac
 
-## Resources
-
-- http://puppetlabs.com/blog/the-next-generation-of-puppet-module-testing
-- http://rspec-puppet.com/matchers/
-
-## Initial Setup:
-
 ---
 
 _Use cmd+ctl+opt+P to activate the Markdown Viewer in TextMate._<br>
@@ -14,6 +7,14 @@ _Use ^H to display Markdown Cheat Sheet._
 
 ---
 
+## Version Branch: 0.0.1
+- started creating specs and getting the fundamentals in order
+- adjusted gem requirements
+- added rake setup
+- added support for using hiera fixtures
+- added a development guideline
+
+## Initial Setup:
 
 - install TextMate
   * install the command line
@@ -75,13 +76,7 @@ _Use ^H to display Markdown Cheat Sheet._
 - git remote add origin ssh://git@radmind.sfu.ca/repo/sfu-managedmac.git
 - git push -f origin master
 
-## Version Branch: 0.0.1
-- git co -b 0.0.1
-- started creating specs and getting the fundamentals in order
-  * created some seat belts
-	* add this log file
-  * pushed the branch upstream, no tags yet
-- git tag -a v0.0.1 -m "v0.0.1" -m “initial release”
-- git push origin master —-tags 
+## Resources
 
-
+- http://puppetlabs.com/blog/the-next-generation-of-puppet-module-testing
+- http://rspec-puppet.com/matchers/
