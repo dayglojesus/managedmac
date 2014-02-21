@@ -25,7 +25,12 @@ describe 'managedmac::ntp', :type => 'class' do
     
     context "when passed a Hash parameter" do
       let :hiera_data do
-        { 'managedmac::ntp::options' => {} }
+        {
+          'managedmac::ntp::options' => {
+            'servers'    => ['time.apple.com', 'time1.google.com'],
+            'max_offset' => 120,
+          }
+        }
       end
       it { should compile }
     end
