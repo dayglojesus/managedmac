@@ -1,6 +1,8 @@
-# Class: managedmac::ntp inherits managedmac
+# Class: managedmac::ntp
 #
 #
-class managedmac::ntp inherits managedmac {
-  # resources
+class managedmac::ntp ($options) {
+
+  validate_hash($options)
+
 }
