@@ -32,11 +32,11 @@ describe 'managedmac::ntp', :type => 'class' do
       end
       
       specify do
-        should contain_file('ntp_conf').with(
+        should contain_file('ntp_conf').that_notifies('Service[org.ntp.ntpd]').with(
         { 'content' => "time.apple.com\ntime1.google.com" })
       end
       
-      specify do 
+      specify do
         should contain_service('org.ntp.ntpd').that_requires('File[ntp_conf]').with(
         { 'ensure' => 'running', 'enable' => 'true' })
       end
