@@ -43,8 +43,17 @@ describe 'managedmac', :type => 'class' do
       }
     end
     
-    # Simple. Everything should work and all dependencies should be met.
-    it { should compile.with_all_deps }
+    context "when NTP configuration options are set" do
+      hash = { 'servers' => ['time.apple.com', 'time1.google.com'], 'max_offset' => 120, }
+      let :hiera_data do
+        {
+          'managedmac::ntp::options' => hash
+        }
+      end
+      it { should contain_class('managedmac::ntp') }
+      it { should compile.with_all_deps }
+    end
+    
   end
   
 end
