@@ -45,6 +45,8 @@ class managedmac {
     fail("unsupported product version: ${::macosx_productversion_major}")
   }
 
-  if is_hash(hiera('managedmac::ntp::options', false)) { contain managedmac::ntp }
+  if is_hash(hiera('managedmac::ntp::options', false)) {
+    contain managedmac::ntp
+  }
 
 }
