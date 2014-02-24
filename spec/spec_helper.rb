@@ -1,3 +1,4 @@
+require 'rubygems'
 require 'bundler/setup'
 require 'rspec-puppet'
 require 'puppetlabs_spec_helper/rake_tasks'
