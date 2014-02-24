@@ -24,15 +24,24 @@ describe 'managedmac::ntp', :type => 'class' do
     end
     
     context "when passed a Hash parameter" do
-      let :hiera_data do
-        {
-          'managedmac::ntp::options' => {
-            'servers'    => ['time.apple.com', 'time1.google.com'],
-            'max_offset' => 120,
-          }
-        }
+      hash = { 'servers' => ['time.apple.com', 'time1.google.com'], 
+               'max_offset' => 120 }
+      
+      let :hiera_data do 
+        { 'managedmac::ntp::options' => hash }
       end
-      it { should compile }
+      
+      specify do
+        should contain_file('ntp_conf').with 
+        { 'content' => "time.apple.com\ntime1.google.com" }
+      end
+      
+      specify do
+        should contain_service("org.ntp.ntpd").with
+        { 'ensure' => 'running', 'enable' => 'true'}
+      end
+      
+      it { should compile.with_all_deps }
     end
     
   end
