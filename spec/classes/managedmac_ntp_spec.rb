@@ -27,18 +27,18 @@ describe 'managedmac::ntp', :type => 'class' do
       hash = { 'servers' => ['time.apple.com', 'time1.google.com'], 
                'max_offset' => 120 }
       
-      let :hiera_data do 
+      let :hiera_data do
         { 'managedmac::ntp::options' => hash }
       end
       
       specify do
-        should contain_file('ntp_conf').with 
-        { 'content' => "time.apple.com\ntime1.google.com" }
+        should contain_file('ntp_conf').with(
+        { 'content' => "time.apple.com\ntime1.google.com" })
       end
       
       specify do
-        should contain_service("org.ntp.ntpd").with
-        { 'ensure' => 'running', 'enable' => 'true'}
+        should contain_service("org.ntp.ntpd").with(
+        { 'ensure' => 'running', 'enable' => 'true' })
       end
       
       it { should compile.with_all_deps }
