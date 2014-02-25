@@ -10,13 +10,16 @@ class managedmac::ntp ($options) {
     fail("max_offset not an Integer: ${options[max_offset]}")
   }
 
+  $ntp_conf_template = "<%= (@options['servers'].collect {
+    |x| ['server', x].join('\s') }).join('\n') %>"
+
   file { 'ntp_conf':
     ensure  => present,
     owner   => 'root',
     group   => 'wheel',
     mode    => '0644',
     path    => '/private/etc/ntp.conf',
-    content => inline_template("<%= (@options['servers'].collect { |x| ['server', x].join('\s') }).join('\n') %>"),
+    content => inline_template($ntp_conf_template),
     notify  => Service['org.ntp.ntpd'],
   }
 
