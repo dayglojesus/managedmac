@@ -33,7 +33,7 @@ describe 'managedmac::ntp', :type => 'class' do
       
       specify do
         should contain_file('ntp_conf').that_notifies('Service[org.ntp.ntpd]').with(
-        { 'content' => "time.apple.com\ntime1.google.com" })
+        { 'content' => "server\stime.apple.com\nserver\stime1.google.com" })
       end
       
       specify do
