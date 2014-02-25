@@ -41,6 +41,22 @@ describe 'managedmac::ntp', :type => 'class' do
         { 'ensure' => 'running', 'enable' => 'true' })
       end
       
+      context "when max_offset is not exceeded" do
+        let(:facts) { { :ntp_offset => 60, } }
+        specify do
+          should_not contain_exec('ntp_sync')
+        end
+      end
+      
+      context "when max_offset is exceeded" do
+        let(:facts) { { :ntp_offset => 300, } }
+        specify do
+          should contain_exec('ntp_sync').that_requires(
+            'File[ntp_conf]').that_notifies(
+              'Service[org.ntp.ntpd]')
+        end
+      end
+      
       it { should compile.with_all_deps }
     end
     

@@ -13,6 +13,8 @@ class managedmac::ntp ($options) {
   $ntp_conf_template = "<%= (@options['servers'].collect {
     |x| ['server', x].join('\s') }).join('\n') %>"
 
+  $ntp_service_label = 'org.ntp.ntpd'
+
   file { 'ntp_conf':
     ensure  => present,
     owner   => 'root',
@@ -20,13 +22,21 @@ class managedmac::ntp ($options) {
     mode    => '0644',
     path    => '/private/etc/ntp.conf',
     content => inline_template($ntp_conf_template),
-    notify  => Service['org.ntp.ntpd'],
+    notify  => Service[$ntp_service_label],
   }
 
-  service { 'org.ntp.ntpd':
+  service { $ntp_service_label:
     ensure  => running,
     enable  => true,
     require => File['ntp_conf'],
+  }
+
+  if $::ntp_offset > $options[max_offset] {
+    exec { 'ntp_sync':
+      command => "/bin/launchctl stop ${ntp_service_label}",
+      notify  => Service[$ntp_service_label],
+      require => File['ntp_conf'],
+    }
   }
 
 }
