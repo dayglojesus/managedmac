@@ -13,6 +13,10 @@ _Use ^H to display Markdown Cheat Sheet._
 - added rake setup
 - added support for using hiera fixtures
 - added a development guideline
+- finish spec and implementation for the ntp class 
+- update changelog
+- `git tag -a v0.0.1 -m "ntp class and various setups, scaffoldings, and scripts"`
+- `git push --tags`
 
 ## Initial Setup:
 
