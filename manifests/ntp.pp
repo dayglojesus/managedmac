@@ -16,7 +16,7 @@ class managedmac::ntp ($options) {
     group   => 'wheel',
     mode    => '0644',
     path    => '/private/etc/ntp.conf',
-    content => inline_template("<%= @options['servers'].join('\n') %>"),
+    content => inline_template("<%= (@options['servers'].collect { |x| ['server', x].join('\s') }).join('\n') %>"),
     notify  => Service['org.ntp.ntpd'],
   }
 
