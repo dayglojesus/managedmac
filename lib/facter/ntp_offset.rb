@@ -10,7 +10,7 @@ Facter.add("ntp_offset") do
     servers.each do |server|
       output = %x{ #{ntpdate} -u -t 0.5 -q #{server} 2> /dev/null }.split("\n").last
       next unless $?.exitstatus == 0
-      offset = (output[/(?<label>offset\s+)(?<value>\d*\.\d*)(?<unit>.*)/, "value"]).to_f
+      offset = (output[/(?<label>offset\s+)(?<value>[-+]?\d+\.\d+)(?<unit>.*)/, "value"]).to_f
       break if offset != 0
     end
   end
