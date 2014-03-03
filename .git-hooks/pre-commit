@@ -14,17 +14,25 @@ puts "puppet-lint: "
 puts div_line
 
 result = true
-begin
-  if Rake.application['lint'].invoke
-    puts "PASSED: You are good looking and write stylish Puppet code!"
+
+modified_manifests = `git diff --name-only --cached`.split.grep /\A.*\.pp/
+
+if modified_manifests.empty?
+  puts "No change to manifests. Skipping lint check..."
+  puts div_line
+else
+  begin
+    if Rake.application['lint'].invoke
+      puts "PASSED: You are good looking and write stylish Puppet code!"
+      puts div_line
+    end
+  rescue RuntimeError
     puts div_line
+    puts "FAILED: puppet-lint style error(s)!!!"
+    puts "You must repair these errors before you can commit."
+    puts div_line
+    result = false
   end
-rescue RuntimeError
-  puts div_line
-  puts "FAILED: puppet-lint style error(s)!!!"
-  puts "You must repair these errors before you can commit."
-  puts div_line
-  result = false
 end
 
 exit result
