@@ -115,6 +115,40 @@ TextMate has support for running RSpec tests, code completion, and syntax highli
 
 It can also handle the majority of basic Git operations you'll require while editing. After you get used to using Git in TM, you will be able to work quite quickly.
 
+### General Testing
+
+If you want to test the module by applying manifests or running `puppet resource` etc. you can create a symlink to the repo:
+
+    cd /etc/puppet/modules
+    ln -s ~/Desktop/sfu-managedmac managedmac
+    puppet resource mobileconfig
+
+In addition, you can add hiera data to the local system and then apply a test manifest...
+
+Create a test manifest (test.pp):
+
+    # test.pp
+    include managedmac
+
+Link in the hiera.yaml file:
+
+    cd /etc/puppet
+    ln -s /etc/hiera.yaml hiera.yaml
+
+Add some hiera data (whatever you like):
+
+    # /var/lib/hiera/defaults.yaml
+    ---
+    managedmac::ntp::options:
+      servers:
+      - time.sfu.ca
+      - time.apple.com
+      - time1.google.com
+      max_offset: 120
+
+After that, you should be able to apply test.pp:
+
+    puppet apply test.pp
 
 ### Changelog
 
@@ -123,19 +157,24 @@ Please ensure you update the changelog when you merge Feature branches into a Re
 ## Appendix
 
 #### Required Gems
-- rake (10.1.1)
+- CFPropertyList (2.2.7)
+- bundler (1.5.3)
+- coderay (1.1.0)
 - diff-lcs (1.2.5)
-- hiera-puppet-helper (2.0.1) from git://github.com/mmz-srf/hiera-puppet-helper.git (at master)
+- hiera-puppet-helper (2.0.1 6f43f7a)
 - metaclass (0.0.2)
+- method_source (0.8.2)
 - mocha (1.0.0)
+- pry (0.9.12.6)
 - puppet-lint (0.3.2)
+- puppetlabs_spec_helper (0.4.1)
+- rake (10.1.1)
+- rspec (2.14.1)
 - rspec-core (2.14.7)
 - rspec-expectations (2.14.5)
 - rspec-mocks (2.14.5)
-- rspec (2.14.1)
 - rspec-puppet (1.0.1)
-- puppetlabs\_spec\_helper (0.4.1)
-- bundler (1.5.3)
+- slop (3.5.0)
 
 #### Required Puppet Modules
 - puppetlabs-stdlib
