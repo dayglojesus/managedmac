@@ -7,10 +7,17 @@ GIT
 GEM
   remote: https://rubygems.org/
   specs:
+    CFPropertyList (2.2.7)
+    coderay (1.1.0)
     diff-lcs (1.2.5)
     metaclass (0.0.2)
+    method_source (0.8.2)
     mocha (1.0.0)
       metaclass (~> 0.0.1)
+    pry (0.9.12.6)
+      coderay (~> 1.0)
+      method_source (~> 0.8)
+      slop (~> 3.4)
     puppet-lint (0.3.2)
     puppetlabs_spec_helper (0.4.1)
       mocha (>= 0.10.5)
@@ -28,11 +35,14 @@ GEM
     rspec-mocks (2.14.5)
     rspec-puppet (1.0.1)
       rspec
+    slop (3.5.0)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  CFPropertyList
   hiera-puppet-helper!
+  pry
   puppet-lint
   puppetlabs_spec_helper
