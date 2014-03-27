@@ -1,8 +1,11 @@
+require 'pry'
 require 'cfpropertylist'
 require 'securerandom'
 require 'fileutils'
 
 class Puppet::Provider::MobileConfig < Puppet::Provider
+  
+  confine :operatingsystem  => :darwin
   
   class << self
     
@@ -14,6 +17,7 @@ class Puppet::Provider::MobileConfig < Puppet::Provider
     
     # Puppet MAGIC
     def prefetch(resources)
+      binding.pry
       instances.each do |prov|
         if resource = resources[prov.name]
           resource.provider = prov

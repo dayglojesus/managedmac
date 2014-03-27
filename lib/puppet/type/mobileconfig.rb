@@ -1,3 +1,4 @@
+require 'pry'
 require 'puppet/managedmac/common'
 
 Puppet::Type.newtype(:mobileconfig) do
@@ -6,6 +7,14 @@ Puppet::Type.newtype(:mobileconfig) do
   
   newparam(:name) do
     isnamevar
+  end
+  
+  newparam(:provider) do
+    validate do |value|
+      unless value
+        resource[:provider] = :basic
+      end
+    end
   end
   
   newproperty(:content, :array_matching => :all) do
