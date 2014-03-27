@@ -155,7 +155,7 @@ class Puppet::Provider::MobileConfig < Puppet::Provider
           `profiles -I -F #{path}`"
       end
       
-      FileUtils.rm_rf path if FIle.exists? path
+      FileUtils.rm_rf path if File.exists? path
     end
     
   end
