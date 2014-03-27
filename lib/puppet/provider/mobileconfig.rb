@@ -1,8 +1,11 @@
+require 'pry'
 require 'cfpropertylist'
 require 'securerandom'
 require 'fileutils'
 
 class Puppet::Provider::MobileConfig < Puppet::Provider
+  
+  confine :operatingsystem  => :darwin
   
   class << self
     
