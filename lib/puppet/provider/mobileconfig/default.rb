@@ -1,6 +1,6 @@
 require 'puppet/provider/mobileconfig'
 
-Puppet::Type.type(:mobileconfig).provide(:basic, 
+Puppet::Type.type(:mobileconfig).provide(:default, 
   :parent => Puppet::Provider::MobileConfig) do
   
   defaultfor :operatingsystem  => :darwin
