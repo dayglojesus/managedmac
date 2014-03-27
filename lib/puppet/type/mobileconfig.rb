@@ -9,14 +9,6 @@ Puppet::Type.newtype(:mobileconfig) do
     isnamevar
   end
   
-  newparam(:provider) do
-    validate do |value|
-      unless value
-        resource[:provider] = :basic
-      end
-    end
-  end
-  
   newproperty(:content, :array_matching => :all) do
     desc "Array of Hashes containing the payload data for the profile. 
     Each hash is a key/value store represnting the payload settings
