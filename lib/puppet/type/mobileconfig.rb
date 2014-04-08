@@ -1,4 +1,3 @@
-require 'pry'
 require 'puppet/managedmac/common'
 
 Puppet::Type.newtype(:mobileconfig) do
@@ -28,6 +27,26 @@ Puppet::Type.newtype(:mobileconfig) do
       value.hash
     end
     
+    # Override #insync?
+    #
+    # In this type, the _is_ value can be a superset of the _should_ value if
+    # we are not strictly managing each key in each of of the Payloads. As such,
+    # the simple equality test Puppet uses to determine state is inadequate.
+    #
+    # Instead, we first need to normalize the _should_ value by merging it into
+    # the _is_ value. Then we can perform an equaity test with the _is_ and
+    # NEW normalized _should_ value to give us the correct result.
+    #
+    def insync?(is)
+      primary_key = 'PayloadIdentifier'
+      hash = proc { Hash.new }
+      normalized = is.collect do |e|
+        id = e[primary_key]
+        e.merge (should.detect(hash) { |e| e[primary_key].eql? id })
+      end
+      is.eql? normalized
+    end
+    
     munge do |value|
       ::ManagedMacCommon::destringify value
     end
@@ -55,18 +74,6 @@ Puppet::Type.newtype(:mobileconfig) do
     end
     defaultto { "Puppet Mobile Config: " + @resource[:name] }
   end
-  
-  # Not implemented
-  # newproperty(:identifier) do
-  #   desc "String uniquely identifying this profile.
-  #     Corresponds to PayloadIdentifier."
-  #   validate do |value|
-  #     unless value.is_a? String
-  #       raise ArgumentError, "Expected String, got #{value.class}"
-  #     end
-  #   end
-  #   defaultto { [@resource[:name], Facter.sp_platform_uuid, 'alacarte' ].join('.') }
-  # end
   
   newproperty(:organization) do
     desc "String that describes the org that prodcued the profile.
