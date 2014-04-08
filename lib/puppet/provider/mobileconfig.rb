@@ -1,4 +1,3 @@
-require 'pry'
 require 'cfpropertylist'
 require 'securerandom'
 require 'fileutils'
@@ -57,7 +56,8 @@ class Puppet::Provider::MobileConfig < Puppet::Provider
       
       # Extract the PayloadType and insert it into the :content Array
       content = profile['ProfileItems'].collect do |item|
-        { 'PayloadType' => item['PayloadType'] }.merge item['PayloadContent']
+        settings = item.delete('PayloadContent')
+        item.merge settings
       end
       
       # Ladies and gentleman, the Puppet resource as a Hash
@@ -99,6 +99,24 @@ class Puppet::Provider::MobileConfig < Puppet::Provider
     @property_hash[:ensure] == :present
   end
   
+  # Formats and fortifies the PayloadContent array
+  # - ensures required keys to each Hash
+  def transform_content(content)
+    return [] if content.empty?
+    content.collect do |payload|
+      embedded_payload_uuid = payload['PayloadUUID'] || SecureRandom.uuid
+      embedded_payload_id   = payload['PayloadIdentifier'] || [@resource[:name],
+                                embedded_payload_uuid].join('.')
+      payload.merge!({
+        'PayloadIdentifier' => embedded_payload_id,
+        'PayloadUUID'       => embedded_payload_uuid,
+        'PayloadEnabled'    => true,
+        'PayloadVersion'    => 1,
+      })
+      payload
+    end
+  end
+  
   # Provider Helper method
   # Build and install the mobileconfig OR destroy it
   def coalesce_mobileconfig
@@ -130,21 +148,8 @@ class Puppet::Provider::MobileConfig < Puppet::Provider
         'PayloadType'              => 'Configuration',
         'PayloadUUID'              => SecureRandom.uuid,
         'PayloadVersion'           => 1,
-        'PayloadContent'           => @resource[:content] || []
+        'PayloadContent'           => transform_content(@resource[:content]),
       }
-      
-      # Build and install the profile
-      document['PayloadContent'].collect! do |payload|
-        embedded_payload_uuid = SecureRandom.uuid
-        payload.merge!({
-          'PayloadIdentifier' => [document['PayloadIdentifier'],
-                                  embedded_payload_uuid].join('.'),
-          'PayloadEnabled'    => true,
-          'PayloadUUID'       => embedded_payload_uuid,
-          'PayloadVersion'    => 1,
-        })
-        payload
-      end
       
       # Parse the document Hash and create new plist file
       plist       = CFPropertyList::List.new
