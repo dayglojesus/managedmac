@@ -105,10 +105,7 @@ class Puppet::Provider::MobileConfig < Puppet::Provider
     return [] if content.empty?
     content.collect do |payload|
       embedded_payload_uuid = payload['PayloadUUID'] || SecureRandom.uuid
-      embedded_payload_id   = payload['PayloadIdentifier'] || [@resource[:name],
-                                embedded_payload_uuid].join('.')
       payload.merge!({
-        'PayloadIdentifier' => embedded_payload_id,
         'PayloadUUID'       => embedded_payload_uuid,
         'PayloadEnabled'    => true,
         'PayloadVersion'    => 1,
