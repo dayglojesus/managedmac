@@ -1,3 +1,4 @@
+require 'pry'
 require 'puppet/managedmac/common'
 
 Puppet::Type.newtype(:mobileconfig) do
@@ -14,6 +15,9 @@ Puppet::Type.newtype(:mobileconfig) do
     a given PayloadType.
     
     * This content can be complicated to construct manually.
+    * Required Keys: PayloadIdentifier, PayloadType
+    * You should always include a unique PayloadIdentifier key/value
+      for each Hash in the Array.
     * You should always include an appropriate PayloadType key/value
       for each Hash in the Array.
     
@@ -25,6 +29,25 @@ Puppet::Type.newtype(:mobileconfig) do
     
     def should_to_s(value)
       value.hash
+    end
+    
+    # Make sure that each of the Hashes in the Array contains some critical keys
+    #
+    # - PayloadIdentifier: our primary key for doing joins in equality tests.
+    # We need this for matching up _is_ and _should_ values.
+    #
+    # - PayloadType: required by OS X so that it knows which preference domain
+    # is being managed in the profile; we do not validate the string, just it's 
+    # presence. If you fail to provide a valid domain, profile installation
+    # will fail outright.
+    #
+    validate do |value|
+      required_keys = ['PayloadIdentifier', 'PayloadType']
+      required_keys.each do |key|
+        unless value.key?(key)
+          raise ArgumentError, "Missing #{key} key! #{value.pretty_inspect}"
+        end
+      end
     end
     
     # Override #insync?
