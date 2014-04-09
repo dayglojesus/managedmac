@@ -16,7 +16,7 @@ module ManagedMacCommon
     when String, Fixnum, Float, TrueClass, FalseClass # Leave my elevator alone
       data
     when Array
-      data.map { |e| destringify_content e }
+      data.map { |e| destringify e }
     when Hash
       Hash[ data.map { |k, v| [k, destringify(v)] } ]
     else
