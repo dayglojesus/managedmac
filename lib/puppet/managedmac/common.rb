@@ -1,5 +1,14 @@
 module ManagedMacCommon
   
+  FILTERED_PAYLOAD_KEYS = ['PayloadIdentifier',
+                           'PayloadDescription',
+                           'PayloadDisplayName',
+                           'PayloadOrganization',
+                           'PayloadRemovalDisallowed',
+                           'PayloadScope',
+                           'PayloadUUID',
+                           'PayloadVersion',]
+  
   # Recurse the data argument and transform it into real Ruby objects
   def self.destringify(data)
     case data
