@@ -32,23 +32,31 @@ Puppet::Type.newtype(:mobileconfig) do
       value.hash
     end
     
-    # Make sure that each of the Hashes in the Array contains some critical keys
-    #
-    # - PayloadIdentifier: our primary key for doing joins in equality tests.
-    # We need this for matching up _is_ and _should_ values.
+    # Make sure that each of the Hashes in the Array contains PayloadType key
     #
     # - PayloadType: required by OS X so that it knows which preference domain
-    # is being managed in the profile; we do not validate the string, just it's 
+    # is being managed in the profile; we do not validate the string, just it's
     # presence. If you fail to provide a valid domain, profile installation
     # will fail outright.
     #
     validate do |value|
-      required_keys = ['PayloadIdentifier', 'PayloadType']
+      required_keys = ['PayloadType']
       required_keys.each do |key|
         unless value.key?(key)
           raise ArgumentError, "Missing #{key} key! #{value.pretty_inspect}"
         end
       end
+    end
+    
+    # Override #insync?
+    # - We need to sort the Arrays before performing an equality test. We do
+    # this using the PayloadType key because it is guarnteed to be present.
+    def insync?(is)
+      key = 'PayloadType'
+      i, s = [is, should].each do |a|
+        a.sort! { |x, y| x[key] <=> y[key] }
+      end
+      i.eql? s
     end
     
     # Normalize the :content array
