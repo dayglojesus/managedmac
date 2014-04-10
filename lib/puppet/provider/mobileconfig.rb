@@ -1,6 +1,7 @@
 require 'cfpropertylist'
 require 'securerandom'
 require 'fileutils'
+require 'puppet/managedmac/common'
 
 class Puppet::Provider::MobileConfig < Puppet::Provider
   
@@ -76,18 +77,8 @@ class Puppet::Provider::MobileConfig < Puppet::Provider
         # Extract the PayloadContent
         settings = item.delete('PayloadContent')
         
-        # We do not compare these keys
-        variable_keys = ['PayloadIdentifier',
-                         'PayloadDescription',
-                         'PayloadDisplayName',
-                         'PayloadOrganization',
-                         'PayloadRemovalDisallowed',
-                         'PayloadScope',
-                         'PayloadUUID',
-                         'PayloadVersion',]
-        
-        # Scrub the ignored keys
-        variable_keys.each do |key|
+        # Scrub the filtered keys
+        ::ManagedMacCommon::FILTERED_PAYLOAD_KEYS.each do |key|
           item.delete_if     { |k| k.eql?(key) }
           settings.delete_if { |k| k.eql?(key) }
         end
