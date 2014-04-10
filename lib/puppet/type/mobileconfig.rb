@@ -61,7 +61,12 @@ Puppet::Type.newtype(:mobileconfig) do
     
     # Normalize the :content array
     munge do |value|
-      ::ManagedMacCommon::destringify value
+      value = ::ManagedMacCommon::destringify value
+      # Scrub keys
+      ::ManagedMacCommon::FILTERED_PAYLOAD_KEYS.each do |key|
+        value.delete_if { |k| k.eql?(key) }
+      end
+      value
     end
     
   end
