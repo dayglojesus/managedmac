@@ -1,6 +1,7 @@
 require 'cfpropertylist'
 require 'securerandom'
 require 'fileutils'
+require 'puppet/managedmac/common'
 
 class Puppet::Provider::MobileConfig < Puppet::Provider
   
@@ -54,11 +55,8 @@ class Puppet::Provider::MobileConfig < Puppet::Provider
       # No profile, empty Hash
       return {} if profile.nil?
       
-      # Extract the PayloadType and insert it into the :content Array
-      content = profile['ProfileItems'].collect do |item|
-        settings = item.delete('PayloadContent')
-        item.merge settings
-      end
+      # Prepare the content array for insertion into the resource
+      content = prepare_content(profile['ProfileItems'])
       
       # Ladies and gentleman, the Puppet resource as a Hash
       {
@@ -71,6 +69,29 @@ class Puppet::Provider::MobileConfig < Puppet::Provider
         :ensure            => :present,
         :content           => content,
       }
+    end
+    
+    # Formats the PayloadContent data for use the in the resource
+    def prepare_content(content)
+      content.collect do |item|
+        # Extract the PayloadContent
+        settings = item.delete('PayloadContent')
+        
+        # Scrub the filtered keys
+        ::ManagedMacCommon::FILTERED_PAYLOAD_KEYS.each do |key|
+          item.delete_if     { |k| k.eql?(key) }
+          settings.delete_if { |k| k.eql?(key) }
+        end
+        
+        # Reject AD Flag keys
+        # We do this here so the `puppet resource mobileconfig ...` will return
+        # the correct :content no matter which provider is used. This feels
+        # cheap, but it is economical and may be required by other subclasses 
+        # of the mobielconfig provider down the road.
+        settings.reject! { |k| k =~ /\AAD.*Flag\z/ }
+        
+        item.merge settings
+      end
     end
     
     # Parse a plist and return a Ruby object
@@ -106,7 +127,7 @@ class Puppet::Provider::MobileConfig < Puppet::Provider
     content.collect do |payload|
       embedded_payload_uuid = payload['PayloadUUID'] || SecureRandom.uuid
       embedded_payload_id   = payload['PayloadIdentifier'] || [@resource[:name],
-                                embedded_payload_uuid].join('.')
+                                      embedded_payload_uuid].join('.')
       payload.merge!({
         'PayloadIdentifier' => embedded_payload_id,
         'PayloadUUID'       => embedded_payload_uuid,

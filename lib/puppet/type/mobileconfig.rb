@@ -14,8 +14,12 @@ Puppet::Type.newtype(:mobileconfig) do
     a given PayloadType.
     
     * This content can be complicated to construct manually.
+    * Required Keys: PayloadIdentifier, PayloadType
+    * You should always include a unique PayloadIdentifier key/value
+      for each Hash in the Array.
     * You should always include an appropriate PayloadType key/value
       for each Hash in the Array.
+    * Other Payload keys (PayloadDescription, etc.) will be ignored.
     
     Corresponds to PayloadContent."
     
@@ -27,28 +31,41 @@ Puppet::Type.newtype(:mobileconfig) do
       value.hash
     end
     
-    # Override #insync?
+    # Make sure that each of the Hashes in the Array contains PayloadType key
     #
-    # In this type, the _is_ value can be a superset of the _should_ value if
-    # we are not strictly managing each key in each of of the Payloads. As such,
-    # the simple equality test Puppet uses to determine state is inadequate.
+    # - PayloadType: required by OS X so that it knows which preference domain
+    # is being managed in the profile; we do not validate the string, just it's
+    # presence. If you fail to provide a valid domain, profile installation
+    # will fail outright.
     #
-    # Instead, we first need to normalize the _should_ value by merging it into
-    # the _is_ value. Then we can perform an equaity test with the _is_ and
-    # NEW normalized _should_ value to give us the correct result.
-    #
-    def insync?(is)
-      primary_key = 'PayloadIdentifier'
-      hash = proc { Hash.new }
-      normalized = is.collect do |e|
-        id = e[primary_key]
-        e.merge (should.detect(hash) { |e| e[primary_key].eql? id })
+    validate do |value|
+      required_keys = ['PayloadType']
+      required_keys.each do |key|
+        unless value.key?(key)
+          raise ArgumentError, "Missing #{key} key! #{value.pretty_inspect}"
+        end
       end
-      is.eql? normalized
     end
     
+    # Override #insync?
+    # - We need to sort the Arrays before performing an equality test. We do
+    # this using the PayloadType key because it is guarnteed to be present.
+    def insync?(is)
+      key = 'PayloadType'
+      i, s = [is, should].each do |a|
+        a.sort! { |x, y| x[key] <=> y[key] }
+      end
+      i.eql? s
+    end
+    
+    # Normalize the :content array
     munge do |value|
-      ::ManagedMacCommon::destringify value
+      value = ::ManagedMacCommon::destringify value
+      # Scrub keys
+      ::ManagedMacCommon::FILTERED_PAYLOAD_KEYS.each do |key|
+        value.delete_if { |k| k.eql?(key) }
+      end
+      value
     end
     
   end
