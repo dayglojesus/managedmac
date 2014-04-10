@@ -20,6 +20,7 @@ Puppet::Type.newtype(:mobileconfig) do
       for each Hash in the Array.
     * You should always include an appropriate PayloadType key/value
       for each Hash in the Array.
+    * Other Payload keys (PayloadDescription, etc.) will be ignored.
     
     Corresponds to PayloadContent."
     
@@ -50,26 +51,7 @@ Puppet::Type.newtype(:mobileconfig) do
       end
     end
     
-    # Override #insync?
-    #
-    # In this type, the _is_ value can be a superset of the _should_ value if
-    # we are not strictly managing each key in each of of the Payloads. As such,
-    # the simple equality test Puppet uses to determine state is inadequate.
-    #
-    # Instead, we first need to normalize the _should_ value by merging it into
-    # the _is_ value. Then we can perform an equaity test with the _is_ and
-    # NEW normalized _should_ value to give us the correct result.
-    #
-    def insync?(is)
-      primary_key = 'PayloadIdentifier'
-      hash = proc { Hash.new }
-      normalized = is.collect do |e|
-        id = e[primary_key]
-        e.merge (should.detect(hash) { |e| e[primary_key].eql? id })
-      end
-      is.eql? normalized
-    end
-    
+    # Normalize the :content array
     munge do |value|
       ::ManagedMacCommon::destringify value
     end
