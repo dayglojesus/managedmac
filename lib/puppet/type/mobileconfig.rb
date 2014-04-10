@@ -1,6 +1,60 @@
 require 'puppet/managedmac/common'
 
 Puppet::Type.newtype(:mobileconfig) do
+  @doc = %q{Dynamically create and manage OS X .mobileconfig profiles
+  
+  A custom Puppet type for delivering policy via OS X profiles.
+  
+  When you define a Mobileconfig resource, a .mobileconfig file containing the
+  settings you specified oin the resource is automatically generated and 
+  installed.
+  
+  Use of this custom type can be complicated if you don't understand the basic 
+  structure of a .mobileconfig file.
+  
+  If you need to do some trench work with profiles, I recommend you abstract
+  the mobileconfig resource by wrappping it in a parameterized Puppet class,
+  as per the various classes in this module. See the activedirectory.pp file
+  for an example of this pattern.
+  
+  ==== USAGE ====
+  
+  # Create an Array of 1 or more PayloadContent Hashes
+  # - You can stack multiple PayloadContent Hashes inside the Array
+  # - Each Hash is a single payload
+  # - Each payload contains key/value pairs representing the settings you want
+  # to manage
+  # - You MUST include a PayloadType key for this to work
+  
+  $content = [{ 'contents-immutable' => true,
+    'largesize' => 128,
+    'orientation' => 'left', 
+    'tilesize' => 128,
+    'autohide' => true,
+    'PayloadType' => 'com.apple.dock'
+  }]
+  
+  # The resource name MUST be unique!
+  # - Only the :name and :content properties are required
+  mobileconfig { 'puppetlabs.dock.alacarte':
+    ensure       => present,
+    displayname  => 'Puppet Labs: Dock Settings',
+    description  => 'Dock configuration. Installed by Puppet.',
+    organization => 'Puppet Labs',
+    content      => $options,
+  }
+  
+  # You can remove an existing profile just like any other Puppet resource
+  mobileconfig { 'puppetlabs.dock.alacarte':
+    ensure => absent,
+  }
+  
+  # Use the puppet resource command to get a list of installed profiles:
+  `sudo puppet resource mobileconfig`
+  
+  # Remove the profile using puppet resource...
+  `sudo puppet resource mobileconfig puppetlabs.dock.alacarte ensure=absent`
+  }
   
   ensurable
   
@@ -21,7 +75,7 @@ Puppet::Type.newtype(:mobileconfig) do
       for each Hash in the Array.
     * Other Payload keys (PayloadDescription, etc.) will be ignored.
     
-    Corresponds to PayloadContent."
+    Corresponds to the PayloadContent key."
     
     def is_to_s(value)
       value.hash
@@ -72,7 +126,7 @@ Puppet::Type.newtype(:mobileconfig) do
   
   newproperty(:description) do
     desc "String that describes what this profile does.
-      Corresponds to PayloadDescription."
+      Corresponds to the PayloadDescription key."
     validate do |value|
       unless value.is_a? String
         raise ArgumentError, "Expected String, got #{value.class}"
@@ -83,7 +137,7 @@ Puppet::Type.newtype(:mobileconfig) do
   
   newproperty(:displayname) do
     desc "String displayed as the title common name for this profile.
-      Corresponds to PayloadDisplayName."
+      Corresponds to the PayloadDisplayName key."
     validate do |value|
       unless value.is_a? String
         raise ArgumentError, "Expected String, got #{value.class}"
@@ -94,7 +148,7 @@ Puppet::Type.newtype(:mobileconfig) do
   
   newproperty(:organization) do
     desc "String that describes the org that prodcued the profile.
-      Corresponds to PayloadOrganization."
+      Corresponds to the PayloadOrganization key."
     validate do |value|
       unless value.is_a? String
         raise ArgumentError, "Expected String, got #{value.class}"
@@ -106,8 +160,8 @@ Puppet::Type.newtype(:mobileconfig) do
   newproperty(:removaldisallowed) do
     desc "Bool: whether or not to allow the removal of the profile. 
       Setting this to false means it can be removed. Don't blame me
-      for the stupid name, blame Apple.
-      Corresponds to PayloadRemovalDisallowed."
+      for the stupid double-negative name, blame Apple.
+      Corresponds to the PayloadRemovalDisallowed key."
     newvalues(:true, :false)
     defaultto :false
   end
