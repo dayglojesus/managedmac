@@ -76,5 +76,18 @@ describe 'managedmac::activedirectory', :type => 'class' do
     
     it { should contain_mobileconfig('managedmac.activedirectory.alacarte')\
       .with_ensure('absent') }
+  end  
+  
+  context "when $ensure is invalid" do
+    let(:params) do
+      { :ensure => 'whatever' }
+    end
+    
+    specify do 
+      expect { 
+        should compile 
+      }.to raise_error(Puppet::Error, /Parameter Error/)
+    end
   end
+  
 end
