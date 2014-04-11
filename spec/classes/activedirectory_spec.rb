@@ -18,4 +18,54 @@ describe 'managedmac::activedirectory', :type => 'class' do
   
   it { should compile.with_all_deps }
   
+  context "when required variables are MISSING" do
+    let(:params) do
+      { 
+        :options => {
+          'HostName' => 'foo.bar.com',
+          'UserName' => 'some_account',
+        }
+      }
+    end
+    
+    specify do 
+      expect { 
+        should compile 
+      }.to raise_error(Puppet::Error, /Missing Option:/)
+    end
+  end
+  
+  context "when required variables are INVALID" do
+    let(:params) do
+      { 
+        :options => {
+          'HostName' => 'foo.bar.com',
+          'UserName' => 'some_account',
+          'Password' => [],
+        }
+      }
+    end
+    
+    specify do 
+      expect { 
+        should compile 
+      }.to raise_error(Puppet::Error)
+    end
+  end
+  
+  # Required vars: HostName, UserName, Password
+  context "when required variables are VALID" do
+    let(:params) do
+      { 
+        :options => {
+          'HostName' => 'foo.bar.com',
+          'UserName' => 'some_account',
+          'Password' => 'some_password',
+        }
+      }
+    end
+    
+    it { should compile.with_all_deps }
+  end
+  
 end
