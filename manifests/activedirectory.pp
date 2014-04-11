@@ -88,10 +88,25 @@
 #
 class managedmac::activedirectory ($options) {
 
-  validate_hash   ($options)
+  validate_hash ($options)
+
+  # HostName
   validate_string ($options[HostName])
+  if empty($options[HostName]) {
+    fail("Missing Option: HostName")
+  }
+
+  # UserName
   validate_string ($options[UserName])
+  if empty($options[UserName]) {
+    fail("Missing Option: UserName")
+  }
+
+  # Password
   validate_string ($options[Password])
+  if empty($options[Password]) {
+    fail("Missing Option: Password")
+  }
 
   $options[PayloadType] = 'com.apple.DirectoryService.managed'
 
