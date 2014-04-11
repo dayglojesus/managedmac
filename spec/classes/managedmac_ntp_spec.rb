@@ -4,7 +4,7 @@ describe 'managedmac::ntp', :type => 'class' do
 
   context "when $ensure is invalid" do
     let(:params) do
-      { :ensure => 'whatever', :options => {}, }
+      { :ensure => 'whatever' }
     end
     
     specify do 
@@ -20,7 +20,7 @@ describe 'managedmac::ntp', :type => 'class' do
     let(:facts) { { :ntp_offset => 300, } }
     
     let(:params) do
-      { :ensure  => 'absent', :options => {}, }
+      { :ensure  => 'absent' }
     end
     
     it { should contain_file('ntp_conf')\
