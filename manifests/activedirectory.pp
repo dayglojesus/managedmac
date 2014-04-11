@@ -1,5 +1,64 @@
-# Class: managedmac::activedirectory
+# == Class: managedmac::activedirectory
 #
+# Leverages the Mobileconfig type and Activedirectory provider to configure and
+# bind a Mac to Active Directory.
+#
+# === Parameters
+#
+# This class takes a single compound parameter (Hash): options
+#
+# [*options*]
+#   Within the options Hash, there are three required keys:
+#     HostName (String): the name of the domain you are binding to
+#     UserName (String): the account that performs the bind operation
+#     Password (String): the password for UserName
+#
+#   All other keys are optional:
+#     ADOrganizationalUnit (String)
+#     ADMountStyle (String)
+#     ADDefaultUserShell (String)
+#     ADMapUIDAttribute (String)
+#     ADMapGIDAttribute (String)
+#     ADMapGGIDAttribute (String)
+#     ADPreferredDCServer (String)
+#     ADRestrictDDNS (String)
+#     ADNamespace (String)
+#     ADDomainAdminGroupList (Array)
+#     ADPacketSign (bool)
+#     ADPacketEncrypt (bool)
+#     ADCreateMobileAccountAtLogin (bool)
+#     ADWarnUserBeforeCreatingMA (bool)
+#     ADForceHomeLocal (bool)
+#     ADUseWindowsUNCPath (bool)
+#     ADAllowMultiDomainAuth (bool)
+#     ADTrustChangePassIntervalDays (Integer)
+#
+# === Variables
+#
+# Not applicable
+#
+# === Examples
+#
+#  # Create an options Hash
+#  $options = {
+#   'HostName' => 'foo.ad.com',
+#   'UserName' => 'some_account',
+#   'Password' => 'some_password',
+#   'ADMountStyle' => 'afp',
+#   'ADTrustChangePassIntervalDays' => 0,
+#  }
+#
+#  class { 'managedmac::activedirectory':
+#    options => $options,
+#  }
+#
+# === Authors
+#
+# Brian Warsing <bcw@sfu.ca>
+#
+# === Copyright
+#
+# Copyright 2014 Simon Fraser University, unless otherwise noted.
 #
 class managedmac::activedirectory ($options) {
 
@@ -7,27 +66,6 @@ class managedmac::activedirectory ($options) {
   validate_string ($options[HostName])
   validate_string ($options[UserName])
   validate_string ($options[Password])
-  validate_string ($options[ADOrganizationalUnit])
-  validate_string ($options[ADMountStyle])
-  validate_string ($options[ADDefaultUserShell])
-  validate_string ($options[ADMapUIDAttribute])
-  validate_string ($options[ADMapGIDAttribute])
-  validate_string ($options[ADMapGGIDAttribute])
-  validate_string ($options[ADPreferredDCServer])
-  validate_string ($options[ADRestrictDDNS])
-  validate_string ($options[ADNamespace])
-  validate_array  ($options[ADDomainAdminGroupList])
-  validate_bool   ($options[ADPacketSign])
-  validate_bool   ($options[ADPacketEncrypt])
-  validate_bool   ($options[ADCreateMobileAccountAtLogin])
-  validate_bool   ($options[ADWarnUserBeforeCreatingMA])
-  validate_bool   ($options[ADForceHomeLocal])
-  validate_bool   ($options[ADUseWindowsUNCPath])
-  validate_bool   ($options[ADAllowMultiDomainAuth])
-
-  unless is_integer($options[ADTrustChangePassIntervalDays]) {
-    fail("max_offset not an Integer: ${options[max_offset]}")
-  }
 
   $options[PayloadType] = 'com.apple.DirectoryService.managed'
 
@@ -41,3 +79,4 @@ class managedmac::activedirectory ($options) {
   }
 
 }
+
