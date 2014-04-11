@@ -49,4 +49,8 @@ class managedmac {
     contain managedmac::ntp
   }
 
+  if is_hash(hiera('managedmac::activedirectory::options', false)) {
+    contain managedmac::activedirectory
+  }
+
 }
