@@ -5,7 +5,11 @@
 #
 # === Parameters
 #
-# This class takes a single compound parameter (Hash): options
+# This class takes a two parameters:
+# [*ensure*]
+#   Whether to apply the resource or remove it. Valid values: present or
+#   absent. Pass a Symbol or a String.
+#   Default: 'present'
 #
 # [*options*]
 #   Within the options Hash, there are three required keys:
@@ -13,7 +17,7 @@
 #     UserName (String): the account that performs the bind operation
 #     Password (String): the password for UserName
 #
-#   All other keys are optional:
+#   All other Hash keys are optional:
 #     ADOrganizationalUnit (String)
 #     ADMountStyle (String)
 #     ADDefaultUserShell (String)
@@ -86,32 +90,40 @@
 #
 # Copyright 2014 Simon Fraser University, unless otherwise noted.
 #
-class managedmac::activedirectory ($options) {
+class managedmac::activedirectory ($ensure = present, $options) {
 
-  validate_hash ($options)
+  # Only validate to required variables if we are activating the resource
+  if $ensure == present {
 
-  # HostName
-  validate_string ($options[HostName])
-  if empty($options[HostName]) {
-    fail("Missing Option: HostName")
-  }
+    validate_hash ($options)
 
-  # UserName
-  validate_string ($options[UserName])
-  if empty($options[UserName]) {
-    fail("Missing Option: UserName")
-  }
+    # HostName
+    validate_string ($options[HostName])
+    if empty($options[HostName]) {
+      fail('Missing Option: HostName')
+    }
 
-  # Password
-  validate_string ($options[Password])
-  if empty($options[Password]) {
-    fail("Missing Option: Password")
+    # UserName
+    validate_string ($options[UserName])
+    if empty($options[UserName]) {
+      fail('Missing Option: UserName')
+    }
+
+    # Password
+    validate_string ($options[Password])
+    if empty($options[Password]) {
+      fail('Missing Option: Password')
+    }
+  } else {
+    unless $ensure == 'absent' {
+      fail("Parameter Error: invalid value for :ensure, ${ensure}")
+    }
   }
 
   $options[PayloadType] = 'com.apple.DirectoryService.managed'
 
   mobileconfig { 'managedmac.activedirectory.alacarte':
-    ensure       => present,
+    ensure       => $ensure,
     provider     => activedirectory,
     displayname  => 'Managed Mac: Active Directory',
     description  => 'Active Directory configuration. Installed by Puppet.',
@@ -120,4 +132,3 @@ class managedmac::activedirectory ($options) {
   }
 
 }
-
