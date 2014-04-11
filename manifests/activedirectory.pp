@@ -33,6 +33,7 @@ class managedmac::activedirectory ($options) {
 
   mobileconfig { 'managedmac.activedirectory.alacarte':
     ensure       => present,
+    provider     => activedirectory,
     displayname  => 'Managed Mac: Active Directory',
     description  => 'Active Directory configuration. Installed by Puppet.',
     organization => 'Simon Fraser University',
