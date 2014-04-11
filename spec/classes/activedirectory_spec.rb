@@ -18,6 +18,7 @@ describe 'managedmac::activedirectory', :type => 'class' do
   
   it { should compile.with_all_deps }
   
+  # Required vars: HostName, UserName, Password
   context "when required variables are MISSING" do
     let(:params) do
       { 
@@ -53,7 +54,6 @@ describe 'managedmac::activedirectory', :type => 'class' do
     end
   end
   
-  # Required vars: HostName, UserName, Password
   context "when required variables are VALID" do
     let(:params) do
       { 
@@ -68,4 +68,13 @@ describe 'managedmac::activedirectory', :type => 'class' do
     it { should compile.with_all_deps }
   end
   
+  # Test ensurability
+  context "when $ensure => 'absent'" do
+    let(:params) do
+      { :ensure => 'absent' }
+    end
+    
+    it { should contain_mobileconfig('managedmac.activedirectory.alacarte')\
+      .with_ensure('absent') }
+  end
 end
