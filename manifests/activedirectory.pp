@@ -39,6 +39,32 @@
 #
 # === Examples
 #
+# This class was designed to be used with Hiera. As such, the best way to pass
+# options is to specify them in your Hiera datadir:
+#
+#  # Example: defaults.yaml
+#  ---
+#  managedmac::activedirectory::options:
+#    HostName: ad.apple.com
+#    UserName: some_account
+#    Password: some_password
+#    ADMountStyle: afp
+#    ADCreateMobileAccountAtLogin: true
+#    ADWarnUserBeforeCreatingMA: false
+#    ADForceHomeLocal: true
+#    ADDomainAdminGroupList:
+#      - APPLE\Domain Admins
+#      - APPLE\Enterprise Admins
+#    ADTrustChangePassIntervalDays: 0
+#
+# Then simply, create a manifest and include the class...
+#
+#  # Example: my_manifest.pp
+#  include managedmac::activedirectory
+#
+# If you just wish to test the functionality of this class, you could also do
+# something along these lines:
+#
 #  # Create an options Hash
 #  $options = {
 #   'HostName' => 'foo.ad.com',
