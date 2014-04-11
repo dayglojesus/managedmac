@@ -1,5 +1,64 @@
-# Class: managedmac::ntp
+# == Class: managedmac::ntp
 #
+# Activates and strictly enforces NTP synchronization.
+#
+# === Parameters
+#
+# This class takes a two parameters:
+#
+# [*ensure*]
+#   Whether to apply the resource or remove it. Accepts values: present or
+#   absent. Pass a Symbol or a String.
+#   Default: present
+#
+# [*options*]
+#   Within the options Hash, there are two required keys:
+#     servers (Array): a list of NTP servers to use
+#     max_offset (Integer): the max +/- allowable clock skew
+#
+# === Variables
+#
+# [*ntp_offset*]
+#   Custom Facter fact: calculated clock skew.
+#
+# === Examples
+#
+# This class was designed to be used with Hiera. As such, the best way to pass
+# options is to specify them in your Hiera datadir:
+#
+#  # Example: defaults.yaml
+#  ---
+#  managedmac::ntp::options:
+#    servers:
+#      - time.apple.com
+#      - time1.google.com
+#    max_offset: 200
+#
+# Then simply, create a manifest and include the class...
+#
+#  # Example: my_manifest.pp
+#  include managedmac::ntp
+#
+# If you just wish to test the functionality of this class, you could also do
+# something along these lines:
+#
+#  # Create an options Hash
+#  $options = {
+#   'servers' => ['time.apple.com', 'time1.google.com'],
+#   'max_offset' => 200,
+#  }
+#
+#  class { 'managedmac::ntp':
+#    options => $options,
+#  }
+#
+# === Authors
+#
+# Brian Warsing <bcw@sfu.ca>
+#
+# === Copyright
+#
+# Copyright 2014 Simon Fraser University, unless otherwise noted.
 #
 class managedmac::ntp ($ensure = present, $options = {}) {
 
