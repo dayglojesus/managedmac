@@ -45,12 +45,14 @@ describe 'managedmac', :type => 'class' do
     
     let :hiera_data do
       {
-        'managedmac::ntp::options' => options_ntp
+        'managedmac::ntp::options' => options_ntp,
+        'managedmac::activedirectory::options' => options_activedirectory,
       }
     end
     
-    context "when NTP configuration options are set" do
+    context "class configuration options are set" do
       it { should contain_class('managedmac::ntp') }
+      it { should contain_class('managedmac::activedirectory') }
     end
     
     it { should compile.with_all_deps }
