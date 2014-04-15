@@ -112,7 +112,7 @@ class managedmac::ntp ($ensure = present, $options = {}) {
       exec { 'ntp_sync':
         command => "/bin/launchctl stop ${ntp_service_label}",
         notify  => Service[$ntp_service_label],
-        require => [File['ntp_conf'], Service[$ntp_service_label]]
+        require => File['ntp_conf'],
       }
     }
   }
