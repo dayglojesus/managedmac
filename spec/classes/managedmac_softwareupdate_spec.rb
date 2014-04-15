@@ -28,4 +28,16 @@ describe 'managedmac::softwareupdate', :type => 'class' do
     it { should compile.with_all_deps }
   end
   
+  # Test ensurability
+  context "when $ensure => 'absent'" do
+    
+    let(:params) do
+      { :ensure  => 'absent' }
+    end
+    
+    it { should contain_mobileconfig('managedmac.softwareupdate.alacarte')\
+      .with_ensure('absent') }
+    
+  end
+  
 end
