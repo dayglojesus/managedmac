@@ -36,4 +36,34 @@ module Helpers
     { 'CatalogURL' => 'http://server.example.com:8088/catalogs.sucatlog' }
   end
   
+  def options_energysaver
+    schedule = {
+      'RepeatingPowerOff' => { 'eventtype' => 'sleep', 'time' => 1410, 
+        'weekdays' => 127},  
+      'RepeatingPowerOn'  => { 'eventtype' => 'wakepoweron', 'time' => 480, 
+        'weekdays' => 127}
+    }
+    
+    ac_power = { "Automatic Restart On Power Loss" => true,
+      "Disk Sleep Timer-boolean" => true,
+      "Display Sleep Timer" => 15,
+      "Sleep On Power Button" => false,
+      "Wake On LAN" => true,
+      "System Sleep Timer" => 30,
+    }
+
+    battery_power = { "Automatic Restart On Power Loss" => true,
+      "Disk Sleep Timer-boolean" => true,
+      "Display Sleep Timer" => 15,
+      "Sleep On Power Button" => false,
+      "Wake On LAN" => true,
+      "System Sleep Timer" => 30,
+    }
+    
+    {
+      'desktop'  => { 'ACPower' => ac_power, 'Schedule' => schedule },
+      'portable' => { 'ACPower' => ac_power, 'BatteryPower' => battery_power }
+    }
+  end
+  
 end
