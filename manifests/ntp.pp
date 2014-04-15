@@ -111,8 +111,7 @@ class managedmac::ntp ($ensure = present, $options = {}) {
     if abs($::ntp_offset) > $options[max_offset] {
       exec { 'ntp_sync':
         command => "/bin/launchctl stop ${ntp_service_label}",
-        notify  => Service[$ntp_service_label],
-        require => File['ntp_conf'],
+        require => Service[$ntp_service_label],
       }
     }
   }
