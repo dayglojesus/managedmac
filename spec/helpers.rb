@@ -31,4 +31,9 @@ module Helpers
     }
   end
   
+  
+  def options_softwareupdate
+    { 'CatalogURL' => 'http://server.example.com:8088/catalogs.sucatlog' }
+  end
+  
 end
