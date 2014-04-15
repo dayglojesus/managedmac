@@ -92,7 +92,11 @@
 #
 class managedmac::activedirectory ($ensure = present, $options) {
 
-  # Only validate to required variables if we are activating the resource
+  if is_hash(hiera('managedmac::ntp::options', false)) {
+    require managedmac::ntp
+  }
+
+  # Only validate required variables if we are activating the resource
   if $ensure == present {
 
     validate_hash ($options)
