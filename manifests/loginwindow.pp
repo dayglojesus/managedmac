@@ -48,7 +48,7 @@ class managedmac::loginwindow (
     }
   }
 
-  $options[PayloadType] = 'com.apple.loginwindow'
+  $compiled_options[PayloadType] = 'com.apple.loginwindow'
 
   mobileconfig { 'managedmac.loginwindow.alacarte':
     ensure       => $ensure,
