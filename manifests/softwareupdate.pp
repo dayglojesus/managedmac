@@ -1,4 +1,75 @@
 # == Class: managedmac::softwareupdate
+#
+# Abstracts com.apple.SoftwareUpdate preference domain using Mobileconfig type.
+#
+# NOTE: Parameters trump matching keys in the options Hash. If you specify one
+# of the defined parameters (ie. $catalog_url) and you also set the
+# corresponding key somewhere in the options Hash, the value of the parameter
+# will take precedence.
+#
+# === Parameters
+#
+# There 3 parameters. An exception will be raised if you do not specify at
+# least one parameter.
+#
+# [*ensure*]
+#   Whether the resources defined in this class should be applied or not.
+#   Type: String
+#   Accepts: present or absent
+#   Default: present
+#
+# [*catalog_url*]
+#   The URL for your Apple Software Update server. This will be validated using
+#   regex, so it needs to at least have the appearnce of being a URL.
+#   Type: String
+#   e.g. "http://swscan.apple.com/content/catalogs/index-1.sucatalog"
+#
+# [*options*]
+#   Raw com.apple.SoftwareUpdate pref keys. (See examples below)
+#   Type: Hash
+#   Default: empty
+#
+# === Variables
+#
+# Not applicable
+#
+# === Examples
+# This class was designed to be used with Hiera. As such, the best way to pass
+# options is to specify them in your Hiera datadir:
+#
+#  # Example: defaults.yaml
+#  ---
+#  managedmac::softwareupdate::catalog_url: http://foo.bar.com/whatever.dude
+#  managedmac::softwareupdate::options:
+#    CatalogURL: "http://swscan.apple.com/content/catalogs/index-1.sucatalog"
+#
+# Then simply, create a manifest and include the class...
+#
+#  # Example: my_manifest.pp
+#  include managedmac::loginwindow
+#
+# If you just wish to test the functionality of this class, you could also do
+# something along these lines:
+#
+#  # Create an options Hash
+#  # - this will get trumped by the parameter we pass into the class!!!
+#  $options = {
+#   'CatalogURL' => 'YOU WILL NEVER SEE THIS',
+#  }
+#
+#  class { 'managedmac::activedirectory':
+#    catalog_url =>'http://swscan.apple.com/content/catalogs/index-1.sucatalog',
+#    options => $options,
+#  }
+#
+# === Authors
+#
+# Brian Warsing <bcw@sfu.ca>
+#
+# === Copyright
+#
+# Copyright 2014 Simon Fraser University, unless otherwise noted.
+#
 class managedmac::softwareupdate (
 
   $ensure       = present,
