@@ -35,7 +35,7 @@ class managedmac::energysaver ($ensure = present, $options = {}) {
         }
 
         unless empty($options[portable][BatteryPower]) {
-          validate_hash ($options[portable][ACPower])
+          validate_hash ($options[portable][BatteryPower])
           $compiled_options[$batt_power_key] = $options[portable][BatteryPower]
           $compiled_options[$portable_batt_profile_num] = $profile_number
         }
@@ -71,7 +71,7 @@ class managedmac::energysaver ($ensure = present, $options = {}) {
     }
   }
 
-  $options[PayloadType] = 'com.apple.MCX'
+  $compiled_options[PayloadType] = 'com.apple.MCX'
 
   mobileconfig { 'managedmac.energysaver.alacarte':
     ensure       => $ensure,
