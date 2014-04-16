@@ -95,11 +95,11 @@
 #
 # === Authors
 #
-# Author Name <author@domain.com>
+# Brian Warsing <bcw@sfu.ca>
 #
 # === Copyright
 #
-# Copyright 2014 Your name here, unless otherwise noted.
+# Copyright 2014 Simon Fraser University, unless otherwise noted.
 #
 
 class managedmac::loginwindow (
