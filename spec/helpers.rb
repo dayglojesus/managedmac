@@ -31,7 +31,6 @@ module Helpers
     }
   end
   
-  
   def options_softwareupdate
     { 'CatalogURL' => 'http://server.example.com:8088/catalogs.sucatlog' }
   end
@@ -93,6 +92,21 @@ module Helpers
                  'shell'      => '/bin/bash',
                  'uid'        => 502,
                }
+    }
+  end
+  
+  def mobileconfigs_payloads
+    {
+      'managedmac.dock.alacarte' => {
+        'content' => {
+          'largesize' => 128,
+          'orientation' => 'left',
+          'tilesize' => 128,
+          'autohide' => true,
+          'PayloadType' => 'com.apple.dock',
+        },
+        'displayname' => 'Managed Mac: Dock Settings',
+      }
     }
   end
   
