@@ -66,4 +66,34 @@ module Helpers
     }
   end
   
+  def accounts_users
+    {
+      'foo' => {
+                 'ensure'     => 'present',
+                 'comment'    => 'Created by Puppet',
+                 'gid'        => 20,
+                 'groups'     => ['_appserveradm', '_appserverusr', '_lpadmin', 'admin', 'com.apple.sharepoint.group.1'],
+                 'home'       => '/Users/bar',
+                 'iterations' => 33682,
+                 'password'   => '6e849409877191dd5b28bcbda2e0619dbe7ee6c6fc30620eb2508df6cbfcf5b57cac66da5a65812aa50970510f72a45b690402325d5cb736095780ef288f5c2be85ea70a49006b94835c8bbf66445656a1f4c3f1c2ec2c89666aaace545d2b2e88de634a779b9d909b6f62e8e182d4dd843b5952fb2913bdfa6a0e824e6c3cea',
+                 'salt'       => '4b07f6938c5774751b2d794d5b18200584a0fbd1b23b62a43491f5f7aeb9e174',
+                 'shell'      => '/bin/bash',
+                 'uid'        => 501,
+               },
+      
+      'bar' => {
+                 'ensure'     => 'present',
+                 'comment'    => 'Created by Puppet',
+                 'gid'        => 20,
+                 'groups'     => ['_appserveradm', '_appserverusr', '_lpadmin', 'admin', 'com.apple.sharepoint.group.1'],
+                 'home'       => '/Users/bar',
+                 'iterations' => 31260,
+                 'password'   => '6e849409877191dd5b28bcbda2e0619dbe7ee6c6fc30620eb2508df6cbfcf5b57cab66da5a65812aa50970510f72a45b690402325d5cb736095780ef288f5c2be85ea70a49006b94835c8bbf66445656a1f4c3f1c2ec2c89666aaace545d2b2e88de634a779b9d909b6f62e8e182d4dd843b5952fb2913bdfa6a0e824e6c3cea',
+                 'salt'       => '4b07f6938c4774751b2d794d5b18200584a0fbd1b23b62a43491f5f7aeb9e174',
+                 'shell'      => '/bin/bash',
+                 'uid'        => 502,
+               }
+    }
+  end
+  
 end
