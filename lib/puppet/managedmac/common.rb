@@ -1,13 +1,18 @@
+require 'cfpropertylist'
+
 module ManagedMacCommon
   
-  FILTERED_PAYLOAD_KEYS = ['PayloadIdentifier',
-                           'PayloadDescription',
-                           'PayloadDisplayName',
-                           'PayloadOrganization',
-                           'PayloadRemovalDisallowed',
-                           'PayloadScope',
-                           'PayloadUUID',
-                           'PayloadVersion',]
+  RECORD_TYPES             = [:users, :groups, :computers, :computergroups]
+  DSCL                     = '/usr/bin/dscl'
+  SEARCH_NODE              = '/Search'
+  FILTERED_PAYLOAD_KEYS    = ['PayloadIdentifier',
+                             'PayloadDescription',
+                             'PayloadDisplayName',
+                             'PayloadOrganization',
+                             'PayloadRemovalDisallowed',
+                             'PayloadScope',
+                             'PayloadUUID',
+                             'PayloadVersion',]
   
   # Recurse the data argument and transform it into real Ruby objects
   def self.destringify(data)
@@ -34,5 +39,25 @@ module ManagedMacCommon
     end
   end
   
+  # Search OpenDirectory
+  # - find records in OpenDirectory given type, attribute and value
+  # - returns Array of record names (not the actual records)
+  def self.dscl_find_by(record_type, attribute, value)
+    
+    unless RECORD_TYPES.member? record_type.to_sym
+      raise Puppet::Error, "not an OpenDirectory type: #{record_type}"
+    end
+    
+    if attribute.empty? or value.empty?
+      raise Puppet::Error, "Search params empty: \'#{attribute}\', \'#{value}\'"
+    end
+    
+    type = record_type.to_s.capitalize
+    cmd_args = [DSCL, SEARCH_NODE, '-search', 
+      "/#{record_type.to_s.capitalize}", attribute.to_s, value.to_s]
+    
+    dscl_result = `#{cmd_args.join(' ')}`
+    dscl_result.scan(/^\w+/)
+  end
+  
 end
-
