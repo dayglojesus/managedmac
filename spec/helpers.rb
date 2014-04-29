@@ -1,11 +1,11 @@
 module Helpers
-  
+
   def options_ntp
-    { 'servers' => ['time.apple.com', 'time1.google.com'], 
-      'max_offset' => 120, 
+    { 'servers' => ['time.apple.com', 'time1.google.com'],
+      'max_offset' => 120,
     }
   end
-  
+
   def options_activedirectory
     { 'HostName'                      => 'ad.apple.com',
       'UserName'                      => 'some_user',
@@ -30,19 +30,19 @@ module Helpers
       'ADTrustChangePassIntervalDays' => 14,
     }
   end
-  
+
   def options_softwareupdate
     { 'CatalogURL' => 'http://server.example.com:8088/catalogs.sucatlog' }
   end
-  
+
   def options_energysaver
     schedule = {
-      'RepeatingPowerOff' => { 'eventtype' => 'sleep', 'time' => 1410, 
-        'weekdays' => 127},  
-      'RepeatingPowerOn'  => { 'eventtype' => 'wakepoweron', 'time' => 480, 
+      'RepeatingPowerOff' => { 'eventtype' => 'sleep', 'time' => 1410,
+        'weekdays' => 127},
+      'RepeatingPowerOn'  => { 'eventtype' => 'wakepoweron', 'time' => 480,
         'weekdays' => 127}
     }
-    
+
     ac_power = { "Automatic Restart On Power Loss" => true,
       "Disk Sleep Timer-boolean" => true,
       "Display Sleep Timer" => 15,
@@ -58,13 +58,13 @@ module Helpers
       "Wake On LAN" => true,
       "System Sleep Timer" => 30,
     }
-    
+
     {
       'desktop'  => { 'ACPower' => ac_power, 'Schedule' => schedule },
       'portable' => { 'ACPower' => ac_power, 'BatteryPower' => battery_power }
     }
   end
-  
+
   def accounts_users
     {
       'foo' => {
@@ -79,7 +79,7 @@ module Helpers
                  'shell'      => '/bin/bash',
                  'uid'        => 501,
                },
-      
+
       'bar' => {
                  'ensure'     => 'present',
                  'comment'    => 'Created by Puppet',
@@ -94,7 +94,24 @@ module Helpers
                }
     }
   end
-  
+
+  def accounts_groups
+    {
+      'foo_group' => {
+        'gid'          => 554,
+        'users'        => ['root', 'nobody', 'daemon',],
+        'nestedgroups' => ['admin', 'staff',],
+      },
+
+      'bar_group' => {
+        'gid'          => 555,
+        'users'        => ['root', 'nobody', 'daemon',],
+        'nestedgroups' => ['admin', 'staff',],
+      },
+
+    }
+  end
+
   def mobileconfigs_payloads
     {
       'managedmac.dock.alacarte' => {
@@ -109,5 +126,5 @@ module Helpers
       }
     }
   end
-  
+
 end
