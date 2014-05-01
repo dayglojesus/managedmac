@@ -184,7 +184,7 @@ Puppet::Type.newtype(:macgroup) do
       end
 
       cmd_args = [::ManagedMacCommon::DSCL, ::ManagedMacCommon::SEARCH_NODE,
-        'read', "/groups/#{name}", 'GeneratedUID']
+        'read', "/Groups/\'#{name}\'", 'GeneratedUID']
 
       `#{cmd_args.join(' ')}`.chomp.split.last.strip
     end
