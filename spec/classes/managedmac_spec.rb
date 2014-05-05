@@ -40,6 +40,7 @@ describe 'managedmac', :type => 'class' do
       {
         :osfamily => 'Darwin',
         :macosx_productversion_major => '10.9',
+        :ntp_offset => 60,
       }
     end
 
