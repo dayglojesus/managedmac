@@ -53,4 +53,24 @@ class managedmac {
     contain managedmac::activedirectory
   }
 
+  if is_hash(hiera('managedmac::loginwindow::acl', false)) {
+
+    $loginwindow_acl   = hiera('managedmac::loginwindow::acl')
+    $loginwindow_group = 'com.apple.access_loginwindow'
+
+    managedmac::acl {'com.apple.access_loginwindow':
+      users   => $loginwindow_acl[users],
+      groups  => $loginwindow_acl[groups],
+      destroy => true,
+    }
+
+  } else {
+
+    managedmac::acl {'com.apple.access_loginwindow':
+      state   => disabled,
+      destroy => true,
+    }
+
+  }
+
 }

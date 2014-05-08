@@ -127,4 +127,8 @@ module Helpers
     }
   end
 
+  def acl_loginwindow
+    { 'users' => ['foo', 'bar'], 'groups' => ['FooGroup', 'BarGroup'] }
+  end
+
 end
