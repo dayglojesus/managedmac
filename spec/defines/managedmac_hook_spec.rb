@@ -105,7 +105,7 @@ describe "managedmac::hook" do
               'mode'   => '0750',
           })
         end
-        it { should contain_exec('activate_hook') }
+        it { should contain_exec("activate_#{type}_hook") }
       end
 
     end
@@ -122,7 +122,7 @@ describe "managedmac::hook" do
       it { should contain_file("/etc/masterhooks/#{type}hook.rb").with(
         { 'ensure' => 'absent',}) }
 
-      it { should contain_exec('deactivate_hook') }
+      it { should contain_exec("deactivate_#{type}_hook") }
 
     end
 
