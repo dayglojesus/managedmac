@@ -9,7 +9,7 @@ describe "managedmac::hook" do
     specify do
       expect {
         should compile
-      }.to raise_error(Puppet::Error, /Must pass type/)
+      }.to raise_error(Puppet::Error, /Must pass enable/)
     end
 
   end
@@ -18,7 +18,9 @@ describe "managedmac::hook" do
 
     context "when type is INVALID" do
 
-      let(:params) { {:type => 'foo' } }
+      let(:params) do
+        { :type => 'foo', :enable => true, :scripts => '/etc/loginhooks' }
+      end
 
       specify do
         expect {
@@ -30,7 +32,10 @@ describe "managedmac::hook" do
 
     context "when type is VALID" do
 
-      let(:params) { {:type => 'login' } }
+      let(:params) do
+        { :type => 'login', :enable => true, :scripts => '/etc/loginhooks' }
+      end
+
 
       specify do
         should contain_file('/etc/loginhooks').with(
@@ -70,7 +75,7 @@ describe "managedmac::hook" do
     context "when type is INVALID" do
 
       let(:params) do
-        { :type => 'foo', :enable => false }
+        { :type => 'foo', :enable => false, :scripts => '/etc/loginhooks' }
       end
 
       specify do
@@ -84,7 +89,7 @@ describe "managedmac::hook" do
     context "when type is VALID" do
 
       let(:params) do
-        { :type => 'login', :enable => false }
+        { :type => 'login', :enable => false, :scripts => '/etc/loginhooks' }
       end
 
       it { should_not contain_file('/etc/masterhooks').with(
