@@ -28,11 +28,16 @@ define managedmac::hook ($enable, $scripts) {
       mode   => '0750',
     }
 
-    file { $masterhooks:
-      ensure => directory,
-      owner  => 'root',
-      group  => 'wheel',
-      mode   => '0750',
+    # This is a conditional resource. We only define it if it's
+    # not being defined anywhere else. We do this so that loginhooks and
+    # logouthooks don't conflict of over who creates the masterhooks dir.
+    if ! defined_with_params(File[$masterhooks], {'ensure' => 'directory' }) {
+      file { $masterhooks:
+        ensure => directory,
+        owner  => 'root',
+        group  => 'wheel',
+        mode   => '0750',
+      }
     }
 
     file { $hook:
@@ -44,7 +49,7 @@ define managedmac::hook ($enable, $scripts) {
       content => template('managedmac/masterhook_template.erb')
     }
 
-    exec { 'activate_hook':
+    exec { "activate_${type}_hook":
       path    => $path,
       command => "defaults write ${prefs} ${label} ${hook}",
       unless  => "defaults read  ${prefs} ${label} | grep ${hook}",
@@ -54,7 +59,7 @@ define managedmac::hook ($enable, $scripts) {
 
     file { $hook: ensure => absent }
 
-    exec { 'deactivate_hook':
+    exec { "deactivate_${type}_hook":
       path    => $path,
       command => "defaults delete ${prefs} ${label}",
       onlyif  => "defaults read   ${prefs} ${label} | grep ${hook}",
