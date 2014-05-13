@@ -1,6 +1,14 @@
-define managedmac::hook ($enable, $type, $scripts) {
+define managedmac::hook ($enable, $scripts) {
 
-  validate_re   ($type, '^log(in|out)$')
+  # We only handle names login and logout. There are no other types of
+  # hooks and we only ever want one resource for each.
+  case $name {
+    'login':   { $type = 'login' }
+    'logout':  { $type = 'logout' }
+    default:   { fail("Parameter Error: invalid :name, ${name}. Must be one of
+      'login' OR 'logout'.") }
+  }
+
   validate_bool ($enable)
 
   $path        = ['/usr/bin', '/bin', '/usr/sbin', '/sbin', '/usr/local/bin',]
