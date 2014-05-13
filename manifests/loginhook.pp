@@ -54,7 +54,7 @@
 # Then simply, create a manifest and include the class...
 #
 #  # Example: my_manifest.pp
-#  include managedmac::loginwindow
+#  include managedmac::loginhook
 #
 # If you just wish to test the functionality of this class, you could also do
 # something along these lines:
