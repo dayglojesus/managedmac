@@ -49,6 +49,8 @@ describe 'managedmac', :type => 'class' do
         'managedmac::ntp::options' => options_ntp,
         'managedmac::activedirectory::options' => options_activedirectory,
         'managedmac::loginwindow::acl' => acl_loginwindow,
+        'managedmac::loginhook::enable' => true,
+        'managedmac::logouthook::enable' => true,
       }
     end
 
@@ -56,6 +58,8 @@ describe 'managedmac', :type => 'class' do
       it { should contain_class('managedmac::ntp') }
       it { should contain_class('managedmac::activedirectory') }
       it { should contain_managedmac__acl('com.apple.access_loginwindow') }
+      it { should contain_class('managedmac::loginhook') }
+      it { should contain_class('managedmac::logouthook') }
     end
 
     it { should compile.with_all_deps }

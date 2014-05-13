@@ -73,4 +73,12 @@ class managedmac {
 
   }
 
+  if type(hiera('managedmac::loginhook::enable')) == 'boolean' {
+    contain managedmac::loginhook
+  }
+
+  if type(hiera('managedmac::logouthook::enable')) == 'boolean' {
+    contain managedmac::logouthook
+  }
+
 }
