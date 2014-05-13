@@ -50,8 +50,7 @@ define managedmac::hook (
 
   } else {
 
-    file { $masterhooks: ensure => absent }
-    file { $hook:        ensure => absent }
+    file { $hook: ensure => absent }
 
     exec { 'deactivate_hook':
       path    => $path,
