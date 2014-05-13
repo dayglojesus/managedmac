@@ -136,12 +136,13 @@ class managedmac::energysaver ($ensure = present, $options = {}) {
     default   => 'desktop',
   }
 
+  $compiled_options = {}
+
   # Only validate required variables if we are activating the resource
   if $ensure == present {
 
     validate_hash ($options)
 
-    $compiled_options          = {}
     $mcx_prefs_domain          = 'com.apple.EnergySaver'
     $desktop_schedule_key      = "${mcx_prefs_domain}.${machine_type}.Schedule"
     $ac_power_key              = "${mcx_prefs_domain}.${machine_type}.ACPower"
