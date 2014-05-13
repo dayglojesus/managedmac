@@ -73,4 +73,8 @@ class managedmac {
 
   }
 
+  if type(hiera('managedmac::loginhook::enable')) == 'boolean' {
+    contain managedmac::loginhook
+  }
+
 }
