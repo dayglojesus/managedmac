@@ -1,10 +1,4 @@
-define managedmac::hook (
-
-  $type,
-  $enable  = true,
-  $scripts = '/etc/loginhooks',
-
-) {
+define managedmac::hook ($enable, $type, $scripts) {
 
   validate_re   ($type, '^log(in|out)$')
   validate_bool ($enable)
