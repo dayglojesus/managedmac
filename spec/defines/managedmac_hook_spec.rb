@@ -87,7 +87,7 @@ describe "managedmac::hook" do
         { :type => 'login', :enable => false }
       end
 
-      it { should contain_file('/etc/masterhooks').with(
+      it { should_not contain_file('/etc/masterhooks').with(
         { 'ensure' => 'absent',}) }
 
       it { should contain_file('/etc/masterhooks/loginhook.rb').with(
