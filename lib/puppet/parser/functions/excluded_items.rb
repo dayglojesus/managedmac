@@ -10,7 +10,7 @@ Returns a Array of properly formatted excludeItems Hashes.
     end
 
     unless args[0].is_a? Hash
-      e = "excluded_items(): Wrong arg type! (#{args.class} instead of Hash)"
+      e = "excluded_items(): Wrong arg type! (#{args[0].class} instead of Hash)"
       raise(Puppet::ParseError, e)
     end
 
