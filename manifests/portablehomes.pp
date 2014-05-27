@@ -207,10 +207,6 @@ class managedmac::portablehomes (
     validate_bool ($disableLogoutSyncCancel)
     validate_bool ($alertOnFailedMounts)
 
-    #
-    # OKAY. NOW DO SOME WORK...
-    #
-
   } else {
     unless $enable == false {
       fail("Parameter Error: invalid value for :enable, ${enable}")
@@ -237,10 +233,10 @@ class managedmac::portablehomes (
   }
 
   $homesync_payload = { 'PayloadType' => 'com.apple.homeSync',
-    'syncedFolders-managed'                => $syncedFolders,
-    'syncedPrefFolders-managed'            => $syncedPrefFolders,
-    'excludedItems'                        => $excludedItems,
-    'excludedPrefItems'                    => $excludedPrefItems,
+    'syncedFolders-managed'                => synced_folders($syncedFolders),
+    'syncedPrefFolders-managed'            => synced_folders($syncedPrefFolders),
+    'excludedItems'                        => excluded_items($excludedItems),
+    'excludedPrefItems'                    => excluded_items($excludedPrefItems),
     'warnOnCreateAllowNever'               => $warnOnCreateAllowNever,
     'createAtLogin'                        => $createAtLogin,
     'createPHDAtLogin'                     => $createPHDAtLogin,
