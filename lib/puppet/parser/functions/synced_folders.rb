@@ -10,7 +10,7 @@ Returns a Array of properly formatted syncedFolder Hashes.
     end
 
     unless args[0].is_a? Array
-      e = "excluded_items(): Wrong arg type! (#{args.class} instead of Array)"
+      e = "excluded_items(): Wrong arg type! (#{args[0].class} instead of Array)"
       raise(Puppet::ParseError, e)
     end
 
