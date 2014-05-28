@@ -129,7 +129,7 @@ class managedmac::filevault (
   }
 
   mobileconfig { 'managedmac.filevault.alacarte':
-    ensure       => $enable ? {
+    ensure => $enable ? {
       true     => 'present',
       default  => 'absent',
     },
