@@ -145,4 +145,11 @@ class managedmac::filevault (
     organization => 'Simon Fraser University',
   }
 
+  if ($enable == false) and ($::filevault_active == true) and ($remove_fde == true)  {
+    exec { 'decrypt_the_disk':
+      command => '/usr/bin/fdesetup disable',
+      returns => [0,1],
+    }
+  }
+
 }
