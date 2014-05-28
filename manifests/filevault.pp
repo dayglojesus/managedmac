@@ -45,6 +45,13 @@
 #   Type: Boolean
 #   Default: true
 #
+# [*keychain_file*]
+#   --> An absolute path or puppet:/// style URI from whence to gather an FVMI.
+#   It will install and manage /Library/Keychains/FileVaultMaster.keychain.
+#   Only works when $use_keychain is true.
+#   Type: String
+#   Default: empty
+#
 # [*destroy_fv_key_on_standby*]
 #   --> Prevent saving the key across standby modes.
 #   Type: Boolean
@@ -105,6 +112,7 @@ class managedmac::filevault (
   $show_recovery_key          = false,
   $output_path                = '/private/var/root/fdesetup_output.plist',
   $use_keychain               = false,
+  $keychain_file              = '',
   $destroy_fv_key_on_standby  = false,
   $dont_allow_fde_disable     = false,
   $remove_fde                 = false,
@@ -119,6 +127,26 @@ class managedmac::filevault (
   validate_bool ($destroy_fv_key_on_standby)
   validate_bool ($dont_allow_fde_disable)
   validate_absolute_path ($output_path)
+
+  if $use_keychain == true {
+
+    if $keychain_file =~ /^puppet:/ {
+      validate_re ($keychain_file,
+        'puppet:(\/{3}(\w+\/)+\w+|\/{2}(\w+\.)+(\w+\/)+\w+)')
+    } else {
+      validate_absolute_path ($keychain_file)
+    }
+
+    file { 'filevault_master_keychain':
+      ensure => file,
+      owner  => root,
+      group  => wheel,
+      mode   => 0644,
+      path   => '/Library/Keychains/FileVaultMaster.keychain',
+      source => "${keychain_file}";
+    }
+
+  }
 
   $filevault_payload = { 'PayloadType' => 'com.apple.MCX.FileVault2',
     'Enable'          => 'On',
