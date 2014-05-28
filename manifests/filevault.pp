@@ -118,6 +118,7 @@ class managedmac::filevault (
   }
 
   $filevault_payload = { 'PayloadType' => 'com.apple.MCX.FileVault2',
+    'Enable'          => 'On',
     'Defer'           => $defer,
     'UseRecoveryKey'  => $use_recovery_key,
     'ShowRecoveryKey' => $show_recovery_key,
