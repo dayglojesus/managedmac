@@ -106,16 +106,13 @@ class managedmac::filevault (
 ){
 
   validate_bool ($enable)
-
-  if $enable == true {
-
-    validate_bool ($defer)
-    validate_bool ($use_recovery_key)
-    validate_bool ($show_recovery_key)
-    validate_bool ($use_keychain)
-    validate_absolute_path ($output_path)
-
-  }
+  validate_bool ($defer)
+  validate_bool ($use_recovery_key)
+  validate_bool ($show_recovery_key)
+  validate_bool ($use_keychain)
+  validate_bool ($destroy_fv_key_on_standby)
+  validate_bool ($dont_allow_fde_disable)
+  validate_absolute_path ($output_path)
 
   $filevault_payload = { 'PayloadType' => 'com.apple.MCX.FileVault2',
     'Enable'          => 'On',
