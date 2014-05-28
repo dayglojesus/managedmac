@@ -55,6 +55,11 @@
 #   Type: Boolean
 #   Default: false
 #
+# [*remove_fde*]
+#   --> Removes FDE if $enable is false and the disk is encrypted.
+#   Type: Boolean
+#   Default: false
+#
 # === Variables
 #
 # Not applicable
@@ -102,6 +107,7 @@ class managedmac::filevault (
   $use_keychain               = false,
   $destroy_fv_key_on_standby  = false,
   $dont_allow_fde_disable     = false,
+  $remove_fde                 = false,
 
 ){
 
