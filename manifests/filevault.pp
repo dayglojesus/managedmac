@@ -148,6 +148,8 @@ class managedmac::filevault (
 
   }
 
+  $systempolicy_payload = { 'PayloadType' => 'com.apple.systempolicy.managed' }
+
   $filevault_payload = { 'PayloadType' => 'com.apple.MCX.FileVault2',
     'Enable'          => 'On',
     'Defer'           => $defer,
@@ -167,7 +169,7 @@ class managedmac::filevault (
       true     => 'present',
       default  => 'absent',
     },
-    content      => [$mcx_payload, $filevault_payload],
+    content      => [$systempolicy_payload, $mcx_payload, $filevault_payload],
     displayname  => 'Managed Mac: FileVault 2',
     description  => 'FileVault 2 configuration. Installed by Puppet.',
     organization => 'Simon Fraser University',
