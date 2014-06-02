@@ -114,13 +114,13 @@ class managedmac::security (
   validate_bool ($dont_allow_lock_message_ui)
   validate_bool ($dont_allow_password_reset_ui)
 
-  $systempolicy_control_payload = {
+  $systempolicy_managed_payload = {
     'PayloadType'     => 'com.apple.systempolicy.managed',
     'DisableOverride' => $gatekeeper_disable_override,
   }
 
-  $systempolicy_managed_payload = {
-    'PayloadType'               => 'com.apple.systempolicy.managed',
+  $systempolicy_control_payload = {
+    'PayloadType'               => 'com.apple.systempolicy.control',
     'AllowIdentifiedDevelopers' => $gatekeeper_allow_identified_developers,
     'EnableAssessment'          => $gatekeeper_enable_assessment,
   }
@@ -143,8 +143,8 @@ class managedmac::security (
     'askForPasswordDelay' => $ask_for_password_delay,
   }
 
-  $content = [ $systempolicy_control_payload,
-    $systempolicy_managed_payload,
+  $content = [ $systempolicy_managed_payload,
+    $systempolicy_control_payload,
     $preference_payload,
     $loginwindow_payload,
     $screensaver_payload,
