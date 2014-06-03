@@ -131,16 +131,10 @@ class managedmac::security (
     'com.apple.login.mcx.DisableAutoLoginClient' => $disable_autologin,
   }
 
-  $screensaver_payload = {
-    'PayloadType'         => 'com.apple.screensaver',
-    'askForPassword'      => $ask_for_password,
-    'askForPasswordDelay' => $ask_for_password_delay,
-  }
-
   $an_empty_hash = {}
 
   #######################################################################
-  # Handle Security Preferences
+  # Handle Security Preferences Payload
   # - if these keys exist in the Payload, the UI gets locked regardless
   # of value. To fix this, we only add the keys to the Payload if the
   # value of the options are true.
@@ -159,6 +153,25 @@ class managedmac::security (
     {'PayloadType' => 'com.apple.preference.security'},
     $security_preference_01,
     $security_preference_02
+  )
+
+  #######################################################################
+  # Handle Screensaver and Sleep Security Payload
+  # - fix the same behaviour as the com.apple.preference.security
+  #######################################################################
+
+  $screensaver_option_01 = $ask_for_password ? {
+    true    => hash(['askForPassword', $ask_for_password]),
+    default => $an_empty_hash
+  }
+  $screensaver_option_02 = $ask_for_password_delay ? {
+    true    => hash(['askForPasswordDelay', $ask_for_password_delay]),
+    default => $an_empty_hash
+  }
+  $screensaver_payload = merge(
+    {'PayloadType' => 'com.apple.screensaver'},
+    $screensaver_option_01,
+    $screensaver_option_02
   )
 
   #######################################################################
