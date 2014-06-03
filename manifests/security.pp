@@ -125,12 +125,6 @@ class managedmac::security (
     'EnableAssessment'          => $gatekeeper_enable_assessment,
   }
 
-  $preference_payload = {
-    'PayloadType'               => 'com.apple.preference.security',
-    'dontAllowLockMessageUI'    => $dont_allow_lock_message_ui,
-    'dontAllowPasswordResetUI'  => $dont_allow_password_reset_ui,
-  }
-
   $loginwindow_payload = {
     'PayloadType'                                => 'com.apple.loginwindow',
     'ChangePasswordDisabled'                     => $dont_allow_password_reset_ui,
@@ -143,12 +137,44 @@ class managedmac::security (
     'askForPasswordDelay' => $ask_for_password_delay,
   }
 
+  $an_empty_hash = {}
+
+  #######################################################################
+  # Handle Security Preferences
+  # - if these keys exist in the Payload, the UI gets locked regardless
+  # of value. To fix this, we only add the keys to the Payload if the
+  # value of the options are true.
+  # - this is an Apple bug
+  #######################################################################
+
+  $security_preference_01 = $dont_allow_lock_message_ui ? {
+    true    => hash('dontAllowLockMessageUI', $dont_allow_lock_message_ui),
+    default => $an_empty_hash,
+  }
+  $security_preference_02 = $dont_allow_password_reset_ui ? {
+    true    => hash(['dontAllowPasswordResetUI', $dont_allow_password_reset_ui]),
+    default => $an_empty_hash,
+  }
+  $security_preference_payload = merge(
+    {'PayloadType' => 'com.apple.preference.security'},
+    $security_preference_01,
+    $security_preference_02
+  )
+
+  #######################################################################
+  # Compile the content Array
+  #######################################################################
+
   $content = [ $systempolicy_managed_payload,
     $systempolicy_control_payload,
-    $preference_payload,
     $loginwindow_payload,
     $screensaver_payload,
+    $security_preference_payload,
   ]
+
+  #######################################################################
+  # All this for a single resource
+  #######################################################################
 
   mobileconfig { 'managedmac.security.alacarte':
     ensure => $enable ? {
