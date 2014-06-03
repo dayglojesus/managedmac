@@ -2,19 +2,7 @@ require 'spec_helper'
 
 describe 'managedmac::security', :type => 'class' do
 
-  context "when $enable == true" do
-    let(:params) do
-      { :enable => true }
-    end
-    it do
-      should contain_mobileconfig('managedmac.security.alacarte').with_ensure('present')
-    end
-  end
-
-  context "when $enable == false" do
-    let(:params) do
-      { :enable => false }
-    end
+  context "when none of the params is set" do
     it do
       should contain_mobileconfig('managedmac.security.alacarte').with_ensure('absent')
     end
@@ -22,12 +10,21 @@ describe 'managedmac::security', :type => 'class' do
 
   context "when passed a BAD param" do
     let(:params) do
-      { :enable => true, :ask_for_password => 'a string', }
+      { :ask_for_password => 'a string', }
     end
     specify do
       expect {
         should compile
       }.to raise_error(Puppet::Error, /not a boolean/)
+    end
+  end
+
+  context "when one of the params is set" do
+    let(:params) do
+      { :ask_for_password => true }
+    end
+    it do
+      should contain_mobileconfig('managedmac.security.alacarte').with_ensure('present')
     end
   end
 
