@@ -167,7 +167,7 @@ class managedmac::security (
   #######################################################################
 
   $systempolicy_managed_01 = $gatekeeper_disable_override ? {
-    /true|false/ => hash('DisableOverride', $gatekeeper_disable_override),
+    /true|false/ => hash(['DisableOverride', $gatekeeper_disable_override]),
     default      => $an_empty_hash,
   }
   $systempolicy_managed_payload = merge(
@@ -180,11 +180,11 @@ class managedmac::security (
   #######################################################################
 
   $systempolicy_control_01 = $gatekeeper_allow_identified_developers ? {
-    /true|false/ => hash('AllowIdentifiedDevelopers', $gatekeeper_allow_identified_developers),
+    /true|false/ => hash(['AllowIdentifiedDevelopers', $gatekeeper_allow_identified_developers]),
     default      => $an_empty_hash,
   }
   $systempolicy_control_02 = $gatekeeper_enable_assessment ? {
-    /true|false/ => hash('AllowIdentifiedDevelopers', $gatekeeper_enable_assessment),
+    /true|false/ => hash(['AllowIdentifiedDevelopers', $gatekeeper_enable_assessment]),
     default      => $an_empty_hash,
   }
   $systempolicy_control_payload = merge(
@@ -198,11 +198,11 @@ class managedmac::security (
   #######################################################################
 
   $loginwindow_01 = $dont_allow_password_reset_ui ? {
-    /true|false/ => hash('ChangePasswordDisabled', $dont_allow_password_reset_ui),
+    /true|false/ => hash(['ChangePasswordDisabled', $dont_allow_password_reset_ui]),
     default      => $an_empty_hash,
   }
   $loginwindow_02 = $disable_autologin ? {
-    /true|false/ => hash('com.apple.login.mcx.DisableAutoLoginClient', $disable_autologin),
+    /true|false/ => hash(['com.apple.login.mcx.DisableAutoLoginClient', $disable_autologin]),
     default      => $an_empty_hash,
   }
   $loginwindow_payload = merge(
@@ -216,7 +216,7 @@ class managedmac::security (
   #######################################################################
 
   $security_preference_01 = $dont_allow_lock_message_ui ? {
-    /true|false/ => hash('dontAllowLockMessageUI', $dont_allow_lock_message_ui),
+    /true|false/ => hash(['dontAllowLockMessageUI', $dont_allow_lock_message_ui]),
     default      => $an_empty_hash,
   }
   $security_preference_02 = $dont_allow_password_reset_ui ? {
