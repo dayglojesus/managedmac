@@ -8,7 +8,7 @@ Puppet::Type.newtype(:remotemanagement) do
         'daphne' => -2147483646, 'velma' => -1073741822 },
     }
 
-    === EXAMPLE USER PRIVILEDGE SETTINGS ===
+    === EXAMPLE USER PRIVILEGE SETTINGS ===
     Bit map for naprivs
     -------------------
     64 Bit Hex Int Bit Decimal Checkbox Item
@@ -99,8 +99,17 @@ Puppet::Type.newtype(:remotemanagement) do
     defaultto false
   end
 
-  newproperty(:allowed_dir_groups) do
-    desc "A hash specifying which directory groups are allowed."
+  newproperty(:allowed_dir_groups, :array_matching => :all) do
+    desc "A list of directory groups allowed to access to the service."
+
+    def insync?(is)
+      if is == :absent
+        [] == should
+      else
+        is.sort == should.sort
+      end
+    end
+
     defaultto { return Array.new }
   end
 
