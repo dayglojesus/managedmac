@@ -1,12 +1,11 @@
 Puppet::Type.newtype(:remotemanagement) do
   @doc = %q{Manage Mac OS X Apple Remote Desktop client settings.
     x_remotemanagement { 'apple_remote_desktop':
-      vnc         => 'enable',
-      vncpass     => 'foobar',
-      menuextra   => 'disabled',
-      dirlogins   => 'enabled',
-      users       => {'fred' => -1073741569, 'daphne' => -2147483646, 'velma' => -1073741822 },
-      ensure      => 'running',
+      ensure            => 'running',
+      allow_all_users   => false,
+      enable_menu_extra => false,
+      users             => {'fred' => -1073741569, 
+        'daphne' => -2147483646, 'velma' => -1073741822 },
     }
 
     === EXAMPLE USER PRIVILEDGE SETTINGS ===
@@ -28,12 +27,6 @@ Puppet::Type.newtype(:remotemanagement) do
     FFFFFFFFC00000FF -1073741569 all enabled
     }
 
-  def munge_integer(value)
-    Integer(value)
-  rescue ArgumentError
-    fail("munge_integer only takes integers")
-  end
-
   def munge_boolean(value)
     case value
     when true, "true", :true
@@ -45,11 +38,7 @@ Puppet::Type.newtype(:remotemanagement) do
     end
   end
 
-
-  # Handle whether the service should actually be running right now.
-  newproperty(:ensure) do
-    desc "Whether a service should be running."
-
+  ensurable do
     newvalue(:stopped, :event => :service_stopped) do
       provider.stop
     end
@@ -60,15 +49,6 @@ Puppet::Type.newtype(:remotemanagement) do
 
     def retrieve
       provider.running? ? :running : :stopped
-    end
-
-    def sync
-      event = super()
-      if property = @resource.property(:enable)
-        val = property.retrieve
-        property.sync unless property.safe_insync?(val)
-      end
-      event
     end
   end
 
@@ -95,8 +75,6 @@ Puppet::Type.newtype(:remotemanagement) do
     munge do |value|
       value.to_s
     end
-
-    defaultto '-2147483648'
   end
 
   newproperty(:enable_menu_extra) do
@@ -107,7 +85,7 @@ Puppet::Type.newtype(:remotemanagement) do
     end
 
     newvalues(true, false)
-    defaultto true
+    defaultto false
   end
 
   newproperty(:enable_dir_logins) do
@@ -123,7 +101,7 @@ Puppet::Type.newtype(:remotemanagement) do
 
   newproperty(:allowed_dir_groups) do
     desc "A hash specifying which directory groups are allowed."
-    defaultto {}
+    defaultto { return Array.new }
   end
 
   newproperty(:enable_legacy_vnc) do
@@ -175,7 +153,7 @@ Puppet::Type.newtype(:remotemanagement) do
       end
     end
 
-    defaultto {}
+    defaultto { return Hash.new }
   end
 
   newparam(:strict) do
@@ -187,7 +165,7 @@ Puppet::Type.newtype(:remotemanagement) do
     end
 
     newvalues(true, false)
-    defaultto false
+    defaultto true
   end
 
 end
