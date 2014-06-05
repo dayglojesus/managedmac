@@ -170,6 +170,7 @@ Puppet::Type.type(:remotemanagement).provide(:default) do
   end
 
   def service_activate
+    info("Starting Apple Remote Desktop...")
     begin
       kickstart "-activate"
     rescue Puppet::ExecutionFailure
@@ -231,7 +232,7 @@ Puppet::Type.type(:remotemanagement).provide(:default) do
   def flush
     write_preferences
     configure_access
-    if @property_flush[:ensure] == :stopped
+    if resource[:ensure] == :stopped
       service_deactivate
     else
       service_activate
