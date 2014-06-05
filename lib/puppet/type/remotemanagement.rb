@@ -28,8 +28,6 @@ Puppet::Type.newtype(:remotemanagement) do
     FFFFFFFFC00000FF -1073741569 all enabled
     }
 
-  # ensurable
-  
   def munge_integer(value)
     Integer(value)
   rescue ArgumentError
@@ -46,24 +44,24 @@ Puppet::Type.newtype(:remotemanagement) do
       fail("munge_boolean only takes booleans")
     end
   end
-  
-  
+
+
   # Handle whether the service should actually be running right now.
   newproperty(:ensure) do
     desc "Whether a service should be running."
-  
+
     newvalue(:stopped, :event => :service_stopped) do
       provider.stop
     end
-  
+
     newvalue(:running, :event => :service_started) do
       provider.start
     end
-  
+
     def retrieve
       provider.running? ? :running : :stopped
     end
-  
+
     def sync
       event = super()
       if property = @resource.property(:enable)
@@ -82,43 +80,43 @@ Puppet::Type.newtype(:remotemanagement) do
 
   newproperty(:allow_all_users) do
     desc "Whether to enable ARD access for ALL local users of the machine."
-    
+
     munge do |value|
       @resource.munge_boolean(value)
     end
-    
+
     newvalues(true, false)
     defaultto false
   end
 
   newproperty(:all_users_privs) do
     desc "The privleges to use when the :allow_all_users bool is set to true."
-    
+
     munge do |value|
       value.to_s
     end
-    
+
     defaultto '-2147483648'
   end
 
   newproperty(:enable_menu_extra) do
     desc "Enable or disable the ARD menu extra in the user's task bar."
-    
+
     munge do |value|
       @resource.munge_boolean(value)
     end
-    
+
     newvalues(true, false)
     defaultto true
   end
 
   newproperty(:enable_dir_logins) do
     desc "Allow the special directory groups to be used."
-    
+
     munge do |value|
       @resource.munge_boolean(value)
     end
-    
+
     newvalues(true, false)
     defaultto false
   end
@@ -130,11 +128,11 @@ Puppet::Type.newtype(:remotemanagement) do
 
   newproperty(:enable_legacy_vnc) do
     desc "Enable or disable legacy VNC support. Just a bad idea all around."
-    
+
     munge do |value|
       @resource.munge_boolean(value)
     end
-    
+
     newvalues(true, false)
     defaultto false
   end
@@ -146,39 +144,48 @@ Puppet::Type.newtype(:remotemanagement) do
 
   newproperty(:allow_vnc_requests) do
     desc "Allow VNC guests to request permission?"
-    
+
     munge do |value|
       @resource.munge_boolean(value)
     end
-    
+
     newvalues(true, false)
     defaultto false
   end
 
   newproperty(:allow_wbem_requests) do
     desc "Allow incoming WBEM requests over IP."
-    
+
     munge do |value|
       @resource.munge_boolean(value)
     end
-    
+
     newvalues(true, false)
     defaultto false
   end
 
   newproperty(:users) do
     desc "A hash containing a username to privilege mapping."
+
+    def insync?(is)
+      if @resource[:strict]
+        is == should
+      else
+        is.merge(should) == is
+      end
+    end
+
     defaultto {}
   end
 
-  newparam(:autocratic) do
+  newparam(:strict) do
     desc "Setting this to true will explicitly define which users are permitted RemoteManagement privs. This
           means that any account not defined in the :users hash will have their privs revoked if present."
-          
+
     munge do |value|
       @resource.munge_boolean(value)
     end
-    
+
     newvalues(true, false)
     defaultto false
   end
