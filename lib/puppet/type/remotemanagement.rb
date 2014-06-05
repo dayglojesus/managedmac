@@ -116,7 +116,7 @@ Puppet::Type.newtype(:remotemanagement) do
   end
 
   newproperty(:vnc_password) do
-    desc "The password use for VNC, stored as plain text!
+    desc "The password used for VNC, stored as plain text!
     Thinking this is not a good idea? Yeah, me too. Don't use it."
   end
 
