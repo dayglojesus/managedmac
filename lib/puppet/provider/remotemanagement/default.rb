@@ -1,6 +1,6 @@
-require 'pry'
 require 'fileutils'
 require 'cfpropertylist'
+require 'puppet/managedmac/common'
 
 Puppet::Type.type(:remotemanagement).provide(:default) do
   desc "Abstracts the Mac OS X kickstart command, allowing management of the Apple Remote Desktop features."
@@ -8,8 +8,8 @@ Puppet::Type.type(:remotemanagement).provide(:default) do
   commands    :kickstart => '/System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart'
   commands    :nc        => '/usr/bin/nc'
   commands    :dscl      => '/usr/bin/dscl'
-  commands    :ps        => '/usr/bin/dscl'
-  
+  commands    :ps        => '/bin/ps'
+
   confine     :operatingsystem => :darwin
   defaultfor  :operatingsystem => :darwin
   has_feature :enableable
@@ -52,14 +52,14 @@ Puppet::Type.type(:remotemanagement).provide(:default) do
     # Try and determine if Apple Remote Desktop is already activated
     def service_active?
       # Is the VNC port open?
-      unless nc('-z', 'localhost', '5900', '> /dev/null')
+      unless system("nc -z localhost 5900 > /dev/null")
         info("VNC port not open...")
         return false
       end
 
       # Is the Remote Management port open?
-      unless nc('-u', '-z', 'localhost', '3283', '> /dev/null')
-        info("Remote Management port not open...")
+      unless system("nc -u -z localhost 3283 > /dev/null")
+        info("VNC port not open...")
         return false
       end
 
@@ -67,7 +67,7 @@ Puppet::Type.type(:remotemanagement).provide(:default) do
       return false unless File.exists? '/private/etc/RemoteManagement.launchd'
 
       # Is the ARDAgent running?
-      unless ps('axc', '| grep ARDAgent', '> /dev/null')
+      unless system("ps axc | grep ARDAgent > /dev/null")
         info("ARD agent not running...")
         return false
       end
@@ -101,9 +101,24 @@ Puppet::Type.type(:remotemanagement).provide(:default) do
     end
 
     def read_plist(path)
+      return {} unless File.exists? path
       plist = CFPropertyList::List.new(:file => path)
       return {} unless plist
       CFPropertyList.native_types(plist.value)
+    end
+
+    def write_plist(path, content, format)
+      f = case format
+      when :xml
+        CFPropertyList::List::FORMAT_XML
+      when :binary
+        CFPropertyList::List::FORMAT_BINARY
+      else
+        raise Puppet::Error, "Bad Format: #{format}"
+      end
+      plist = CFPropertyList::List.new
+      plist.value = CFPropertyList.guess(content)
+      plist.save(path, f, {:formatted => true})
     end
 
   end
@@ -121,12 +136,15 @@ Puppet::Type.type(:remotemanagement).provide(:default) do
   def start
     @property_flush[:ensure] = :running
   end
-  
+
   def stop
     @property_flush[:ensure] = :stopped
   end
-  
+
   def vnc_password=(value)
+    if value.nil? or value.empty?
+      FileUtils.rm VNC_PASSWORD_FILE
+    end
     seed = self.class.convert_to_hex VNC_SEED
     pass = value.unpack('C*')
     result = seed.inject('') do |memo,byte|
@@ -141,20 +159,86 @@ Puppet::Type.type(:remotemanagement).provide(:default) do
       end
     end
   end
-  
+
+  def service_deactivate
+    info("Stopping Apple Remote Desktop...")
+    begin
+      kickstart "-deactivate", "-stop"
+    rescue Puppet::ExecutionFailure
+      raise Puppet::Error, "Unable to stop Apple Remote Desktop!"
+    end
+  end
+
+  def service_activate
+    begin
+      kickstart "-activate"
+    rescue Puppet::ExecutionFailure
+      raise raise Puppet::Error, "Unable to start Apple Remote Desktop!"
+    end
+  end
+
+  def validate_user(name)
+    result = ::ManagedMacCommon::dscl_find_by(:users, 'name', name)
+    unless result.respond_to? :first
+      raise Puppet::Error,
+         "An unknown error occured while searching: #{result}"
+    end
+    if result.empty?
+      Puppet::Util::Warnings.warnonce(
+        "#{self.class}: User not found: \'#{name}\'")
+      return false
+    end
+    true
+  end
+
+  def configure_access
+    info("Configuring Apple Remote Desktop access...")
+    assigned_users = resource[:users].inject({}) do |memo,(k,v)|
+      if validate_user(k)
+        memo[k] = v
+      else
+        warn("Skipping user \'#{k}\'. User account does not exist.")
+      end
+      memo
+    end
+    existing_users = self.class.get_all_ard_users
+    combined_users = existing_users.merge(assigned_users)
+    combined_users.each do |user,priv|
+      if assigned_users.key?(user)
+        dscl('.', 'create', "/Users/#{user}", 'naprivs', priv)
+      elsif resource[:strict]
+        dscl('.', 'delete', "/Users/#{user}", 'naprivs')
+      else
+        info("Strict mode is off. User \'#{user}\' naprivs retained.")
+      end
+    end
+  end
+
+  def write_preferences
+    prefs = {
+      'ARD_AllLocalUsers'             => resource[:allow_all_users],
+      'ARD_AllLocalUsersPrivs'        => resource[:all_users_privs],
+      'LoadRemoteManagementMenuExtra' => resource[:enable_menu_extra],
+      'DirectoryGroupLoginsEnabled'   => resource[:enable_dir_logins],
+      'DirectoryGroupList'            => resource[:allowed_dir_groups],
+      'VNCLegacyConnectionsEnabled'   => resource[:enable_legacy_vnc],
+      'ScreenSharingReqPermEnabled'   => resource[:allow_vnc_requests],
+      'WBEMIncomingAccessEnabled'     => resource[:allow_wbem_requests],
+    }.delete_if { |k,v| v.nil? }
+    self.class.write_plist(ARD_PREFERENCES, prefs, :xml)
+  end
+
   def flush
-    binding.pry
+    write_preferences
+    configure_access
     if @property_flush[:ensure] == :stopped
-      # stop the service
+      service_deactivate
     else
-      # set_content
-      # set_owner
-      # set_group
-      # set_mode
+      service_activate
     end
     # Collect the resources again once they've been changed (that way `puppet
     # resource` will show the correct values after changes have been made).
     @property_hash = self.class.get_service_properties
   end
-  
+
 end
