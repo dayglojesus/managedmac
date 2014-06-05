@@ -145,6 +145,10 @@ Puppet::Type.newtype(:remotemanagement) do
   newproperty(:users) do
     desc "A hash containing a username to privilege mapping."
 
+    munge do |value|
+      value.inject({}) { |m,(k,v)| m[k.to_s] = v.to_s;m }
+    end
+
     def insync?(is)
       if @resource[:strict]
         is == should
