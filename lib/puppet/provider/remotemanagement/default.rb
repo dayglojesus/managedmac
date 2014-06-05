@@ -40,7 +40,7 @@ Puppet::Type.type(:remotemanagement).provide(:default) do
         :all_users_privs       => prefs['ARD_AllLocalUsersPrivs'],
         :enable_menu_extra     => prefs['LoadRemoteManagementMenuExtra'],
         :enable_dir_logins     => prefs['DirectoryGroupLoginsEnabled'],
-        :allowed_dir_groups    => prefs['DirectoryGroupList'],
+        :allowed_dir_groups    => (prefs['DirectoryGroupList'] || '').split(','),
         :enable_legacy_vnc     => prefs['VNCLegacyConnectionsEnabled'],
         :vnc_password          => read_vnc_password(VNC_PASSWORD_FILE),
         :allow_vnc_requests    => prefs['ScreenSharingReqPermEnabled'],
@@ -221,7 +221,7 @@ Puppet::Type.type(:remotemanagement).provide(:default) do
       'ARD_AllLocalUsersPrivs'        => resource[:all_users_privs],
       'LoadRemoteManagementMenuExtra' => resource[:enable_menu_extra],
       'DirectoryGroupLoginsEnabled'   => resource[:enable_dir_logins],
-      'DirectoryGroupList'            => resource[:allowed_dir_groups],
+      'DirectoryGroupList'            => resource[:allowed_dir_groups].join(','),
       'VNCLegacyConnectionsEnabled'   => resource[:enable_legacy_vnc],
       'ScreenSharingReqPermEnabled'   => resource[:allow_vnc_requests],
       'WBEMIncomingAccessEnabled'     => resource[:allow_wbem_requests],
@@ -233,9 +233,9 @@ Puppet::Type.type(:remotemanagement).provide(:default) do
     write_preferences
     configure_access
     if resource[:ensure] == :stopped
-      service_deactivate
+      service_deactivate if running?
     else
-      service_activate
+      service_activate unless running?
     end
     # Collect the resources again once they've been changed (that way `puppet
     # resource` will show the correct values after changes have been made).
