@@ -131,4 +131,14 @@ module Helpers
     { 'users' => ['foo', 'bar'], 'groups' => ['FooGroup', 'BarGroup'] }
   end
 
+  def content_propertylists
+    {
+      '/path/to/a/file.plist' => {
+        'content' => ['A string', { 'a_hash_key' => 1 }, 42],
+      },
+      '/path/to/b/file.plist' => {
+        'content' => [{ 0 => 1 }, ['foo', 'bar', 'baz'], 99],
+      },
+    }
+  end
 end
