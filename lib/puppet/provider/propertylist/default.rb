@@ -35,7 +35,7 @@ Puppet::Type.type(:propertylist).provide(:default) do
       stat    = File.stat path
       content = read_plist path
       {
-        :path     => path,
+        :name     => path,
         :format   => format,
         :ensure   => :present,
         :owner    => Etc.getpwuid(stat.uid).name,
