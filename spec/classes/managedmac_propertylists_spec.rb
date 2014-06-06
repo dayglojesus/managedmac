@@ -6,9 +6,9 @@ describe "managedmac::propertylists", :type => 'class' do
     specify { expect { should compile }.to raise_error(Puppet::Error) }
   end
 
-  context "when $propertylists is invalid" do
+  context "when $files is invalid" do
     let(:params) do
-      { :propertylists => 'This is not a Hash.' }
+      { :files => 'This is not a Hash.' }
     end
     specify { expect { should compile }.to raise_error(Puppet::Error) }
   end
@@ -16,7 +16,7 @@ describe "managedmac::propertylists", :type => 'class' do
   context "when $defaults is invalid" do
     let(:params) do
       {
-        :propertylists => { :fake => 'data' },
+        :files => { :fake => 'data' },
         :defaults => 'This is not a Hash.',
       }
     end
@@ -25,7 +25,7 @@ describe "managedmac::propertylists", :type => 'class' do
 
   context "when $payloads is empty" do
     let(:params) do
-      { :propertylists => {} }
+      { :files => {} }
     end
     specify { expect { should compile }.to raise_error(Puppet::Error) }
   end
@@ -33,7 +33,7 @@ describe "managedmac::propertylists", :type => 'class' do
   context "when $payloads contains invalid data" do
     let(:params) do
       the_data = content_propertylists.merge({ 'bad_data' => 'Not a Hash.'})
-      { :propertylists => the_data }
+      { :files => the_data }
     end
     specify { expect { should compile }.to raise_error(Puppet::Error) }
   end
@@ -42,7 +42,7 @@ describe "managedmac::propertylists", :type => 'class' do
     let(:params) do
       {
         :defaults => { 'owner' => 'root', 'group' => 'admin' },
-        :propertylists => content_propertylists,
+        :files => content_propertylists,
       }
     end
     specify do
