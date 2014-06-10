@@ -1,17 +1,10 @@
-# == Class: managedmac::softwareupdate
+# == Class: managedmac::mounts
 #
-# Uses Mobileconfig type to define Login Items in a profile.
+# Uses Mobileconfig type to define drives to map at login time.
 #
 # === Parameters
 #
 # There are 2 parameters.
-#
-# [*filesandfolders*]
-#   A list of absolute paths to files, folder or Apps to automatically open at
-#   login time. Profile variables liek %short_name% do not appear to work in
-#   this context.
-#   Type: Array
-#   Default: empty
 #
 # [*urls*]
 #   A list of network mount URIs you wish to open at login. OS X Finder will
@@ -29,17 +22,14 @@
 #
 #  # Example: defaults.yaml
 #  ---
-#  managedmac::loginitems::filesandfolders:
-#    - /Applications/Chess.app
-#    - /Users/Shared
-#  managedmac::loginitems::urls:
+#  managedmac::mounts::urls:
 #    - 'https://some.dav.com/web/personal/%short_name%'
 #    - 'smb://some.windows.com/%short_name%'
 #
 # Then simply, create a manifest and include the class...
 #
 #  # Example: my_manifest.pp
-#  include managedmac::loginitems
+#  include managedmac::mounts
 #
 # If you just wish to test the functionality of this class, you could also do
 # something along these lines:
@@ -47,7 +37,7 @@
 #  # Create an URLs Array
 #  $urls = ['afp://some.server.com/some/volume']
 #
-#  class { 'managedmac::loginitems':
+#  class { 'managedmac::mounts':
 #    urls => $urls,
 #  }
 #
@@ -59,17 +49,11 @@
 #
 # Copyright 2014 Simon Fraser University, unless otherwise noted.
 #
-class managedmac::loginitems (
+class managedmac::mounts ($urls = []) {
 
-  $filesandfolders = [],
-  $urls            = [],
-
-) {
-
-  validate_array ($filesandfolders)
   validate_array ($urls)
 
-  $params_are_set = empty($filesandfolders) and empty($urls)
+  $params_are_set = empty($urls)
 
   # Only validate required variables if we are activating the resource
   $ensure = $params_are_set ? {
@@ -77,12 +61,12 @@ class managedmac::loginitems (
     default => present,
   }
 
-  $compiled_options = process_loginitems($filesandfolders, $urls)
+  $compiled_options = process_mounts($urls)
 
-  mobileconfig { 'managedmac.loginitems.alacarte':
+  mobileconfig { 'managedmac.mounts.alacarte':
     ensure       => $ensure,
-    displayname  => 'Managed Mac: Login Items',
-    description  => 'Login Items. Installed by Puppet.',
+    displayname  => 'Managed Mac: Mounts',
+    description  => 'Mounts. Installed by Puppet.',
     organization => 'Simon Fraser University',
     content      => [$compiled_options],
   }
