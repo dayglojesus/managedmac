@@ -1,3 +1,4 @@
+require 'pry'
 require 'cfpropertylist'
 module Puppet::Parser::Functions
   newfunction(:process_mcx_options, :type => :rvalue, :doc => <<-EOS
@@ -5,12 +6,12 @@ Returns MCX PropertyList as String.
     EOS
   ) do |args|
 
-    if args.size != 3
-      e = "process_mcx_options(): Wrong number of args: #{args.size} for 2"
+    if args.size != 4
+      e = "process_mcx_options(): Wrong number of args: #{args.size} for 4"
       raise(Puppet::ParseError, e)
     end
 
-    bluetooth, wifi, loginitems = *args
+    bluetooth, wifi, loginitems, suppress_icloud_setup = *args
 
     plist_options = {
       :plist_format => CFPropertyList::List::FORMAT_XML,
@@ -18,9 +19,10 @@ Returns MCX PropertyList as String.
     }
 
     settings = {
-      'com.apple.MCXBluetooth' => {},
-      'com.apple.MCXAirPort'   => {},
-      'loginwindow'            => {},
+      'com.apple.MCXBluetooth'   => {},
+      'com.apple.MCXAirPort'     => {},
+      'loginwindow'              => {},
+      'com.apple.SetupAssistant' => {},
     }
 
     case bluetooth
@@ -67,6 +69,23 @@ Returns MCX PropertyList as String.
         }
       }
     end
+
+    if suppress_icloud_setup
+      settings['com.apple.SetupAssistant'] = {
+        'DidSeeCloudSetup' => {
+          'state' => 'once',
+          'value' => true,
+        },
+        'LastSeenCloudProductVersion' => {
+          'state' => 'once',
+          'value' => lookupvar('macosx_productversion_major'),
+        },
+      }
+    else
+      settings.delete('com.apple.SetupAssistant')
+    end
+
+    # binding.pry
 
     return nil if settings.empty?
     settings.to_plist(plist_options)

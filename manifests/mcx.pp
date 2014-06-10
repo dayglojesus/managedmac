@@ -32,6 +32,11 @@
 #   Type: Array
 #   Default: []
 #
+# [*suppress_icloud_setup*]
+#   --> Allow iCloud Setup to run at login for new users.
+#   Type: Bool
+#   Default: false
+#
 # === Variables
 #
 # Not applicable
@@ -47,6 +52,7 @@
 #  managedmac::mcx::wifi: off
 #  managedmac::mcx::loginitems:
 #     - /Applications/Chess.app
+#  managedmac::mcx::suppress_icloud_setup: true
 #
 # Then simply, create a manifest and include the class...
 #
@@ -72,9 +78,10 @@
 #
 class managedmac::mcx (
 
-  $bluetooth  = undef,
-  $wifi       = undef,
-  $loginitems = [],
+  $bluetooth             = undef,
+  $wifi                  = undef,
+  $loginitems            = [],
+  $suppress_icloud_setup = false,
 
 ){
 
@@ -101,8 +108,9 @@ class managedmac::mcx (
   }
 
   validate_array ($loginitems)
+  validate_bool  ($suppress_icloud_setup)
 
-  $content = process_mcx_options($bluetooth_state, $wifi_state, $loginitems)
+  $content = process_mcx_options($bluetooth_state, $wifi_state, $loginitems, $suppress_icloud_setup)
 
   $ensure = empty($content) ? {
     true    => absent,
