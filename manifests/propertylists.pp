@@ -88,7 +88,7 @@ class managedmac::propertylists ($files, $defaults = {}) {
     fail('Parameter Error: $files is empty')
   } else {
     # Cheating: validate that the key for each file is an absolute path
-    $check_hash = inline_template("<%= @files.select! { 
+    $check_hash = inline_template("<%= @files.select! {
       |k,v| Pathname.new(k).absolute? } %>")
 
       unless empty($check_hash) {
