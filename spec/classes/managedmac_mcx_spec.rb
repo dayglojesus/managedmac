@@ -2,6 +2,10 @@ require 'spec_helper'
 
 describe 'managedmac::mcx', :type => 'class' do
 
+  let(:facts) do
+    { :macosx_productversion_major => "10.9" }
+  end
+
   it { should contain_exec('refresh_mcx') }
 
   context "when passed a BAD param" do
@@ -174,6 +178,34 @@ describe 'managedmac::mcx', :type => 'class' do
       expect {
         should compile
       }.to raise_error(Puppet::Error, /not an Array/)
+    end
+  end
+
+  context "when $suppress_icloud_setup == false" do
+    let(:params) do
+      { :suppress_icloud_setup => false }
+    end
+    it do
+      should contain_computer('mcx_puppet').with_ensure(
+      'absent')
+    end
+    it do
+      should contain_mcx('/Computers/mcx_puppet').with_content('')
+    end
+  end
+
+  context "when $suppress_icloud_setup == true" do
+
+    let(:params) do
+      { :suppress_icloud_setup => true }
+    end
+    it do
+      should contain_computer('mcx_puppet').with_ensure(
+      'present')
+    end
+    it do
+      should contain_mcx('/Computers/mcx_puppet').with_content(
+        /DidSeeCloudSetup/)
     end
   end
 
