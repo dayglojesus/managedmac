@@ -13,12 +13,12 @@ Returns a Payload Hash of properly formatted Login Items. Expects Array.
     filesandfolders, urls = *args
 
     unless filesandfolders.is_a? Array
-      e = "excluded_items(): Wrong arg type! (#{filesandfolders.class} instead of Array)"
+      e = "process_loginitems(): Wrong arg type! (#{filesandfolders.class} instead of Array)"
       raise(Puppet::ParseError, e)
     end
 
     unless urls.is_a? Array
-      e = "excluded_items(): Wrong arg type! (#{urls.class} instead of Array)"
+      e = "process_loginitems(): Wrong arg type! (#{urls.class} instead of Array)"
       raise(Puppet::ParseError, e)
     end
 
