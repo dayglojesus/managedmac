@@ -72,37 +72,44 @@ class managedmac::screensharing (
 
   unless $enable == undef {
 
-    $service_label = 'com.apple.screensharing'
-    $acl_group     = 'com.apple.access_screensharing'
-    $admin_guid    = 'ABCDEFAB-CDEF-ABCD-EFAB-CDEF00000050'
+    if ! defined_with_params(Remotemanagement['apple_remote_desktop'],
+      {'ensure' => 'running' })
+    {
+      $service_label = 'com.apple.screensharing'
+      $acl_group     = 'com.apple.access_screensharing'
+      $admin_guid    = 'ABCDEFAB-CDEF-ABCD-EFAB-CDEF00000050'
 
-    validate_bool ($enable)
+      validate_bool ($enable)
 
-    validate_array ($users)
-    validate_array ($groups)
+      validate_array ($users)
+      validate_array ($groups)
 
-    $users_attr = $enable ? {
-      true  => $users,
-      false => [],
+      $users_attr = $enable ? {
+        true  => $users,
+        false => [],
+      }
+
+      $groups_attr = $enable ? {
+        true  => $groups,
+        false => [$admin_guid],
+      }
+
+      macgroup { $acl_group:
+        ensure       => present,
+        users        => $users_attr,
+        nestedgroups => $groups_attr,
+      }
+
+      service { $service_label:
+        ensure  => $enable,
+        enable  => true,
+        require => Macgroup[$acl_group],
+      }
+
+    } else {
+      $msg = 'Cannot activate ScreenSharing while RemoteManagement is running.'
+      notice($msg)
     }
-
-    $groups_attr = $enable ? {
-      true  => $groups,
-      false => [$admin_guid],
-    }
-
-    macgroup { $acl_group:
-      ensure       => present,
-      users        => $users_attr,
-      nestedgroups => $groups_attr,
-    }
-
-    service { $service_label:
-      ensure  => $enable,
-      enable  => true,
-      require => Macgroup[$acl_group],
-    }
-
   }
 
 }
