@@ -1,4 +1,4 @@
-# == Class: managedmac:screensharing
+# == Class: managedmac::screensharing
 #
 # Activates and controls the OS X ScreenSharing service.
 #
@@ -7,8 +7,6 @@
 # service will trump ScreenSharing.
 #
 # === Parameters
-#
-# This class takes a two parameters:
 #
 # [*enable*]
 #   Whether to enable the service or not, true or false.
