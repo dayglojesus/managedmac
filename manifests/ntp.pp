@@ -1,25 +1,24 @@
 # == Class: managedmac::ntp
 #
-# Activates and strictly enforces NTP synchronization.
+# Activates and configures NTP synchronization.
 #
 # === Parameters
 #
 # This class takes a two parameters:
 #
-# [*ensure*]
-#   Whether to apply the resource or remove it. Accepts values: present or
-#   absent. Pass a Symbol or a String.
-#   Default: present
+# [*enable*]
+#   Whether to enable to ntp client or not.
+#   Type: Bool
+#   Default: undef
 #
-# [*options*]
-#   Within the options Hash, there are two required keys:
-#     servers (Array): a list of NTP servers to use
-#     max_offset (Integer): the max +/- allowable clock skew
+# [*servers*]
+#   A list of NTP servers to use.
+#   Type: Array
+#   Default: ['time.sfu.ca']
 #
 # === Variables
 #
-# [*ntp_offset*]
-#   Custom Facter fact: calculated clock skew.
+# Not applicable
 #
 # === Examples
 #
@@ -28,11 +27,10 @@
 #
 #  # Example: defaults.yaml
 #  ---
-#  managedmac::ntp::options:
-#    servers:
-#      - time.apple.com
-#      - time1.google.com
-#    max_offset: 200
+#  managedmac::ntp::enable: true
+#  managedmac::ntp::servers:
+#    - time.apple.com
+#    - time1.google.com
 #
 # Then simply, create a manifest and include the class...
 #
@@ -42,14 +40,9 @@
 # If you just wish to test the functionality of this class, you could also do
 # something along these lines:
 #
-#  # Create an options Hash
-#  $options = {
-#   'servers' => ['time.apple.com', 'time1.google.com'],
-#   'max_offset' => 200,
-#  }
-#
 #  class { 'managedmac::ntp':
-#    options => $options,
+#   enable  => true,
+#   servers => ['time.apple.com', 'time1.google.com'],
 #  }
 #
 # === Authors
@@ -60,60 +53,48 @@
 #
 # Copyright 2014 Simon Fraser University, unless otherwise noted.
 #
-class managedmac::ntp ($ensure = present, $options = {}) {
+class managedmac::ntp (
 
-  # Only validate varaiables if ensure=present
-  if $ensure == present {
+  $enable  = undef,
+  $servers = ['time.apple.com']
 
-    validate_hash ($options)
-    # servers
-    validate_array ($options[servers])
-    # max_offset
-    unless is_integer($options[max_offset]) {
-      fail("max_offset not an Integer: ${options[max_offset]}")
-    }
+) {
 
-    $service_state = running
-    $enabled = true
-    $ntp_conf_template = inline_template("<%= (@options['servers'].collect {
+  unless $enable == undef {
+
+    validate_bool  ($enable)
+    validate_array ($servers)
+
+    $ntp_service_label = 'org.ntp.ntpd'
+    $ntp_conf_default  = 'server time.apple.com'
+    $ntp_conf_template = inline_template("<%= (@servers.collect {
       |x| ['server', x].join('\s') }).join('\n') %>")
 
-  } else {
-
-    unless $ensure == 'absent' {
-      fail("Parameter Error: invalid value for :ensure, ${ensure}")
+    file { 'ntp_conf':
+      ensure  => file,
+      owner   => 'root',
+      group   => 'wheel',
+      mode    => '0644',
+      path    => '/private/etc/ntp.conf',
+      content => $enable ? {
+        true  => $ntp_conf_template,
+        false => $ntp_conf_default,
+      },
+      notify  => Service[$ntp_service_label],
     }
 
-    $service_state = stopped
-    $enabled = false
-    $ntp_conf_template = 'time.apple.com'
-  }
+    service { $ntp_service_label:
+      ensure  => $enable,
+      enable  => true,
+      require => File['ntp_conf'],
+    }
 
-  $ntp_service_label = 'org.ntp.ntpd'
-
-  file { 'ntp_conf':
-    ensure  => file,
-    owner   => 'root',
-    group   => 'wheel',
-    mode    => '0644',
-    path    => '/private/etc/ntp.conf',
-    content => $ntp_conf_template,
-    notify  => Service[$ntp_service_label],
-  }
-
-  service { $ntp_service_label:
-    ensure  => $service_state,
-    enable  => $enabled,
-    require => File['ntp_conf'],
-  }
-
-  if $ensure == present {
-    if abs($::ntp_offset) > $options[max_offset] {
+    if $enable {
       exec { 'ntp_sync':
         command => "/bin/launchctl stop ${ntp_service_label}",
         require => Service[$ntp_service_label],
       }
     }
-  }
 
+  }
 }
