@@ -5,37 +5,119 @@
 #
 # === Parameters
 #
-# This class takes a two parameters:
-# [*ensure*]
-#   Whether to apply the resource or remove it. Valid values: present or
-#   absent. Pass a Symbol or a String.
-#   Default: 'present'
+# [*enable*]
+#   Whether to apply the resource or remove it. Pass a Symbol or a String.
+#   Type: Boolean
+#   Default: undef
 #
-# [*options*]
-#   Within the options Hash, there are three required keys:
-#     HostName (String): the name of the domain you are binding to
-#     UserName (String): the account that performs the bind operation
-#     Password (String): the password for UserName
+# [*hostname*]
+#   The Active Directory domain to join
+#   Type: String
+#   Default: undef
 #
-#   All other Hash keys are optional:
-#     ADOrganizationalUnit (String)
-#     ADMountStyle (String)
-#     ADDefaultUserShell (String)
-#     ADMapUIDAttribute (String)
-#     ADMapGIDAttribute (String)
-#     ADMapGGIDAttribute (String)
-#     ADPreferredDCServer (String)
-#     ADRestrictDDNS (String)
-#     ADNamespace (String)
-#     ADDomainAdminGroupList (Array)
-#     ADPacketSign (bool)
-#     ADPacketEncrypt (bool)
-#     ADCreateMobileAccountAtLogin (bool)
-#     ADWarnUserBeforeCreatingMA (bool)
-#     ADForceHomeLocal (bool)
-#     ADUseWindowsUNCPath (bool)
-#     ADAllowMultiDomainAuth (bool)
-#     ADTrustChangePassIntervalDays (Integer)
+# [*username*]
+#   User name of the account used to join the domain
+#   Type: String
+#   Default: undef
+#
+# [*password*]
+#   Password of the account used to join the domain
+#   Type: String
+#   Default: undef
+#
+# [*organizational_unit*]
+#   The organizational unit (OU) where the joining computer object is added
+#   Type: String
+#   Default: undef
+#
+# [*mount_style*]
+#   Network home protocol to use: "afp" or "smb"
+#   Type: String
+#   Default: undef
+#
+# [*default_user_shell*]
+#   Default user shell; e.g. /bin/bash
+#   Type: String
+#   Default: undef
+#
+# [*map_uid_attribute*]
+#   Map UID to attribute
+#   Type: String
+#   Default: undef
+#
+# [*map_gid_attribute*]
+#   Map user GID to attribute
+#   Type: String
+#   Default: undef
+#
+# [*map_ggid_attribute*]
+#   Map group GID to attribute
+#   Type: String
+#   Default: undef
+#
+# [*preferred_dc_server*]
+#   Prefer this domain server
+#   Type: String
+#   Default: undef
+#
+# [*restrict_ddns*]
+#   Restrict Dynamic DNS updates to the specified interfaces (e.g. en0,
+#   en1, etc)
+#   Type: String
+#   Default: undef
+#
+# [*namespace*]
+#   Set primary user account naming convention: "forest" or "domain";
+#   "domain" is default
+#   Type: String
+#   Default: undef
+#
+# [*domain_admin_group_list*]
+#   Allow administration by specified Active Directory groups
+#   Type: Array
+#   Default: []
+#
+# [*packet_sign*]
+#   Packet signing: "allow", "disable" or "require"; "allow" is default
+#   Type: Boolean
+#   Default: undef
+#
+# [*packet_encrypt*]
+#   Packet encryption: "allow", "disable", "require" or "ssl"; "allow"
+#   is default
+#   Type: Boolean
+#   Default: undef
+#
+# [*create_mobile_account_at_login*]
+#   Create mobile account at login
+#   Type: Boolean
+#   Default: undef
+#
+# [*warn_user_before_creating_ma*]
+#   Warn user before creating a Mobile Account
+#   Type: Boolean
+#   Default: undef
+#
+# [*force_home_local*]
+#   Force local home directory
+#   Type: Boolean
+#   Default: undef
+#
+# [*use_windows_unc_path*]
+#   Use UNC path from Active Directory to derive network home location
+#   Type: Boolean
+#   Default: undef
+#
+# [*allow_multi_domain_auth*]
+#   Allow authentication from any domain in the forest
+#   Type: Boolean
+#   Default: undef
+#
+# [*trust_change_pass_interval_days*]
+#   How often to require change of the computer trust account password in
+#   days; "0" is disabled
+#   Type: Integer
+#   Default: undef
 #
 # === Variables
 #
@@ -48,18 +130,18 @@
 #
 #  # Example: defaults.yaml
 #  ---
-#  managedmac::activedirectory::options:
-#    HostName: ad.apple.com
-#    UserName: some_account
-#    Password: some_password
-#    ADMountStyle: afp
-#    ADCreateMobileAccountAtLogin: true
-#    ADWarnUserBeforeCreatingMA: false
-#    ADForceHomeLocal: true
-#    ADDomainAdminGroupList:
-#      - APPLE\Domain Admins
-#      - APPLE\Enterprise Admins
-#    ADTrustChangePassIntervalDays: 0
+#  managedmac::activedirectory::enable: true
+#  managedmac::activedirectory::hostname: ad.apple.com
+#  managedmac::activedirectory::username: some_account
+#  managedmac::activedirectory::password: some_password
+#  managedmac::activedirectory::mount_style: afp
+#  managedmac::activedirectory::create_mobile_account_at_login: true
+#  managedmac::activedirectory::warn_user_before_creating_ma: false
+#  managedmac::activedirectory::force_home_local: true
+#  managedmac::activedirectory::domain_admin_group_list:
+#     - APPLE\Domain Admins
+#     - APPLE\Enterprise Admins
+#  managedmac::activedirectory::trust_change_pass_interval_days: 0
 #
 # Then simply, create a manifest and include the class...
 #
@@ -69,17 +151,12 @@
 # If you just wish to test the functionality of this class, you could also do
 # something along these lines:
 #
-#  # Create an options Hash
-#  $options = {
-#   'HostName' => 'foo.ad.com',
-#   'UserName' => 'some_account',
-#   'Password' => 'some_password',
-#   'ADMountStyle' => 'afp',
-#   'ADTrustChangePassIntervalDays' => 0,
-#  }
-#
 #  class { 'managedmac::activedirectory':
-#    options => $options,
+#     hostname                        => 'foo.ad.com',
+#     username                        => 'some_account',
+#     password                        => 'some_password',
+#     mount_style                     => 'afp',
+#     trust_change_pass_interval_days => 0,
 #  }
 #
 # === Authors
@@ -90,49 +167,169 @@
 #
 # Copyright 2014 Simon Fraser University, unless otherwise noted.
 #
-class managedmac::activedirectory ($ensure = present, $options) {
+class managedmac::activedirectory (
 
-  if is_hash(hiera('managedmac::ntp::options', false)) {
+  $enable                          = undef,
+  $hostname                        = undef,
+  $username                        = undef,
+  $password                        = undef,
+  $organizational_unit             = undef,
+  $mount_style                     = undef,
+  $default_user_shell              = undef,
+  $map_uid_attribute               = undef,
+  $map_gid_attribute               = undef,
+  $map_ggid_attribute              = undef,
+  $preferred_dc_server             = undef,
+  $namespace                       = undef,
+  $domain_admin_group_list         = [],
+  $restrict_ddns                   = undef,
+  $packet_sign                     = undef,
+  $packet_encrypt                  = undef,
+  $create_mobile_account_at_login  = undef,
+  $warn_user_before_creating_ma    = undef,
+  $force_home_local                = undef,
+  $use_windows_unc_path            = undef,
+  $allow_multi_domain_auth         = undef,
+  $trust_change_pass_interval_days = undef,
+
+) {
+
+  # If the ntp class is enabled, let's get the time synchronized first
+  if hiera('managedmac::ntp::enable', false) {
     require managedmac::ntp
   }
 
-  # Only validate required variables if we are activating the resource
-  if $ensure == present {
+  unless $enable == undef {
 
-    validate_hash ($options)
+    validate_bool ($enable)
+    
+    unless $enable == false {
+      
+      if $hostname == undef {
+        fail("You must specify a hostname param!")
+      }
 
-    # HostName
-    validate_string ($options[HostName])
-    if empty($options[HostName]) {
-      fail('Missing Option: HostName')
+      if $username == undef {
+        fail("You must specify a username param!")
+      }
+
+      if $password == undef {
+        fail("You must specify a password param!")
+      }
+
+      unless $organizational_unit == undef {
+        validate_string ($organizational_unit)
+      }
+
+      unless $mount_style == undef {
+        validate_string ($mount_style)
+      }
+
+      unless $default_user_shell == undef {
+        validate_string ($default_user_shell)
+      }
+
+      unless $map_uid_attribute == undef {
+        validate_string ($map_uid_attribute)
+      }
+
+      unless $map_gid_attribute == undef {
+        validate_string ($map_gid_attribute)
+      }
+
+      unless $map_ggid_attribute == undef {
+        validate_string ($map_ggid_attribute)
+      }
+
+      unless $preferred_dc_server == undef {
+        validate_string ($preferred_dc_server)
+      }
+
+      unless $namespace == undef {
+        validate_string ($namespace)
+      }
+
+      unless empty($domain_admin_group_list) {
+        validate_array ($domain_admin_group_list)
+      }
+
+      unless $restrict_ddns == undef {
+        validate_bool ($restrict_ddns)
+      }
+
+      unless $packet_sign == undef {
+        validate_bool ($packet_sign)
+      }
+
+      unless $packet_encrypt == undef {
+        validate_bool ($packet_encrypt)
+      }
+
+      unless $create_mobile_account_at_login == undef {
+        validate_bool ($create_mobile_account_at_login)
+      }
+
+      unless $warn_user_before_creating_ma == undef {
+        validate_bool ($warn_user_before_creating_ma)
+      }
+
+      unless $force_home_local == undef {
+        validate_bool ($force_home_local)
+      }
+
+      unless $use_windows_unc_path == undef {
+        validate_bool ($use_windows_unc_path)
+      }
+
+      unless $allow_multi_domain_auth == undef {
+        validate_bool ($allow_multi_domain_auth)
+      }
+
+      unless $trust_change_pass_interval_days == undef {
+        unless is_integer($trust_change_pass_interval_days) {
+          fail("trust_change_pass_interval_days not an Integer: ${trust_change_pass_interval_days}")
+        }
+      }
     }
 
-    # UserName
-    validate_string ($options[UserName])
-    if empty($options[UserName]) {
-      fail('Missing Option: UserName')
+    $params = {
+      'PayloadType'                    => 'com.apple.DirectoryService.managed',
+      'HostName'                       => $hostname,
+      'UserName'                       => $username,
+      'Password'                       => $password,
+      'ADOrganizationalUnit'           => $organizational_unit,
+      'ADMountStyle'                   => $mount_style,
+      'ADDefaultUserShell'             => $default_user_shell,
+      'ADMapUIDAttribute'              => $map_uid_attribute,
+      'ADMapGIDAttribute'              => $map_gid_attribute,
+      'ADMapGGIDAttribute'             => $map_ggid_attribute,
+      'ADPreferredDCServer'            => $preferred_dc_server,
+      'ADNamespace'                    => $namespace,
+      'ADDomainAdminGroupList'         => $domain_admin_group_list,
+      'ADRestrictDDNS'                 => $restrict_ddns,
+      'ADPacketSign'                   => $packet_sign,
+      'ADPacketEncrypt'                => $packet_encrypt,
+      'ADCreateMobileAccountAtLogin'   => $create_mobile_account_at_login,
+      'ADWarnUserBeforeCreatingMA'     => $warn_user_before_creating_ma,
+      'ADForceHomeLocal'               => $force_home_local,
+      'ADUseWindowsUNCPath'            => $use_windows_unc_path,
+      'ADAllowMultiDomainAuth'         => $allow_multi_domain_auth,
+      'ADTrustChangePassIntervalDays'  => $trust_change_pass_interval_days,
     }
 
-    # Password
-    validate_string ($options[Password])
-    if empty($options[Password]) {
-      fail('Missing Option: Password')
+    $options = process_activedirectory_params($params)
+
+    mobileconfig { 'managedmac.activedirectory.alacarte':
+      ensure       => $enable ? {
+        true  => present,
+        false => absent,
+      },
+      provider     => activedirectory,
+      displayname  => 'Managed Mac: Active Directory',
+      description  => 'Active Directory configuration. Installed by Puppet.',
+      organization => 'Simon Fraser University',
+      content      => [$options],
     }
-  } else {
-    unless $ensure == 'absent' {
-      fail("Parameter Error: invalid value for :ensure, ${ensure}")
-    }
+
   }
-
-  $options[PayloadType] = 'com.apple.DirectoryService.managed'
-
-  mobileconfig { 'managedmac.activedirectory.alacarte':
-    ensure       => $ensure,
-    provider     => activedirectory,
-    displayname  => 'Managed Mac: Active Directory',
-    description  => 'Active Directory configuration. Installed by Puppet.',
-    organization => 'Simon Fraser University',
-    content      => [$options],
-  }
-
 }
