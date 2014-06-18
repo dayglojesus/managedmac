@@ -111,6 +111,10 @@
 #   Corresponds to the com.apple.login.mcx.DisableAutoLoginClient key.
 #   Type: Boolean
 #
+# [*disable_guest_account*]
+#   Disable the the OS X Guest login feature.
+#   Type: Boolean
+#
 # === Variables
 #
 # Not applicable
@@ -149,6 +153,7 @@
 #  managedmac::loginwindow::shutdown_disabled: false
 #  managedmac::loginwindow::sleep_disabled: false
 #  managedmac::loginwindow::disable_autologin: true
+#  managedmac::loginwindow::disable_guest_account: true
 
 # Then simply, create a manifest and include the class...
 #
@@ -193,6 +198,7 @@ class managedmac::loginwindow (
   $show_name_and_password_fields = undef,
   $show_other_button             = undef,
   $disable_autologin             = undef,
+  $disable_guest_account         = undef,
 
 ) {
 
@@ -264,6 +270,10 @@ class managedmac::loginwindow (
     validate_bool ($disable_autologin)
   }
 
+  unless $disable_guest_account == undef {
+    validate_bool ($disable_guest_account)
+  }
+
   $params = {
     'com.apple.loginwindow' => {
       'AllowList'                                  => $allow_list,
@@ -283,7 +293,15 @@ class managedmac::loginwindow (
       'SHOWFULLNAME'                               => $show_name_and_password_fields,
       'SHOWOTHERUSERS_MANAGED'                     => $show_other_button,
       'com.apple.login.mcx.DisableAutoLoginClient' => $disable_autologin,
-    }
+    },
+    'com.apple.MCX' => {
+      'DisableGuestAccount' => $disable_guest_account,
+      'EnableGuestAccount'  => $disable_guest_account ? {
+        undef => undef,
+        true  => false,
+        false => true,
+      },
+    },
   }
 
   # Should return Array
