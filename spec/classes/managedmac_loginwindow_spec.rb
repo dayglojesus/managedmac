@@ -5,6 +5,8 @@ describe 'managedmac::loginwindow', :type => 'class' do
   context "when NO params are passed" do
     it { should contain_mobileconfig('managedmac.loginwindow.alacarte')\
       .with_ensure('absent') }
+    it { should contain_macgroup('com.apple.access_loginwindow')\
+      .with_ensure('absent') }
   end
 
   context "when passed a BAD param" do
@@ -58,6 +60,28 @@ describe 'managedmac::loginwindow', :type => 'class' do
       .with_ensure('present') }
     it { should contain_mobileconfig('managedmac.loginwindow.alacarte')\
       .with_content(/An important message/) }
+    it { should contain_macgroup('com.apple.access_loginwindow')\
+      .with_ensure('absent') }
+  end
+
+
+  context "when the loginwindow ACL is NOT set" do
+    it { should contain_macgroup('com.apple.access_loginwindow')\
+      .with_ensure('absent') }
+  end
+
+  context "when setting the loginwindow ACL" do
+    let(:params) do
+      {
+        :users  => ['fry', 'bender'],
+        :groups => ['robothouse'],
+      }
+    end
+    it { should contain_macgroup('com.apple.access_loginwindow').with(
+        'ensure' => 'present',
+        'users'  => ['fry', 'bender'],
+        'nestedgroups' => ['robothouse'],
+      )}
   end
 
 end
