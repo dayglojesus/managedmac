@@ -9,6 +9,19 @@
 #
 # === Parameters
 #
+# [*users*]
+#   A list of user names allowed to access the machine via the loginwindow.
+#   This control is implemented in the com.apple.access_loginwindow ACL
+#   group. By default, this group does not exist.
+#   Type: Array
+#
+# [*groups*]
+#   A list of groups (names or GUIDs) allowed to access the machine via the
+#   loginwindow. This control is implemented in the
+#   com.apple.access_loginwindow ACL group. By default, this group does not
+#   exist.
+#   Type: Array
+#
 # [*allow_list*]
 #   A list of GUIDs corresponding to allowed users or groups.
 #   Corresponds to the AllowList key.
@@ -155,6 +168,8 @@
 #
 class managedmac::loginwindow (
 
+  $users                         = [],
+  $groups                        = [],
   $allow_list                    = [],
   $deny_list                     = [],
   $disable_console_access        = undef,
@@ -174,6 +189,9 @@ class managedmac::loginwindow (
   $disable_autologin             = undef,
 
 ) {
+
+  validate_array ($users)
+  validate_array ($groups)
 
   validate_array ($allow_list)
   validate_array ($deny_list)
@@ -265,13 +283,26 @@ class managedmac::loginwindow (
   # Should return Array
   $content = process_loginwindow_params($params)
 
-  $ensure = empty($content) ? {
+  $mobileconfig_ensure = empty($content) ? {
     true  => 'absent',
     false => 'present',
   }
 
+  $acl_inactive = empty($users) and empty($groups)
+
+  $acl_ensure = $acl_inactive ? {
+    true  => absent,
+    false => present,
+  }
+
+  macgroup { 'com.apple.access_loginwindow':
+    ensure       => $acl_ensure,
+    users        => $users,
+    nestedgroups => $groups,
+  }
+
   mobileconfig { 'managedmac.loginwindow.alacarte':
-    ensure       => $ensure,
+    ensure       => $mobileconfig_ensure,
     displayname  => 'Managed Mac: Loginwindow',
     description  => 'Loginwindow configuration. Installed by Puppet.',
     organization => 'Simon Fraser University',
