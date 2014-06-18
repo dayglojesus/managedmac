@@ -84,4 +84,14 @@ describe 'managedmac::loginwindow', :type => 'class' do
       )}
   end
 
+  context "when disabling the Guest Account" do
+    let(:params) do
+      {
+        :disable_guest_account  => true,
+      }
+    end
+    it { should contain_mobileconfig('managedmac.loginwindow.alacarte')\
+      .with_content(/DisableGuestAccount.*EnableGuestAccount/) }
+  end
+
 end
