@@ -94,4 +94,24 @@ describe 'managedmac::loginwindow', :type => 'class' do
       .with_content(/DisableGuestAccount.*EnableGuestAccount/) }
   end
 
+  context "when enforcing an auto_logout_delay" do
+    let(:params) do
+      {
+        :auto_logout_delay  => 3600,
+      }
+    end
+    it { should contain_mobileconfig('managedmac.loginwindow.alacarte')\
+      .with_content(/com.apple.autologout.AutoLogOutDelay/) }
+  end
+
+  context "when enabling or disabling Fast User Switching" do
+    let(:params) do
+      {
+        :enable_fast_user_switching  => true,
+      }
+    end
+    it { should contain_mobileconfig('managedmac.loginwindow.alacarte')\
+      .with_content(/MultipleSessionEnabled/) }
+  end
+
 end
