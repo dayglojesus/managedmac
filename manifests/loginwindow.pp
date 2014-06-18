@@ -115,6 +115,14 @@
 #   Disable the the OS X Guest login feature.
 #   Type: Boolean
 #
+# [*auto_logout_delay*]
+#   Forces a logout after the machine is idle for n seconds.
+#   Type: Integer
+#
+# [*enable_fast_user_switching*]
+#   Enable or disable Fast User Switching.
+#   Type: Boolean
+#
 # === Variables
 #
 # Not applicable
@@ -154,6 +162,8 @@
 #  managedmac::loginwindow::sleep_disabled: false
 #  managedmac::loginwindow::disable_autologin: true
 #  managedmac::loginwindow::disable_guest_account: true
+#  managedmac::loginwindow::auto_logout_delay: 3600
+#  managedmac::loginwindow::enable_fast_user_switching: false
 
 # Then simply, create a manifest and include the class...
 #
@@ -199,6 +209,8 @@ class managedmac::loginwindow (
   $show_other_button             = undef,
   $disable_autologin             = undef,
   $disable_guest_account         = undef,
+  $auto_logout_delay             = undef,
+  $enable_fast_user_switching    = undef,
 
 ) {
 
@@ -274,6 +286,16 @@ class managedmac::loginwindow (
     validate_bool ($disable_guest_account)
   }
 
+  unless $auto_logout_delay == undef {
+    unless is_integer($auto_logout_delay) {
+      fail("retries_until_hint not an Integer: ${auto_logout_delay}")
+    }
+  }
+
+  unless $enable_fast_user_switching == undef {
+    validate_bool ($enable_fast_user_switching)
+  }
+
   $params = {
     'com.apple.loginwindow' => {
       'AllowList'                                  => $allow_list,
@@ -301,6 +323,10 @@ class managedmac::loginwindow (
         true  => false,
         false => true,
       },
+    },
+    '.GlobalPreferences' => {
+      'com.apple.autologout.AutoLogOutDelay' => $auto_logout_delay,
+      'MultipleSessionEnabled'               => $enable_fast_user_switching,
     },
   }
 
