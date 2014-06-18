@@ -122,6 +122,12 @@
 #
 #  # Example: defaults.yaml
 #  ---
+#  managedmac::loginwindow::users:
+#     - fry
+#     - bender
+#  managedmac::loginwindow::groups:
+#     - robothouse
+#     - 20EFB92F-4842-4218-8973-9F4738963660
 #  managedmac::loginwindow::allow_list:
 #     - D2C2107F-CE19-4C9F-9235-688BEB01D8C0
 #     - 779A91D0-885B-4066-97FC-BEECB737E6AF
@@ -153,7 +159,7 @@
 # something along these lines:
 #
 #  class { 'managedmac::loginwindow':
-#    loginwindow_text => 'We are setting the loginwindow message!',
+#    loginwindow_text => 'Planet Express Employees Only',
 #    disable_console_access => true,
 #    show_name_and_password_fields => true,
 #  }
