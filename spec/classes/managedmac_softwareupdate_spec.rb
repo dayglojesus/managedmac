@@ -133,4 +133,30 @@ describe 'managedmac::softwareupdate', :type => 'class' do
     end
   end
 
+  context "when setting $auto_update_apps" do
+    context "when a undef" do
+      let(:params) do
+        { :auto_update_apps => '' }
+      end
+      it { should_not contain_propertylist('/Library/Preferences/com.apple.storeagent.plist') }
+    end
+    context "when not a boolean" do
+      let(:params) do
+        { :auto_update_apps => 'foo' }
+      end
+      specify do
+        expect {
+          should compile
+        }.to raise_error(Puppet::Error, /not a boolean/)
+      end
+    end
+    context "when a boolean" do
+      let(:params) do
+        { :auto_update_apps => true }
+      end
+      it { should contain_propertylist('/Library/Preferences/com.apple.storeagent.plist')
+        .with_ensure('present') }
+    end
+  end
+
 end
