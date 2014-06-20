@@ -1,86 +1,136 @@
 require 'spec_helper'
 
 describe 'managedmac::softwareupdate', :type => 'class' do
-  
-  context "when it is passed no params" do
-    specify { expect { should compile }.to raise_error(Puppet::Error) }
-  end
-  
-  # Test ensurability
-  context "when $ensure => 'absent'" do
-    let(:params) do
-      { :ensure  => 'absent' }
+
+  context "when setting $catalog_url" do
+    context "when undef" do
+      let(:params) do
+        { :catalog_url  => '' }
+      end
+      it { should contain_mobileconfig('managedmac.softwareupdate.alacarte')\
+        .with_ensure('absent') }
     end
-    
-    it { should contain_mobileconfig('managedmac.softwareupdate.alacarte')\
-      .with_ensure('absent') }
-  end
-  
-  context "when $ensure is invalid" do
-    let(:params) do
-      { :ensure => 'whatever' }
+    context "when not a URL-like" do
+      let(:params) do
+        { :catalog_url => 'foo' }
+      end
+      specify do
+        expect {
+          should compile
+        }.to raise_error(Puppet::Error, /does not match/)
+      end
     end
-    
-    specify do 
-      expect { 
-        should compile 
-      }.to raise_error(Puppet::Error, /Parameter Error/)
-    end
-  end
-  
-  context "when $catalog_url is valid URL" do
-    let(:params) do
-      { :catalog_url => 'http://swscan.apple.com/content/catalogs/index-1.sucatalog' }
-    end
-    
-    specify do
-      should contain_mobileconfig('managedmac.softwareupdate.alacarte').\
-        with_content(/CatalogURL.*swscan\.apple\.com.*/)
+    context "when a URL" do
+      let(:params) do
+        { :catalog_url => 'http://foo.bar.com/foo.sucatalog' }
+      end
+      it { should contain_mobileconfig('managedmac.softwareupdate.alacarte')\
+        .with_ensure('present') }
     end
   end
-  
-  context "when $catalog_url is INVALID" do
-    let(:params) do
-      { :catalog_url => 'swscan.apple.com/content/catalogs/index-1.sucatalog' }
+
+  context "when setting $automatic_update_check" do
+    context "when a undef" do
+      let(:params) do
+        { :automatic_update_check => '' }
+      end
+      it { should_not contain_propertylist('/Library/Preferences/com.apple.SoftwareUpdate.plist') }
     end
-    
-    specify { expect { should compile }.to raise_error(Puppet::Error) }
+    context "when not a boolean" do
+      let(:params) do
+        { :automatic_update_check => 'foo' }
+      end
+      specify do
+        expect {
+          should compile
+        }.to raise_error(Puppet::Error, /not a boolean/)
+      end
+    end
+    context "when a boolean" do
+      let(:params) do
+        { :automatic_update_check => true }
+      end
+      it { should contain_propertylist('/Library/Preferences/com.apple.SoftwareUpdate.plist')
+        .with_ensure('present') }
+    end
   end
-  
-  context "when it is passed a BAD $options" do
-    let(:params) do
-      { :options => "Icanhazstring", }
+
+  context "when setting $automatic_download" do
+    context "when a undef" do
+      let(:params) do
+        { :automatic_download => '' }
+      end
+      it { should_not contain_propertylist('/Library/Preferences/com.apple.SoftwareUpdate.plist') }
     end
-    
-    specify { expect { should compile }.to raise_error(Puppet::Error) }
+    context "when not a boolean" do
+      let(:params) do
+        { :automatic_download => 'foo' }
+      end
+      specify do
+        expect {
+          should compile
+        }.to raise_error(Puppet::Error, /not a boolean/)
+      end
+    end
+    context "when a boolean" do
+      let(:params) do
+        { :automatic_download => true }
+      end
+      it { should contain_propertylist('/Library/Preferences/com.apple.SoftwareUpdate.plist')
+        .with_ensure('present') }
+    end
   end
-  
-  context "when passed a Hash parameter with valid options" do
-    
-    let(:params) do
-      { :options => options_softwareupdate, }
+
+  context "when setting $config_data_install" do
+    context "when a undef" do
+      let(:params) do
+        { :config_data_install => '' }
+      end
+      it { should_not contain_propertylist('/Library/Preferences/com.apple.SoftwareUpdate.plist') }
     end
-    
-    specify do
-      should contain_mobileconfig('managedmac.softwareupdate.alacarte').\
-        with_content(/CatalogURL.*catalogs\.sucatlog/)
+    context "when not a boolean" do
+      let(:params) do
+        { :config_data_install => 'foo' }
+      end
+      specify do
+        expect {
+          should compile
+        }.to raise_error(Puppet::Error, /not a boolean/)
+      end
     end
-        
-    it { should compile.with_all_deps }
+    context "when a boolean" do
+      let(:params) do
+        { :config_data_install => true }
+      end
+      it { should contain_propertylist('/Library/Preferences/com.apple.SoftwareUpdate.plist')
+        .with_ensure('present') }
+    end
   end
-  
-  context "when params and options Hash contain the same keys" do
-    options_catalog_url = 'http://swscan.apple.com/content/catalogs/index-1.sucatalog'
-    params_catalog_url  = 'http://swscan.apple.com/content/catalogs/index-2.sucatalog'
-    let(:params) do
-      { 
-        :catalog_url => params_catalog_url,
-        :options     => { 'CatalogURL' => options_catalog_url } 
-      }
+
+  context "when setting $critical_update_install" do
+    context "when a undef" do
+      let(:params) do
+        { :critical_update_install => '' }
+      end
+      it { should_not contain_propertylist('/Library/Preferences/com.apple.SoftwareUpdate.plist') }
     end
-    
-    it { should contain_mobileconfig('managedmac.softwareupdate.alacarte')\
-      .with_content(/#{params_catalog_url}/) }
+    context "when not a boolean" do
+      let(:params) do
+        { :critical_update_install => 'foo' }
+      end
+      specify do
+        expect {
+          should compile
+        }.to raise_error(Puppet::Error, /not a boolean/)
+      end
+    end
+    context "when a boolean" do
+      let(:params) do
+        { :critical_update_install => true }
+      end
+      it { should contain_propertylist('/Library/Preferences/com.apple.SoftwareUpdate.plist')
+        .with_ensure('present') }
+    end
   end
-  
+
 end
