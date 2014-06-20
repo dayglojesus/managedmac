@@ -149,7 +149,7 @@ class managedmac::softwareupdate (
   unless empty($swup_plist_content) {
     propertylist { '/Library/Preferences/com.apple.SoftwareUpdate.plist':
       ensure  => present,
-      content => $swup_plist_ensure,
+      content => $swup_plist_content,
       owner   => 'root',
       group   => 'wheel',
       mode    => '0644',
