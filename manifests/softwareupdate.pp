@@ -1,7 +1,8 @@
 # == Class: managedmac::softwareupdate
 #
 # Abstracts com.apple.SoftwareUpdate PayloadType using Mobileconfig type
-# and controls keys in global com.apple.SoftwareUpdate prefs domain.
+# and controls keys in global com.apple.SoftwareUpdate and com.apple.storeagent
+# prefs domain.
 #
 # === Parameters
 #
@@ -16,6 +17,12 @@
 #   Whether or not to automatically check for Apple Software Updates.
 #   Corresponds to AutomaticCheckEnabled. Managed in global preferences by
 #   directly modifying the property list.
+#   Type: Boolean
+#
+# [*auto_update_apps*]
+#   Whether or not to automatically install App Store app updates.
+#   Corresponds to AutoUpdate. Managed in global preferences by
+#   directly modifying the com.apple.storeagent property list.
 #   Type: Boolean
 #
 # [*automatic_download*]
@@ -49,8 +56,9 @@
 #
 #  # Example: defaults.yaml
 #  ---
-#  managedmac::softwareupdate::automatic_update_check: false
 #  managedmac::softwareupdate::catalog_url: http://foo.bar.com/whatever.dude
+#  managedmac::softwareupdate::automatic_update_check: true
+#  managedmac::softwareupdate::auto_update_apps: true
 #  managedmac::softwareupdate::automatic_download: false
 #  managedmac::softwareupdate::config_data_install: false
 #  managedmac::softwareupdate::critical_update_install: false
@@ -77,8 +85,9 @@
 #
 class managedmac::softwareupdate (
 
-  $automatic_update_check  = undef,
   $catalog_url             = undef,
+  $automatic_update_check  = undef,
+  $auto_update_apps        = undef,
   $automatic_download      = undef,
   $config_data_install     = undef,
   $critical_update_install = undef,
@@ -97,12 +106,55 @@ class managedmac::softwareupdate (
     validate_bool ($automatic_download)
   }
 
+  unless $auto_update_apps == undef {
+    validate_bool ($auto_update_apps)
+  }
+
   unless $config_data_install == undef {
     validate_bool ($config_data_install)
   }
 
   unless $critical_update_install == undef {
     validate_bool ($critical_update_install)
+  }
+
+  $store_plist_content = {
+    'AutoUpdate' => $auto_update_apps,
+  }
+
+  $store_plist_ensure = inline_template("<%= @store_plist_content.delete_if { |k,v|
+    (v.respond_to?(:empty?) and v.empty?) or v == :undef } %>")
+
+  unless empty($store_plist_content) {
+    propertylist { '/Library/Preferences/com.apple.storeagent.plist':
+      ensure  => present,
+      content => $store_plist_content,
+      owner   => 'root',
+      group   => 'wheel',
+      mode    => '0644',
+      method  => insert,
+    }
+  }
+
+  $swup_plist_content = {
+    'AutomaticCheckEnabled' => $automatic_update_check,
+    'AutomaticDownload'     => $automatic_download,
+    'ConfigDataInstall'     => $config_data_install,
+    'CriticalUpdateInstall' => $critical_update_install,
+  }
+
+  $swup_plist_ensure = inline_template("<%= @swup_plist_content.delete_if { |k,v|
+    (v.respond_to?(:empty?) and v.empty?) or v == :undef } %>")
+
+  unless empty($swup_plist_content) {
+    propertylist { '/Library/Preferences/com.apple.SoftwareUpdate.plist':
+      ensure  => present,
+      content => $swup_plist_ensure,
+      owner   => 'root',
+      group   => 'wheel',
+      mode    => '0644',
+      method  => insert,
+    }
   }
 
   $params = {
@@ -116,27 +168,6 @@ class managedmac::softwareupdate (
   $mobileconfig_ensure = empty($mobileconfig_content) ? {
     true  => 'absent',
     false => 'present',
-  }
-
-  $plist_content = {
-    'AutomaticCheckEnabled' => $automatic_update_check,
-    'AutomaticDownload'     => $automatic_download,
-    'ConfigDataInstall'     => $config_data_install,
-    'CriticalUpdateInstall' => $critical_update_install,
-  }
-
-  $plist_ensure = inline_template("<%= @plist_content.delete_if { |k,v|
-    (v.respond_to?(:empty?) and v.empty?) or v == :undef } %>")
-
-  unless empty($plist_content) {
-    propertylist { '/Library/Preferences/com.apple.SoftwareUpdate.plist':
-      ensure  => present,
-      content => $plist_content,
-      owner   => 'root',
-      group   => 'wheel',
-      mode    => '0644',
-      method  => insert,
-    }
   }
 
   mobileconfig { 'managedmac.softwareupdate.alacarte':
