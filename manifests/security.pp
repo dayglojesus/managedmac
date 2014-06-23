@@ -162,7 +162,7 @@ class managedmac::security (
   }
 
   # Should return Array
-  $content = process_security_params($params)
+  $content = process_mobileconfig_params($params)
 
   $mobileconfig_ensure = empty($content) ? {
     true  => 'absent',
