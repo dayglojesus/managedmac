@@ -202,9 +202,9 @@ class managedmac::activedirectory (
   unless $enable == undef {
 
     validate_bool ($enable)
-    
+
     unless $enable == false {
-      
+
       if $hostname == undef {
         fail("You must specify a hostname param!")
       }
