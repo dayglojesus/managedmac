@@ -209,4 +209,42 @@ describe 'managedmac::mcx', :type => 'class' do
     end
   end
 
+  context "when $hidden_preference_panes are defined" do
+    let(:params) do
+      { :hidden_preference_panes => ['com.apple.preferences.icloud'] }
+    end
+    it do
+      should contain_computer('mcx_puppet').with_ensure(
+      'present')
+    end
+    it do
+      should contain_mcx('/Computers/mcx_puppet').with_content(
+        /com\.apple\.preferences\.icloud/)
+    end
+  end
+
+  context "when NO $hidden_preference_panes are defined" do
+    let(:params) do
+      { :hidden_preference_panes => [] }
+    end
+    it do
+      should contain_computer('mcx_puppet').with_ensure(
+      'absent')
+    end
+    it do
+      should contain_mcx('/Computers/mcx_puppet').with_content('')
+    end
+  end
+
+  context "when $hidden_preference_panes is not an Array" do
+    let(:params) do
+      { :hidden_preference_panes => 'foo' }
+    end
+    specify do
+      expect {
+        should compile
+      }.to raise_error(Puppet::Error, /not an Array/)
+    end
+  end
+
 end
