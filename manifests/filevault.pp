@@ -84,17 +84,6 @@
 #
 # Copyright 2014 Simon Fraser University, unless otherwise noted.
 #
-
-# $enable                     = false,
-# $use_recovery_key           = true,
-# $show_recovery_key          = false,
-# $output_path                = '/private/var/root/fdesetup_output.plist',
-# $use_keychain               = false,
-# $keychain_file              = '',
-# $destroy_fv_key_on_standby  = false,
-# $dont_allow_fde_disable     = false,
-# $remove_fde                 = false,
-
 class managedmac::filevault (
 
   $enable                     = undef,
