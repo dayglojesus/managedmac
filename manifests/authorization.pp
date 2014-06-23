@@ -1,4 +1,4 @@
-# == Class: managedmac::systempreferences
+# == Class: managedmac::authorization
 #
 # Unlock select System Preferences panes by setting a bool.
 #
@@ -34,19 +34,19 @@
 #
 # # Example: defaults.yaml
 # ---
-# managedmac::systempreferences::allow_energysaver true
-# managedmac::systempreferences::allow_datetime true
-# managedmac::systempreferences::allow_timemachine true
+# managedmac::authorization::allow_energysaver true
+# managedmac::authorization::allow_datetime true
+# managedmac::authorization::allow_timemachine true
 #
 # Then simply, create a manifest and include the class...
 #
 #  # Example: my_manifest.pp
-#  include managedmac::systempreferences
+#  include managedmac::authorization
 #
 # If you just wish to test the functionality of this class, you could also do
 # something along these lines:
 #
-#  class { 'managedmac::systempreferences':
+#  class { 'managedmac::authorization':
 #    allow_energysaver => true,
 #    allow_datetime => true,
 #    allow_timemachine => true,
@@ -60,7 +60,7 @@
 #
 # Copyright 2014 Simon Fraser University, unless otherwise noted.
 #
-class managedmac::systempreferences (
+class managedmac::authorization (
 
   $allow_energysaver = false,
   $allow_datetime    = false,

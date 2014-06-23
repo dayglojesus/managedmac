@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "managedmac::systempreferences", :type => 'class' do
+describe "managedmac::authorization", :type => 'class' do
 
   context "when passed no params" do
     it { should compile.with_all_deps }
