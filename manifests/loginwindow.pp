@@ -123,6 +123,10 @@
 #   Enable or disable Fast User Switching.
 #   Type: Boolean
 #
+# [*disable_fde_autologin*]
+#   Disable autologin after FileVault EFI is unlocked.
+#   Type: Boolean
+#
 # === Variables
 #
 # Not applicable
@@ -164,6 +168,7 @@
 #  managedmac::loginwindow::disable_guest_account: true
 #  managedmac::loginwindow::auto_logout_delay: 3600
 #  managedmac::loginwindow::enable_fast_user_switching: false
+#  managedmac::loginwindow::disable_fde_autologin: true
 
 # Then simply, create a manifest and include the class...
 #
@@ -211,6 +216,7 @@ class managedmac::loginwindow (
   $disable_guest_account         = undef,
   $auto_logout_delay             = undef,
   $enable_fast_user_switching    = undef,
+  $disable_fde_autologin         = undef,
 
 ) {
 
@@ -296,6 +302,10 @@ class managedmac::loginwindow (
     validate_bool ($enable_fast_user_switching)
   }
 
+  unless $disable_fde_autologin == undef {
+    validate_bool ($disable_fde_autologin)
+  }
+
   $params = {
     'com.apple.loginwindow' => {
       'AllowList'                                  => $allow_list,
@@ -315,6 +325,7 @@ class managedmac::loginwindow (
       'SHOWFULLNAME'                               => $show_name_and_password_fields,
       'SHOWOTHERUSERS_MANAGED'                     => $show_other_button,
       'com.apple.login.mcx.DisableAutoLoginClient' => $disable_autologin,
+      'DisableFDEAutoLogin'                        => $disable_fde_autologin,
     },
     'com.apple.MCX' => {
       'DisableGuestAccount' => $disable_guest_account,
