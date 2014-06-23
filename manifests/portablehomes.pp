@@ -296,8 +296,8 @@
 # === Functions
 #
 # This class uses two custom functions to reformat file lists:
-# - excluded_items
-# - synced_folders
+# - portablehomes_excluded_items
+# - portablehomes_synced_folders
 #
 # === Examples
 #
@@ -567,10 +567,10 @@ class managedmac::portablehomes (
   }
 
   $homesync_payload = { 'PayloadType' => 'com.apple.homeSync',
-    'syncedFolders-managed'                => synced_folders($syncedFolders),
-    'syncedPrefFolders-managed'            => synced_folders($syncedPrefFolders),
-    'excludedItems'                        => excluded_items($excludedItems),
-    'excludedPrefItems'                    => excluded_items($excludedPrefItems),
+    'syncedFolders-managed'                => portablehomes_synced_folders($syncedFolders),
+    'syncedPrefFolders-managed'            => portablehomes_synced_folders($syncedPrefFolders),
+    'excludedItems'                        => portablehomes_excluded_items($excludedItems),
+    'excludedPrefItems'                    => portablehomes_excluded_items($excludedPrefItems),
     'warnOnCreateAllowNever'               => $warnOnCreateAllowNever,
     'createAtLogin'                        => $createAtLogin,
     'createPHDAtLogin'                     => $createPHDAtLogin,

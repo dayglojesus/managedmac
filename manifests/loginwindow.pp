@@ -342,7 +342,7 @@ class managedmac::loginwindow (
   }
 
   # Should return Array
-  $content = process_loginwindow_params($params)
+  $content = process_mobileconfig_params($params)
 
   $mobileconfig_ensure = empty($content) ? {
     true  => 'absent',

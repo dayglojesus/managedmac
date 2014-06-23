@@ -293,31 +293,32 @@ class managedmac::activedirectory (
     }
 
     $params = {
-      'PayloadType'                    => 'com.apple.DirectoryService.managed',
-      'HostName'                       => $hostname,
-      'UserName'                       => $username,
-      'Password'                       => $password,
-      'ADOrganizationalUnit'           => $organizational_unit,
-      'ADMountStyle'                   => $mount_style,
-      'ADDefaultUserShell'             => $default_user_shell,
-      'ADMapUIDAttribute'              => $map_uid_attribute,
-      'ADMapGIDAttribute'              => $map_gid_attribute,
-      'ADMapGGIDAttribute'             => $map_ggid_attribute,
-      'ADPreferredDCServer'            => $preferred_dc_server,
-      'ADNamespace'                    => $namespace,
-      'ADDomainAdminGroupList'         => $domain_admin_group_list,
-      'ADRestrictDDNS'                 => $restrict_ddns,
-      'ADPacketSign'                   => $packet_sign,
-      'ADPacketEncrypt'                => $packet_encrypt,
-      'ADCreateMobileAccountAtLogin'   => $create_mobile_account_at_login,
-      'ADWarnUserBeforeCreatingMA'     => $warn_user_before_creating_ma,
-      'ADForceHomeLocal'               => $force_home_local,
-      'ADUseWindowsUNCPath'            => $use_windows_unc_path,
-      'ADAllowMultiDomainAuth'         => $allow_multi_domain_auth,
-      'ADTrustChangePassIntervalDays'  => $trust_change_pass_interval_days,
+      'com.apple.DirectoryService.managed' => {
+        'HostName'                       => $hostname,
+        'UserName'                       => $username,
+        'Password'                       => $password,
+        'ADOrganizationalUnit'           => $organizational_unit,
+        'ADMountStyle'                   => $mount_style,
+        'ADDefaultUserShell'             => $default_user_shell,
+        'ADMapUIDAttribute'              => $map_uid_attribute,
+        'ADMapGIDAttribute'              => $map_gid_attribute,
+        'ADMapGGIDAttribute'             => $map_ggid_attribute,
+        'ADPreferredDCServer'            => $preferred_dc_server,
+        'ADNamespace'                    => $namespace,
+        'ADDomainAdminGroupList'         => $domain_admin_group_list,
+        'ADRestrictDDNS'                 => $restrict_ddns,
+        'ADPacketSign'                   => $packet_sign,
+        'ADPacketEncrypt'                => $packet_encrypt,
+        'ADCreateMobileAccountAtLogin'   => $create_mobile_account_at_login,
+        'ADWarnUserBeforeCreatingMA'     => $warn_user_before_creating_ma,
+        'ADForceHomeLocal'               => $force_home_local,
+        'ADUseWindowsUNCPath'            => $use_windows_unc_path,
+        'ADAllowMultiDomainAuth'         => $allow_multi_domain_auth,
+        'ADTrustChangePassIntervalDays'  => $trust_change_pass_interval_days,
+      },
     }
 
-    $options = process_activedirectory_params($params)
+    $options = process_mobileconfig_params($params)
 
     mobileconfig { 'managedmac.activedirectory.alacarte':
       ensure       => $enable ? {
@@ -328,7 +329,7 @@ class managedmac::activedirectory (
       displayname  => 'Managed Mac: Active Directory',
       description  => 'Active Directory configuration. Installed by Puppet.',
       organization => 'Simon Fraser University',
-      content      => [$options],
+      content      => $options,
     }
 
   }

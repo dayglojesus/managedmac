@@ -1,6 +1,6 @@
 module Puppet::Parser::Functions
   newfunction(:process_mounts, :type => :rvalue, :doc => <<-EOS
-Returns a Payload Hash of properly mounts. Expects Array.
+Returns a Payload Hash of properly formatted mounts. Expects Array.
     EOS
   ) do |args|
 

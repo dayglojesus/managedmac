@@ -163,7 +163,7 @@ class managedmac::softwareupdate (
     }
   }
 
-  $mobileconfig_content = process_softwareupdate_params($params)
+  $mobileconfig_content = process_mobileconfig_params($params)
 
   $mobileconfig_ensure = empty($mobileconfig_content) ? {
     true  => 'absent',
