@@ -28,10 +28,17 @@ Puppet::Type.type(:propertylist).provide(:default) do
     end
 
     def get_propertylist_properties(path)
-      unless File.exists?(path) and File.file?(path)
-        return { :path => path, :ensure => :absent }
+      absent = { :name => path, :ensure => :absent }
+
+      unless File.exists?(path)
+        unless File.file?(path)
+          raise Puppet::Error, "Error: #{path} is not a file, [#{File.ftype(path)}]."
+        end
+        return absent
       end
-      format  = IO.read(path, 8).eql?('bplist00') ? :binary : :xml
+
+      return absent unless format = get_format(path)
+
       stat    = File.stat path
       content = read_plist path
       {
@@ -46,7 +53,11 @@ Puppet::Type.type(:propertylist).provide(:default) do
     end
 
     def read_plist(path)
-      plist = CFPropertyList::List.new(:file => path)
+      begin
+        plist = CFPropertyList::List.new(:file => path)
+      rescue Exception
+        warn("Warning: #{path} is not a Property List.")
+      end
       return {} unless plist
       CFPropertyList.native_types(plist.value)
     end
@@ -63,6 +74,18 @@ Puppet::Type.type(:propertylist).provide(:default) do
       plist = CFPropertyList::List.new
       plist.value = CFPropertyList.guess(content)
       plist.save(path, f, {:formatted => true})
+    end
+
+    def get_format(path)
+      bytes = IO.read(path, 8)
+      if bytes.eql?('bplist00')
+        return :binary
+      elsif bytes =~ /\A\<\?xml\sve/
+        return :xml
+      else
+        warn("Error: #{path} is not a Property List.")
+        false
+      end
     end
 
   end
@@ -97,7 +120,22 @@ Puppet::Type.type(:propertylist).provide(:default) do
   end
 
   def set_content
-    self.class.write_plist(resource[:path], resource[:content], resource[:format])
+    path    = resource[:path]
+    content = resource[:content]
+    if resource[:method] == :insert
+      if File.exists?(path) and File.file?(path)
+        original = self.class.read_plist path
+        case original
+        when Hash
+          content = original.merge(content)
+        when Array
+          content = original | content
+        else
+          content = content
+        end
+      end
+    end
+    self.class.write_plist(path, content, resource[:format])
   end
 
   def flush

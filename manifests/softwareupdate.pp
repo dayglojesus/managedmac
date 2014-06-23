@@ -1,65 +1,78 @@
 # == Class: managedmac::softwareupdate
 #
-# Abstracts com.apple.SoftwareUpdate preference domain using Mobileconfig type.
-#
-# NOTE: Parameters trump matching keys in the options Hash. If you specify one
-# of the defined parameters (ie. $catalog_url) and you also set the
-# corresponding key somewhere in the options Hash, the value of the parameter
-# will take precedence.
+# Abstracts com.apple.SoftwareUpdate PayloadType using Mobileconfig type
+# and controls keys in global com.apple.SoftwareUpdate and com.apple.storeagent
+# prefs domain.
 #
 # === Parameters
-#
-# There 3 parameters. An exception will be raised if you do not specify at
-# least one parameter.
-#
-# [*ensure*]
-#   Whether the resources defined in this class should be applied or not.
-#   Type: String
-#   Accepts: present or absent
-#   Default: present
 #
 # [*catalog_url*]
 #   The URL for your Apple Software Update server. This will be validated using
 #   regex, so it needs to at least have the appearnce of being a URL.
+#   Corresponds to CatalogURL. Managed as a profile.
 #   Type: String
 #   e.g. "http://swscan.apple.com/content/catalogs/index-1.sucatalog"
 #
-# [*options*]
-#   Raw com.apple.SoftwareUpdate pref keys. (See examples below)
-#   Type: Hash
-#   Default: empty
+# [*automatic_update_check*]
+#   Whether or not to automatically check for Apple Software Updates.
+#   Corresponds to AutomaticCheckEnabled. Managed in global preferences by
+#   directly modifying the property list.
+#   Type: Boolean
+#
+# [*auto_update_apps*]
+#   Whether or not to automatically install App Store app updates.
+#   Corresponds to AutoUpdate. Managed in global preferences by
+#   directly modifying the com.apple.storeagent property list.
+#   Type: Boolean
+#
+# [*automatic_download*]
+#   Whether or not to automatically download required Apple Software Updates.
+#   Corresponds to AutomaticDownload. Managed in global preferences by
+#   directly modifying the property list.
+#   Type: Boolean
+#
+# [*config_data_install*]
+#   Whether or not to automatically download and install updated system data
+#   files and security updates (Eg. XProtect).
+#   Corresponds to ConfigDataInstall. Managed in global preferences by
+#   directly modifying the property list.
+#   Type: Boolean
+#
+# [*critical_update_install*]
+#   Whether or not to automatically download and install critical system
+#   and security updates (Eg. Security Update 2014-002).
+#   Corresponds to CriticalUpdateInstall. Managed in global preferences by
+#   directly modifying the property list.
+#   Type: Boolean
 #
 # === Variables
 #
 # Not applicable
 #
 # === Examples
+#
 # This class was designed to be used with Hiera. As such, the best way to pass
 # options is to specify them in your Hiera datadir:
 #
 #  # Example: defaults.yaml
 #  ---
 #  managedmac::softwareupdate::catalog_url: http://foo.bar.com/whatever.dude
-#  managedmac::softwareupdate::options:
-#    CatalogURL: "http://swscan.apple.com/content/catalogs/index-1.sucatalog"
+#  managedmac::softwareupdate::automatic_update_check: true
+#  managedmac::softwareupdate::auto_update_apps: true
+#  managedmac::softwareupdate::automatic_download: false
+#  managedmac::softwareupdate::config_data_install: false
+#  managedmac::softwareupdate::critical_update_install: false
 #
 # Then simply, create a manifest and include the class...
 #
 #  # Example: my_manifest.pp
-#  include managedmac::loginwindow
+#  include managedmac::softwareupdate
 #
 # If you just wish to test the functionality of this class, you could also do
 # something along these lines:
 #
-#  # Create an options Hash
-#  # - this will get trumped by the parameter we pass into the class!!!
-#  $options = {
-#   'CatalogURL' => 'YOU WILL NEVER SEE THIS',
-#  }
-#
-#  class { 'managedmac::activedirectory':
+#  class { 'managedmac::softwareupdate':
 #    catalog_url =>'http://swscan.apple.com/content/catalogs/index-1.sucatalog',
-#    options => $options,
 #  }
 #
 # === Authors
@@ -72,46 +85,97 @@
 #
 class managedmac::softwareupdate (
 
-  $ensure       = present,
-  $catalog_url  = '',
-  $options      = {}
+  $catalog_url             = undef,
+  $automatic_update_check  = undef,
+  $auto_update_apps        = undef,
+  $automatic_download      = undef,
+  $config_data_install     = undef,
+  $critical_update_install = undef,
 
 ) {
 
-  $all_params = {}
+  unless $automatic_update_check == undef {
+    validate_bool ($automatic_update_check)
+  }
 
-  # Only validate required variables if we are activating the resource
-  if $ensure == present {
+  unless empty($catalog_url) {
+    validate_re ($catalog_url, '\Ahttp:\/\/(\w+\.)+\w+\/')
+  }
 
-    validate_hash ($options)
+  unless $automatic_download == undef {
+    validate_bool ($automatic_download)
+  }
 
-    unless empty($catalog_url) {
-      validate_re ($catalog_url, '\Ahttp:\/\/(\w+\.)+\w+\/')
-      $all_params[CatalogURL] = $catalog_url
-    }
+  unless $auto_update_apps == undef {
+    validate_bool ($auto_update_apps)
+  }
 
-    if empty($options) and empty($all_params) {
-      fail('Missing Options: you have specified no params and the options
-        Hash is empty')
-    }
+  unless $config_data_install == undef {
+    validate_bool ($config_data_install)
+  }
 
-    # Merge the parameters into the options Hash
-    # - parameters trump options
-    $compiled_options = merge($options, $all_params)
-    $compiled_options[PayloadType] = 'com.apple.SoftwareUpdate'
+  unless $critical_update_install == undef {
+    validate_bool ($critical_update_install)
+  }
 
-  } else {
-    unless $ensure == 'absent' {
-      fail("Parameter Error: invalid value for :ensure, ${ensure}")
+  $store_plist_content = {
+    'AutoUpdate' => $auto_update_apps,
+  }
+
+  $store_plist_ensure = inline_template("<%= @store_plist_content.delete_if { |k,v|
+    (v.respond_to?(:empty?) and v.empty?) or v == :undef } %>")
+
+  unless empty($store_plist_content) {
+    propertylist { '/Library/Preferences/com.apple.storeagent.plist':
+      ensure  => present,
+      content => $store_plist_content,
+      owner   => 'root',
+      group   => 'wheel',
+      mode    => '0644',
+      method  => insert,
     }
   }
 
+  $swup_plist_content = {
+    'AutomaticCheckEnabled' => $automatic_update_check,
+    'AutomaticDownload'     => $automatic_download,
+    'ConfigDataInstall'     => $config_data_install,
+    'CriticalUpdateInstall' => $critical_update_install,
+  }
+
+  $swup_plist_ensure = inline_template("<%= @swup_plist_content.delete_if { |k,v|
+    (v.respond_to?(:empty?) and v.empty?) or v == :undef } %>")
+
+  unless empty($swup_plist_content) {
+    propertylist { '/Library/Preferences/com.apple.SoftwareUpdate.plist':
+      ensure  => present,
+      content => $swup_plist_content,
+      owner   => 'root',
+      group   => 'wheel',
+      mode    => '0644',
+      method  => insert,
+    }
+  }
+
+  $params = {
+    'com.apple.SoftwareUpdate' => {
+      'CatalogURL' => $catalog_url,
+    }
+  }
+
+  $mobileconfig_content = process_softwareupdate_params($params)
+
+  $mobileconfig_ensure = empty($mobileconfig_content) ? {
+    true  => 'absent',
+    false => 'present',
+  }
+
   mobileconfig { 'managedmac.softwareupdate.alacarte':
-    ensure       => $ensure,
+    ensure       => $mobileconfig_ensure,
     displayname  => 'Managed Mac: Software Update',
     description  => 'Software Update configuration. Installed by Puppet.',
     organization => 'Simon Fraser University',
-    content      => [$compiled_options],
+    content      => $mobileconfig_content,
   }
 
 }
