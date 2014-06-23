@@ -139,134 +139,38 @@ class managedmac::security (
     validate_bool ($dont_allow_password_reset_ui)
   }
 
-  $ask_for_password_delay_as_bool = $ask_for_password_delay ? {
-    undef   => false,
-    default => true
+  $params = {
+    'com.apple.systempolicy.managed' => {
+      'DisableOverride' => $gatekeeper_disable_override,
+    },
+    'com.apple.systempolicy.control' => {
+      'AllowIdentifiedDevelopers' => $gatekeeper_allow_identified_developers,
+      'EnableAssessment'          => $gatekeeper_enable_assessment,
+    },
+    'com.apple.loginwindow' => {
+      'ChangePasswordDisabled'                     => $dont_allow_password_reset_ui,
+      'com.apple.login.mcx.DisableAutoLoginClient' => $disable_autologin,
+    },
+    'com.apple.preference.security' => {
+      'dontAllowLockMessageUI'   => $dont_allow_lock_message_ui,
+      'dontAllowPasswordResetUI' => $dont_allow_password_reset_ui,
+    },
+    'com.apple.screensaver' => {
+      'askForPassword'      => $ask_for_password,
+      'askForPasswordDelay' => $ask_for_password_delay
+    },
   }
 
-  $enable = num2bool(
-    bool2num($ask_for_password) +
-    bool2num($ask_for_password_delay_as_bool) +
-    bool2num($disable_autologin) +
-    bool2num($gatekeeper_enable_assessment) +
-    bool2num($gatekeeper_allow_identified_developers) +
-    bool2num($gatekeeper_disable_override) +
-    bool2num($dont_allow_lock_message_ui) +
-    bool2num($dont_allow_password_reset_ui)
-  )
+  # Should return Array
+  $content = process_mobileconfig_params($params)
 
-  validate_bool ($enable)
-
-  # Puppet Selectors cannot deal with Hashes, so populate an empty one
-  # https://projects.puppetlabs.com/issues/14301
-
-  $an_empty_hash = {}
-
-  #######################################################################
-  # Handle System Policy Managed Payload
-  #######################################################################
-
-  $systempolicy_managed_01 = $gatekeeper_disable_override ? {
-    /true|false/ => hash(['DisableOverride', $gatekeeper_disable_override]),
-    default      => $an_empty_hash,
+  $mobileconfig_ensure = empty($content) ? {
+    true  => 'absent',
+    false => 'present',
   }
-  $systempolicy_managed_payload = merge(
-    {'PayloadType' => 'com.apple.systempolicy.managed'},
-    $systempolicy_managed_01
-  )
-
-  #######################################################################
-  # Handle System Policy Control Payload
-  #######################################################################
-
-  $systempolicy_control_01 = $gatekeeper_allow_identified_developers ? {
-    /true|false/ => hash(['AllowIdentifiedDevelopers', $gatekeeper_allow_identified_developers]),
-    default      => $an_empty_hash,
-  }
-  $systempolicy_control_02 = $gatekeeper_enable_assessment ? {
-    /true|false/ => hash(['AllowIdentifiedDevelopers', $gatekeeper_enable_assessment]),
-    default      => $an_empty_hash,
-  }
-  $systempolicy_control_payload = merge(
-    {'PayloadType' => 'com.apple.systempolicy.control'},
-    $systempolicy_control_01,
-    $systempolicy_control_02
-  )
-
-  #######################################################################
-  # Handle Loginwindow Payload
-  #######################################################################
-
-  $loginwindow_01 = $dont_allow_password_reset_ui ? {
-    /true|false/ => hash(['ChangePasswordDisabled', $dont_allow_password_reset_ui]),
-    default      => $an_empty_hash,
-  }
-  $loginwindow_02 = $disable_autologin ? {
-    /true|false/ => hash(['com.apple.login.mcx.DisableAutoLoginClient', $disable_autologin]),
-    default      => $an_empty_hash,
-  }
-  $loginwindow_payload = merge(
-    {'PayloadType' => 'com.apple.loginwindow'},
-    $loginwindow_01,
-    $loginwindow_02
-  )
-
-  #######################################################################
-  # Handle Security Preferences Payload
-  #######################################################################
-
-  $security_preference_01 = $dont_allow_lock_message_ui ? {
-    /true|false/ => hash(['dontAllowLockMessageUI', $dont_allow_lock_message_ui]),
-    default      => $an_empty_hash,
-  }
-  $security_preference_02 = $dont_allow_password_reset_ui ? {
-    /true|false/ => hash(['dontAllowPasswordResetUI', $dont_allow_password_reset_ui]),
-    default      => $an_empty_hash,
-  }
-  $security_preference_payload = merge(
-    {'PayloadType' => 'com.apple.preference.security'},
-    $security_preference_01,
-    $security_preference_02
-  )
-
-  #######################################################################
-  # Handle Screensaver and Sleep Security Payload
-  #######################################################################
-
-  $screensaver_option_01 = $ask_for_password ? {
-    /true|false/ => hash(['askForPassword', $ask_for_password]),
-    default      => $an_empty_hash,
-  }
-  $screensaver_option_02 = $ask_for_password_delay ? {
-    /\d+/   => hash(['askForPasswordDelay', $ask_for_password_delay]),
-    default => $an_empty_hash,
-  }
-  $screensaver_payload = merge(
-    {'PayloadType' => 'com.apple.screensaver'},
-    $screensaver_option_01,
-    $screensaver_option_02
-  )
-
-  #######################################################################
-  # Compile the content Array
-  #######################################################################
-
-  $content = [ $systempolicy_managed_payload,
-    $systempolicy_control_payload,
-    $loginwindow_payload,
-    $screensaver_payload,
-    $security_preference_payload,
-  ]
-
-  #######################################################################
-  # All this for a single resource
-  #######################################################################
 
   mobileconfig { 'managedmac.security.alacarte':
-    ensure => $enable ? {
-      true     => 'present',
-      default  => 'absent',
-    },
+    ensure       => $mobileconfig_ensure,
     content      => $content,
     displayname  => 'Managed Mac: Security',
     description  => 'Security configuration. Installed by Puppet.',
