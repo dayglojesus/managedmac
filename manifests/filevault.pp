@@ -163,7 +163,7 @@ class managedmac::filevault (
       },
     }
 
-    $content = process_filevault_params($params)
+    $content = process_mobileconfig_params($params)
 
     mobileconfig { 'managedmac.filevault.alacarte':
       ensure => $enable ? {
