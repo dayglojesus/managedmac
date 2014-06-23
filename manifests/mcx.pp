@@ -11,31 +11,32 @@
 # === Parameters
 #
 # [*bluetooth*]
-#   --> Enable or disable Bluetooth power and administrative controls.
+#   Enable or disable Bluetooth power and administrative controls.
 #   Accepts values: on/off, true/false, enable/disable. Values are enforced, so
 #   if you set it to on/true/enable, users will not be able to turn off the
 #   service.
 #   Type: String or Boolean
-#   Default: undef
 #
 # [*wifi*]
-#   --> Enable or disable Airport power and administrative controls.
+#   Enable or disable Airport power and administrative controls.
 #   Accepts values: on/off, true/false, enable/disable. Values are enforced, so
 #   if you set it to on/true/enable, users will not be able to turn off the
 #   service.
 #   Type: String or Boolean
-#   Default: undef
 #
 # [*logintiems*]
-#   --> Accepts a list of items you want launched at login time. Paths are NOT
+#   Accepts a list of items you want launched at login time. Paths are NOT
 #   validated.
 #   Type: Array
-#   Default: []
 #
 # [*suppress_icloud_setup*]
-#   --> Allow iCloud Setup to run at login for new users.
+#   Allow iCloud Setup to run at login for new users.
 #   Type: Bool
-#   Default: false
+#
+# [*hidden_preference_panes*]
+#   A list of hidden System Preferences panes. Prefernce pane names MUST be
+#   specified by their reverse domain ID. (Eg. com.apple.preferences.icloud)
+#   Type: Array
 #
 # === Variables
 #
@@ -53,6 +54,8 @@
 #  managedmac::mcx::loginitems:
 #     - /Applications/Chess.app
 #  managedmac::mcx::suppress_icloud_setup: true
+#  managedmac::mcx::hidden_preference_panes:
+#     - com.apple.preferences.icloud
 #
 # Then simply, create a manifest and include the class...
 #
@@ -78,10 +81,11 @@
 #
 class managedmac::mcx (
 
-  $bluetooth             = undef,
-  $wifi                  = undef,
-  $loginitems            = [],
-  $suppress_icloud_setup = false,
+  $bluetooth                  = undef,
+  $wifi                       = undef,
+  $loginitems                 = [],
+  $suppress_icloud_setup      = undef,
+  $hidden_preference_panes    = [],
 
 ){
 
@@ -108,9 +112,15 @@ class managedmac::mcx (
   }
 
   validate_array ($loginitems)
-  validate_bool  ($suppress_icloud_setup)
+  
+  unless $suppress_icloud_setup == undef {
+    validate_bool ($suppress_icloud_setup)
+  }
 
-  $content = process_mcx_options($bluetooth_state, $wifi_state, $loginitems, $suppress_icloud_setup)
+  validate_array ($hidden_preference_panes)
+
+  $content = process_mcx_options($bluetooth_state, 
+    $wifi_state, $loginitems, $suppress_icloud_setup, $hidden_preference_panes)
 
   $ensure = empty($content) ? {
     true    => absent,
