@@ -6,17 +6,15 @@
 # === Parameters
 #
 # [*enable*]
-#   --> Whether to enable the service or not.
+#   Whether to enable the service or not.
 #   Type: Boolean
-#   Default: false
 #
 # [*allow_all_users*]
-#   --> Whether to enable access for ALL local users or not.
+#   Whether to enable access for ALL local users or not.
 #   Type: Boolean
-#   Default: false
 #
 # [*all_users_privs*]
-#   --> The privileges granted to connected users when the allow_all_users param
+#   The privileges granted to connected users when the allow_all_users param
 #   is true. Privileges are are represented using a signed integer stored as a
 #   string. Yes, confusing. Use this Bit map chart to figure it out:
 #
@@ -37,58 +35,48 @@
 #    FFFFFFFFC00000FF -2147483648 all disabled
 #
 #   Type: String
-#   Default: undef
 #
 # [*enable_menu_extra*]
-#   --> Whether or not to activate the ARD menu extra.
+#   Whether or not to activate the ARD menu extra.
 #   Type: Boolean
-#   Default: undef
 #
 # [*enable_dir_logins*]
-#   --> Whether or not to enable the Open Directory group ACLs.
+#   Whether or not to enable the Open Directory group ACLs.
 #   Type: Boolean
-#   Default: undef
 #
 # [*allowed_dir_groups*]
-#   --> The list of directory groups to use as ARD ACLs.
+#   The list of directory groups to use as ARD ACLs.
 #   Type: Array
-#   Default: empty
 #
 # [*enable_legacy_vnc*]
-#   --> Whether or not to allow legacy VNC connections.
+#   Whether or not to allow legacy VNC connections.
 #   Type: Boolean
-#   Default: false
 #
 # [*vnc_password*]
-#   --> The VNC plain text password for connecting. I highly recommend not
+#   The VNC plain text password for connecting. I highly recommend not
 #   using this.
 #   Type: String
-#   Default: empty
 #
 # [*allow_vnc_requests*]
-#   --> Whether or not to allow_webm_requests incoming VNC requests.
+#   Whether or not to allow_webm_requests incoming VNC requests.
 #   Type: Boolean
-#   Default: false
 #
 # [*allow_webm_requests*]
-#   --> Whether or not to allow_webm_requests incoming WBEM requests.
+#   Whether or not to allow_webm_requests incoming WBEM requests.
 #   Type: Boolean
-#   Default: false
 #
 # [*users*]
-#   --> A Hash mapping user names to respective ARD privs. Keys are user names
+#   A Hash mapping user names to respective ARD privs. Keys are user names
 #   as String, values are proivs as String.
 #   Example:
 #   {'fred' => -1073741569, 'daphne' => -2147483646, 'velma' => -1073741822 },
 #   Type: Hash
-#   Default: empty
 #
 # [*strict*]
-#   --> Controls the exclusivity of the user list. When true, only the listed
+#   Controls the exclusivity of the user list. When true, only the listed
 #   users will be allowed access to ARD. Other users with existing rights will
 #   have their privs revoked.
 #   Type: Boolean
-#   Default: true
 #
 # === Variables
 #
@@ -137,14 +125,14 @@
 #
 class managedmac::remotemanagement (
 
-  $enable               = false,
+  $enable               = undef,
   $allow_all_users      = false,
   $all_users_privs      = '-2147483648',
   $enable_menu_extra    = true,
   $enable_dir_logins    = false,
   $allowed_dir_groups   = [],
   $enable_legacy_vnc    = false,
-  $vnc_password         = '',
+  $vnc_password         = undef,
   $allow_vnc_requests   = false,
   $allow_webm_requests  = false,
   $users                = {},
@@ -152,36 +140,40 @@ class managedmac::remotemanagement (
 
 ){
 
-  validate_bool ($enable)
-  validate_bool ($allow_all_users)
-  validate_bool ($enable_menu_extra)
-  validate_bool ($enable_dir_logins)
-  validate_bool ($enable_legacy_vnc)
-  validate_bool ($allow_vnc_requests)
-  validate_bool ($allow_webm_requests)
-  validate_bool ($strict)
+  unless $enable == undef {
 
-  validate_string ($all_users_privs)
-  validate_string ($vnc_password)
-  validate_array  ($allowed_dir_groups)
-  validate_hash   ($users)
+    validate_bool ($enable)
 
-  remotemanagement { 'apple_remote_desktop':
-    ensure => $enable ? {
-      true     => running,
-      default  => stopped,
-    },
-    allow_all_users      => $allow_all_users,
-    all_users_privs      => $all_users_privs,
-    enable_menu_extra    => $enable_menu_extra,
-    enable_dir_logins    => $enable_dir_logins,
-    allowed_dir_groups   => $allowed_dir_groups,
-    enable_legacy_vnc    => $enable_legacy_vnc,
-    vnc_password         => $vnc_password,
-    allow_vnc_requests   => $allow_vnc_requests,
-    allow_wbem_requests  => $allow_webm_requests,
-    users                => $users,
-    strict               => $strict,
+    validate_bool   ($allow_all_users)
+    validate_string ($all_users_privs)
+    validate_bool   ($enable_menu_extra)
+    validate_bool   ($enable_dir_logins)
+    validate_array  ($allowed_dir_groups)
+    validate_bool   ($enable_legacy_vnc)
+    validate_string ($vnc_password)
+    validate_bool   ($allow_vnc_requests)
+    validate_bool   ($allow_webm_requests)
+    validate_hash   ($users)
+    validate_bool   ($strict)
+
+    remotemanagement { 'apple_remote_desktop':
+      ensure => $enable ? {
+        true     => running,
+        default  => stopped,
+      },
+      allow_all_users      => $allow_all_users,
+      all_users_privs      => $all_users_privs,
+      enable_menu_extra    => $enable_menu_extra,
+      enable_dir_logins    => $enable_dir_logins,
+      allowed_dir_groups   => $allowed_dir_groups,
+      enable_legacy_vnc    => $enable_legacy_vnc,
+      vnc_password         => $vnc_password,
+      allow_vnc_requests   => $allow_vnc_requests,
+      allow_wbem_requests  => $allow_webm_requests,
+      users                => $users,
+      strict               => $strict,
+    }
+
   }
 
 }
