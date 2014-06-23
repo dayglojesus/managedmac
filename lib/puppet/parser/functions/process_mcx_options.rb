@@ -6,12 +6,12 @@ Returns MCX PropertyList as String.
     EOS
   ) do |args|
 
-    if args.size != 4
-      e = "process_mcx_options(): Wrong number of args: #{args.size} for 4"
+    if args.size != 5
+      e = "process_mcx_options(): Wrong number of args: #{args.size} for 5"
       raise(Puppet::ParseError, e)
     end
 
-    bluetooth, wifi, loginitems, suppress_icloud_setup = *args
+    bluetooth, wifi, loginitems, suppress_icloud_setup, hidden_preference_panes = *args
 
     plist_options = {
       :plist_format => CFPropertyList::List::FORMAT_XML,
@@ -19,10 +19,11 @@ Returns MCX PropertyList as String.
     }
 
     settings = {
-      'com.apple.MCXBluetooth'   => {},
-      'com.apple.MCXAirPort'     => {},
-      'loginwindow'              => {},
-      'com.apple.SetupAssistant' => {},
+      'com.apple.MCXBluetooth'      => {},
+      'com.apple.MCXAirPort'        => {},
+      'loginwindow'                 => {},
+      'com.apple.SetupAssistant'    => {},
+      'com.apple.systempreferences' => {},
     }
 
     case bluetooth
@@ -70,7 +71,8 @@ Returns MCX PropertyList as String.
       }
     end
 
-    if suppress_icloud_setup
+    case suppress_icloud_setup
+    when true
       settings['com.apple.SetupAssistant'] = {
         'DidSeeCloudSetup' => {
           'state' => 'once',
@@ -85,7 +87,21 @@ Returns MCX PropertyList as String.
       settings.delete('com.apple.SetupAssistant')
     end
 
-    # binding.pry
+    if hidden_preference_panes.empty?
+      settings.delete('com.apple.systempreferences')
+    else
+      settings['com.apple.systempreferences'] = {
+        'HiddenPreferencePanes-Raw' => {
+          'state' => 'always',
+          'upk'   => {
+            'mcx_input_key_names'   => ['HiddenPreferencePanes-Raw'],
+            'mcx_output_key_name'   => 'HiddenPreferencePanes',
+            'mcx_remove_duplicates' => true
+          },
+          'value' => hidden_preference_panes,
+        }
+      }
+    end
 
     return nil if settings.empty?
     settings.to_plist(plist_options)
