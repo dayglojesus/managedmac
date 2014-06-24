@@ -8,8 +8,6 @@
 #
 # === Parameters
 #
-# There 2 parameters, the $accounts parameter is required.
-#
 # [*accounts*]
 #   This is a Hash of Hashes.
 #   The hash should be in the form { title => { parameters } }.
@@ -72,28 +70,35 @@
 #
 # Copyright 2014 Simon Fraser University, unless otherwise noted.
 #
-class managedmac::groups ($accounts, $defaults = {}) {
+class managedmac::groups (
+
+  $accounts = undef,
+  $defaults = {}
+
+) {
 
   if is_hash(hiera('managedmac::activedirectory::options', false)) {
     require managedmac::activedirectory
   }
 
-  validate_hash ($accounts)
-  validate_hash ($defaults)
+  unless $accounts == undef {
 
-  if empty ($accounts) {
-    fail('Parameter Error: $accounts is empty')
-  } else {
-    # Cheating: validate that the value for each key is itself a Hash
-    $check_hash = inline_template("<%= @accounts.reject! {
-      |x| x.respond_to? :key } %>")
+    validate_hash ($accounts)
+    validate_hash ($defaults)
 
-    unless empty($check_hash) {
-      fail("Account Error: Failed to parse one or more account data objects:
-        ${check_hash}")
+    if empty ($accounts) {
+      fail('Parameter Error: $accounts is empty')
+    } else {
+      # Cheating: validate that the value for each key is itself a Hash
+      $check_hash = inline_template("<%= @accounts.reject! {
+        |x| x.respond_to? :key } %>")
+
+      unless empty($check_hash) {
+        fail("Account Error: Failed to parse one or more account data objects:
+          ${check_hash}")
+      }
+
+      create_resources(macgroup, $accounts, $defaults)
     }
-
-    create_resources(macgroup, $accounts, $defaults)
   }
-
 }
