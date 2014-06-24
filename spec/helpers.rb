@@ -141,4 +141,22 @@ module Helpers
       },
     }
   end
+
+  def files_objects
+    {
+      '/path/to/a/file.txt' => {
+        'ensure'  => 'file',
+        'owner'   => 'root',
+        'group'   => 'admin',
+        'mode'    => '0644',
+        'content' => "This is an exmaple.",
+      },
+      '/path/to/a/directory' => {
+        'ensure'  => 'directory',
+        'owner'   => 'root',
+        'group'   => 'admin',
+        'mode'    => '0755',
+      },
+    }
+  end
 end
