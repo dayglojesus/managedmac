@@ -2,10 +2,6 @@ require 'spec_helper'
 
 describe "managedmac::propertylists", :type => 'class' do
 
-  context "when passed no params" do
-    specify { expect { should compile }.to raise_error(Puppet::Error) }
-  end
-
   context "when $files is invalid" do
     let(:params) do
       { :files => 'This is not a Hash.' }

@@ -141,4 +141,33 @@ module Helpers
       },
     }
   end
+
+  def files_objects
+    {
+      '/path/to/a/file.txt' => {
+        'ensure'  => 'file',
+        'owner'   => 'root',
+        'group'   => 'admin',
+        'mode'    => '0644',
+        'content' => "This is an exmaple.",
+      },
+      '/path/to/a/directory' => {
+        'ensure'  => 'directory',
+        'owner'   => 'root',
+        'group'   => 'admin',
+        'mode'    => '0755',
+      },
+    }
+  end
+
+  def execs_cmds
+    {
+      'who_dump' => {
+        'command' => '/usr/bin/who > /tmp/who.dump',
+      },
+      'ps_dump' => {
+        'command' => '/bin/ps aux > /tmp/ps.dump',
+      },
+    }
+  end
 end

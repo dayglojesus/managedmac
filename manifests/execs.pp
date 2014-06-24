@@ -1,6 +1,6 @@
-# == Class: managedmac::groups
+# == Class: managedmac::execs
 #
-# Dynamically create Puppet Macgroup resources using the Puppet built-in
+# Dynamically create Puppet Exec resources using the Puppet built-in
 # 'create_resources' function.
 #
 # We do some validation of data, but the usual caveats apply: garbage in,
@@ -8,7 +8,7 @@
 #
 # === Parameters
 #
-# [*accounts*]
+# [*commands*]
 #   This is a Hash of Hashes.
 #   The hash should be in the form { title => { parameters } }.
 #   See http://tinyurl.com/7783b9l, and the examples below for details.
@@ -24,43 +24,37 @@
 # Not applicable
 #
 # === Examples
+#
 # This class was designed to be used with Hiera. As such, the best way to pass
 # options is to specify them in your Hiera datadir:
 #
 # # Example: defaults.yaml
 # ---
-# managedmac::groups::defaults:
-#   ensure: present
-# managedmac::groups::accounts:
-#   foo_group:
-#     gid: 998
-#     users:
-#       - foo
-#       - bar
-#   bar_group:
-#     gid: 999
-#     nestedgroups:
-#       - foo_group
+# managedmac::execs::commands:
+#   who_dump:
+#     command: '/usr/bin/who > /tmp/who.dump'
+#   ps_dump:
+#     command: '/bin/ps aux > /tmp/ps.dump'
 #
 # Then simply, create a manifest and include the class...
 #
-# # Example: my_manifest.pp
-# include managedmac::groups
+#  # Example: my_manifest.pp
+#  include managedmac::execs
 #
 # If you just wish to test the functionality of this class, you could also do
 # something along these lines:
 #
-# # Create some Hashes
-# $defaults = { 'ensure' => 'present', }
-# $accounts = {
-#   'foo_group' => { 'gid' => 511, 'users'        => ['foo'] },
-#   'bar_group' => { 'gid' => 522, 'nestedgroups' => ['foo_group'] },
-# }
+#  # Create some Hashes
+#  #defaults = { 'returns' => [0,1], }
+#  $commands = {
+#     'who_dump' => { 'command' => '/usr/bin/who > /tmp/who.dump' },
+#     'ps_dump'  => { 'command' => '/bin/ps aux  > /tmp/ps.dump' },
+#  }
 #
-# class { 'managedmac::groups':
-#   accounts => $accounts,
-#   defaults => $defaults,
-# }
+#  class { 'managedmac::execs':
+#    commands  => $commands,
+#    defaults => $defaults,
+#  }
 #
 # === Authors
 #
@@ -70,35 +64,33 @@
 #
 # Copyright 2014 Simon Fraser University, unless otherwise noted.
 #
-class managedmac::groups (
+class managedmac::execs (
 
-  $accounts = undef,
-  $defaults = {}
+  $commands = undef,
+  $defaults = {},
 
 ) {
 
-  if is_hash(hiera('managedmac::activedirectory::options', false)) {
-    require managedmac::activedirectory
-  }
+  unless $commands == undef {
 
-  unless $accounts == undef {
-
-    validate_hash ($accounts)
+    validate_hash ($commands)
     validate_hash ($defaults)
 
-    if empty ($accounts) {
-      fail('Parameter Error: $accounts is empty')
+    if empty ($commands) {
+      fail('Parameter Error: $commands is empty')
     } else {
       # Cheating: validate that the value for each key is itself a Hash
-      $check_hash = inline_template("<%= @accounts.reject! {
+      $check_hash = inline_template("<%= @commands.reject! {
         |x| x.respond_to? :key } %>")
 
       unless empty($check_hash) {
-        fail("Account Error: Failed to parse one or more account data objects:
+        fail("Account Error: Failed to parse one or more account data commands:
           ${check_hash}")
       }
 
-      create_resources(macgroup, $accounts, $defaults)
+      create_resources(exec, $commands, $defaults)
     }
+
   }
+
 }

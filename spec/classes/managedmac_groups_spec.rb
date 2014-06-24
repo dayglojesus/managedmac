@@ -2,10 +2,6 @@ require 'spec_helper'
 
 describe "managedmac::groups", :type => 'class' do
 
-  context "when passed no params" do
-    specify { expect { should compile }.to raise_error(Puppet::Error) }
-  end
-
   context "when $accounts is invalid" do
     let(:params) do
       { :accounts => 'This is not a Hash.' }

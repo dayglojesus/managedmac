@@ -8,8 +8,6 @@
 #
 # === Parameters
 #
-# There 2 parameters, the $files parameter is required.
-#
 # [*files*]
 #   This is a Hash of Hashes.
 #   The hash should be in the form { title => { parameters } }.
@@ -79,23 +77,32 @@
 #
 # Copyright 2014 Simon Fraser University, unless otherwise noted.
 #
-class managedmac::propertylists ($files, $defaults = {}) {
+class managedmac::propertylists (
 
-  validate_hash ($files)
-  validate_hash ($defaults)
+  $files    = undef,
+  $defaults = {}
 
-  if empty ($files) {
-    fail('Parameter Error: $files is empty')
-  } else {
-    # Cheating: validate that the key for each file is an absolute path
-    $check_hash = inline_template("<%= @files.select! {
-      |k,v| Pathname.new(k).absolute? } %>")
+) {
 
-      unless empty($check_hash) {
-      fail("Propertylist Error: Failed to parse one or more file data objects:
-        ${check_hash}")
+  unless $files == undef {
+
+    validate_hash ($files)
+    validate_hash ($defaults)
+
+    if empty ($files) {
+      fail('Parameter Error: $files is empty')
+    } else {
+      # Cheating: validate that the key for each file is an absolute path
+      $check_hash = inline_template("<%= @files.select! {
+        |k,v| Pathname.new(k).absolute? } %>")
+
+        unless empty($check_hash) {
+        fail("Propertylist Error: Failed to parse one or more file data objects:
+          ${check_hash}")
+      }
+      create_resources(propertylist, $files, $defaults)
     }
-    create_resources(propertylist, $files, $defaults)
+
   }
 
 }

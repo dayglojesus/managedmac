@@ -1,35 +1,31 @@
 require 'spec_helper'
 
 describe "managedmac::mobileconfigs", :type => 'class' do
-  
-  context "when passed no params" do
-    specify { expect { should compile }.to raise_error(Puppet::Error) }
-  end
-  
+
   context "when $payloads is invalid" do
     let(:params) do
       { :payloads => 'This is not a Hash.' }
     end
     specify { expect { should compile }.to raise_error(Puppet::Error) }
   end
-  
+
   context "when $defaults is invalid" do
     let(:params) do
-      { 
+      {
         :payloads => { :fake => 'data' },
         :defaults => 'This is not a Hash.',
       }
     end
     specify { expect { should compile }.to raise_error(Puppet::Error) }
   end
-  
+
   context "when $payloads is empty" do
     let(:params) do
       { :payloads => {} }
     end
     specify { expect { should compile }.to raise_error(Puppet::Error) }
   end
-  
+
   context "when $payloads contains invalid data" do
     let(:params) do
       the_data = mobileconfigs_payloads.merge({ 'bad_data' => 'Not a Hash.'})
@@ -37,10 +33,10 @@ describe "managedmac::mobileconfigs", :type => 'class' do
     end
     specify { expect { should compile }.to raise_error(Puppet::Error) }
   end
-  
+
   context "when $payloads is VALID" do
     let(:params) do
-      { 
+      {
         :defaults => { 'organization' => 'Puppet Labs'},
         :payloads => mobileconfigs_payloads,
       }
@@ -54,5 +50,5 @@ describe "managedmac::mobileconfigs", :type => 'class' do
         .with_organization('Puppet Labs')
     end
   end
-  
+
 end

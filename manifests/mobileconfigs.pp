@@ -8,8 +8,6 @@
 #
 # === Parameters
 #
-# There 2 parameters, the $payloads parameter is required.
-#
 # [*payloads*]
 #   This is a Hash of Hashes.
 #   The hash should be in the form { title => { parameters } }.
@@ -74,24 +72,33 @@
 #
 # Copyright 2014 Simon Fraser University, unless otherwise noted.
 #
-class managedmac::mobileconfigs ($payloads, $defaults = {}) {
+class managedmac::mobileconfigs (
 
-  validate_hash ($payloads)
-  validate_hash ($defaults)
+  $payloads = undef,
+  $defaults = {}
 
-  if empty ($payloads) {
-    fail('Parameter Error: $payloads is empty')
-  } else {
-    # Cheating: validate that the value for each key is itself a Hash
-    $check_hash = inline_template("<%= @payloads.reject! {
-      |x| x.respond_to? :key } %>")
+) {
 
-    unless empty($check_hash) {
-      fail("Payload Error: Failed to parse one or more payload data objects:
-        ${check_hash}")
+  unless $payloads == undef {
+
+    validate_hash ($payloads)
+    validate_hash ($defaults)
+
+    if empty ($payloads) {
+      fail('Parameter Error: $payloads is empty')
+    } else {
+      # Cheating: validate that the value for each key is itself a Hash
+      $check_hash = inline_template("<%= @payloads.reject! {
+        |x| x.respond_to? :key } %>")
+
+      unless empty($check_hash) {
+        fail("Payload Error: Failed to parse one or more payload data objects:
+          ${check_hash}")
+      }
+
+      create_resources(mobileconfig, $payloads, $defaults)
     }
 
-    create_resources(mobileconfig, $payloads, $defaults)
   }
 
 }
