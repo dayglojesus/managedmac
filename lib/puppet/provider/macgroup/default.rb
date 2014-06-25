@@ -152,7 +152,7 @@ Puppet::Type.type(:macgroup).provide(:default) do
 
   # Puppet MAGIC
   # The flush method is called once per resource whenever the
-  # ‘is’ and ‘should’ values for a property differ
+  # 'is' and 'should' values for a property differ
   # (and synchronization needs to occur).
   # As per Shit Gary Says: http://bit.ly/1j9ou3Q
   def flush
