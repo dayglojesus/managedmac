@@ -3,39 +3,21 @@
 # Leverages the Mobileconfig type and provider to configure Energy Saver
 # settings for Desktops and Laptops.
 #
-# This class is extremely primitive. It is little more than a wrapper
-# for Mobileconfig. To get it to work correctly, you must pass it properly
-# formatted data. In other words, you need to know what you are doing.
-#
-# Read the examples below!
-#
-# It's not difficult to do, but if you pass it garbage, it may not complain. We
-# do SOME validation of the data, but we cannot validate optional values.
-#
-# These shortcomings have to do with the fact that the params for Energy Saver
-# settings are have a fairly complicated structure and that Apple actually
-# abstracts these settings in a profile using the com.apple.MCX preference
-# domain. They are not set using a proper profile/mobileconfig in the strictest
-# sense. You could just as easily be using plain MCX.
-#
-# Still, abstracting it into a Puppet class allows you to use Hiera to specify
-# the settings. Fun!
+# If no parameters are set, removal of the Mobileconfig resource is implicit.
 #
 # === Parameters
 #
-# This class takes a two parameters:
-# [*ensure*]
-#   Whether to apply the resource or remove it. Valid values: present or
-#   absent. Pass a Symbol or a String.
-#   Default: 'present'
+# [*desktop*]
+#   The settings to apply for Desktop machines. This is a compound parameter
+#   containing the raw keys/values for configuring EnergySaver. The structure
+#   is rather complex. See the examples for complete details.
+#   Type: Hash
 #
-# [*options*]
-#   Within the options Hash, you may specify one or more keys:
-#     desktop  (String): the settings for Desktop machines
-#     portable (String): the settings for Portable machines
-#
-#   Each of these Hash keys, has it's own acceptable data structures. See the
-#   documentation below for a more complete example.
+# [*portable*]
+#   The settings to apply for Laptop machines. This is a compound parameter
+#   containing the raw keys/values for configuring EnergySaver. The structure
+#   is rather complex. See the examples for complete details.
+#   Type: Hash
 #
 # === Variables
 #
@@ -49,8 +31,7 @@
 #
 #  # Example: defaults.yaml
 #  ---
-# managedmac::energysaver::options:
-#   desktop:
+#  managedmac::energysaver::desktop:
 #     ACPower:
 #       'Automatic Restart On Power Loss': true
 #       'Disk Sleep Timer-boolean': true
@@ -67,7 +48,7 @@
 #         eventtype: wakepoweron
 #         time: 480
 #         weekdays: 127
-#   laptop:
+#  managedmac::energysaver::portable:
 #     ACPower:
 #       'Automatic Restart On Power Loss': true
 #       'Disk Sleep Timer-boolean': true
@@ -89,37 +70,53 @@
 # If you just wish to test the functionality of this class, you could also do
 # something along these lines:
 #
-#  # Create an options Hash
-#  $options = {"desktop"=>
-#     {"ACPower"=>
-#       {"Automatic Restart On Power Loss"=>true,
-#        "Disk Sleep Timer-boolean"=>true,
-#        "Display Sleep Timer"=>15,
-#        "Sleep On Power Button"=>false,
-#        "Wake On LAN"=>true,
-#        "System Sleep Timer"=>30},
-#      "Schedule"=>
-#       {"RepeatingPowerOff"=>
-#         {"eventtype"=>"sleep", "time"=>1410, "weekdays"=>127},
-#        "RepeatingPowerOn"=>
-#         {"eventtype"=>"wakepoweron", "time"=>480, "weekdays"=>127}}},
-#    "laptop"=>
-#     {"ACPower"=>
-#       {"Automatic Restart On Power Loss"=>true,
-#        "Disk Sleep Timer-boolean"=>true,
-#        "Display Sleep Timer"=>15,
-#        "Wake On LAN"=>true,
-#        "System Sleep Timer"=>30},
-#      "BatteryPower"=>
-#       {"Automatic Restart On Power Loss"=>false,
-#        "Disk Sleep Timer-boolean"=>true,
-#        "Display Sleep Timer"=>5,
-#        "System Sleep Timer"=>10,
-#        "Wake On LAN"=>true}}}
+# # Create an Desktop settings Hash
+# $desktop = {
+#  "ACPower" => {
+#    "Automatic Restart On Power Loss" => true,
+#    "Disk Sleep Timer-boolean"        => true,
+#    "Display Sleep Timer"             => 15,
+#    "Sleep On Power Button"           => false,
+#    "Wake On LAN"                     => true,
+#    "System Sleep Timer"              => 30,
+#   },
+#   "Schedule" => {
+#     "RepeatingPowerOff" => {
+#       "eventtype" => "sleep",
+#       "time"      => 1410,
+#       "weekdays"  => 127
+#     },
+#     "RepeatingPowerOn" => {
+#       "eventtype" => "wakepoweron",
+#       "time"      => 480,
+#       "weekdays"  => 127
+#     }
+#   }
+# }
 #
-#  class { 'managedmac::energysaver':
-#    options => $options,
-#  }
+# # Create an Portable settings Hash
+# $portable = {
+#   "ACPower" => {
+#     "Automatic Restart On Power Loss" => true,
+#     "Disk Sleep Timer-boolean"        => true,
+#     "Display Sleep Timer"             => 15,
+#     "Wake On LAN"                     => true,
+#     "System Sleep Timer"              => 30,
+#   },
+#   "BatteryPower" => {
+#     "Automatic Restart On Power Loss" => false,
+#     "Disk Sleep Timer-boolean"        => true,
+#     "Display Sleep Timer"             => 5,
+#     "System Sleep Timer"              => 10,
+#     "Wake On LAN"                     => true
+#   }
+# }
+#
+# # Invoke the class with params
+# class { 'managedmac::energysaver':
+#   desktop => $desktop,
+#   laptop  => $portable,
+# }
 #
 # === Authors
 #
@@ -129,87 +126,42 @@
 #
 # Copyright 2014 Simon Fraser University, unless otherwise noted.
 #
-class managedmac::energysaver ($ensure = present, $options = {}) {
+class managedmac::energysaver (
 
-  $machine_type = $::productname ? {
-    /MacBook/ => 'portable',
-    default   => 'desktop',
-  }
+  $desktop  = {},
+  $portable = {},
 
-  $compiled_options = {}
+) {
 
-  # Only validate required variables if we are activating the resource
-  if $ensure == present {
+  validate_hash ($desktop)
+  validate_hash ($portable)
 
-    validate_hash ($options)
-
-    $mcx_prefs_domain          = 'com.apple.EnergySaver'
-    $desktop_schedule_key      = "${mcx_prefs_domain}.${machine_type}.Schedule"
-    $ac_power_key              = "${mcx_prefs_domain}.${machine_type}.ACPower"
-    $batt_power_key            = "${mcx_prefs_domain}.${machine_type}.BatteryPower"
-    $desktop_ac_profile_num    = "${mcx_prefs_domain}.${machine_type}.ACPower-ProfileNumber"
-    $portable_ac_profile_num   = "${mcx_prefs_domain}.${machine_type}.ACPower-ProfileNumber"
-    $portable_batt_profile_num = "${mcx_prefs_domain}.${machine_type}.BatteryPower-ProfileNumber"
-    $profile_number            = -1
-
-    case $machine_type {
-
-      # PORTABLE
-      'portable': {
-
-        validate_hash ($options[portable])
-
-        unless empty($options[portable][ACPower]) {
-          validate_hash ($options[portable][ACPower])
-          $compiled_options[$ac_power_key] = $options[portable][ACPower]
-          $compiled_options[$portable_ac_profile_num] = $profile_number
-        }
-
-        unless empty($options[portable][BatteryPower]) {
-          validate_hash ($options[portable][BatteryPower])
-          $compiled_options[$batt_power_key] = $options[portable][BatteryPower]
-          $compiled_options[$portable_batt_profile_num] = $profile_number
-        }
-
-      }
-
-      # DESKTOP
-      'desktop':    {
-        validate_hash ($options[desktop])
-
-        unless empty($options[desktop][ACPower]) {
-          validate_hash ($options[desktop][ACPower])
-          $compiled_options[$ac_power_key] = $options[desktop][ACPower]
-        }
-
-        unless empty($options[desktop][Schedule]) {
-          validate_hash ($options[desktop][Schedule])
-          $compiled_options[$desktop_schedule_key] = $options[desktop][Schedule]
-        }
-
-      }
-
-      # OTHER
-      default:      {
-        fail("Unknown machine_type: ${machine_type}")
-      }
-
-    }
-
-  } else {
-    unless $ensure == 'absent' {
-      fail("Parameter Error: invalid value for :ensure, ${ensure}")
+  $params = {
+    'com.apple.MCX' => {
+      "com.apple.EnergySaver.desktop.ACPower"       => $desktop['ACPower'],
+      "com.apple.EnergySaver.desktop.Schedule"      => $desktop['Schedule'],
+      "com.apple.EnergySaver.portable.ACPower"      => $portable['ACPower'],
+      "com.apple.EnergySaver.portable.BatteryPower" => $portable['BatteryPower'],
+      "com.apple.EnergySaver.portable.Schedule"     => $portable['Schedule'],
+      "com.apple.EnergySaver.desktop.ACPower-ProfileNumber"       => -1,
+      "com.apple.EnergySaver.portable.ACPower-ProfileNumber"      => -1,
+      "com.apple.EnergySaver.portable.BatteryPower-ProfileNumber" => -1,
     }
   }
 
-  $compiled_options[PayloadType] = 'com.apple.MCX'
+  $content = process_mobileconfig_params($params)
+
+  $mobileconfig_ensure = empty($desktop) and empty($portable)
 
   mobileconfig { 'managedmac.energysaver.alacarte':
-    ensure       => $ensure,
+    ensure => $mobileconfig_ensure ? {
+      true  => 'absent',
+      false => 'present',
+    },
     displayname  => 'Managed Mac: Energy Saver',
     description  => 'Energy Saver configuration. Installed by Puppet.',
     organization => 'Simon Fraser University',
-    content      => [$compiled_options],
+    content      => $content,
   }
 
 }

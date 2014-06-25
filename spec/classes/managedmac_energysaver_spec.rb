@@ -1,176 +1,55 @@
 require 'spec_helper'
 
 describe 'managedmac::energysaver', :type => 'class' do
-  
-  context "when it is passed no params" do
-    specify { expect { should compile }.to raise_error(Puppet::Error) }
-  end
-  
-  context "when it is passed a BAD param" do
+
+  context "when $desktop is not a Hash" do
     let(:params) do
-      { :options => "Icanhazstring", }
+      { :desktop => "Icanhazstring", }
     end
-    
     specify { expect { should compile }.to raise_error(Puppet::Error) }
   end
-  
-  # Test ensurability
-  context "when $ensure => 'absent'" do
-    
+
+  context "when $portable is not a Hash" do
     let(:params) do
-      { :ensure  => 'absent' }
+      { :desktop => "Icanhazstring", }
     end
-    
-    it { should contain_mobileconfig('managedmac.energysaver.alacarte')\
-      .with_ensure('absent') }
-  end
-  
-  context "when the machine_type is uknown" do
-    let(:facts) { { :productname => 'FOO', } }
     specify { expect { should compile }.to raise_error(Puppet::Error) }
   end
-    
-  context "when the machine is a portable" do
-    
-    let(:facts) { { :productname => 'MacBook', } }
-    
-    context "when there are no portable options set" do
-      let(:params) do
-        { 
-          :options => { 'desktop' => {} }
-        }
-      end
-      specify { expect { should compile }.to raise_error(Puppet::Error) }
+
+  context "when $desktop is an empty Hash" do
+    let(:params) do
+      { :desktop => {}, }
     end
-    
-    context "when portable options are set" do
-      let(:params) do
-        { 
-          :options => { 'portable' => {} }
-        }
-      end
-      specify do
-        should contain_mobileconfig('managedmac.energysaver.alacarte')
-      end
+    it do
+      should contain_mobileconfig('managedmac.energysaver.alacarte').with_ensure('absent')
     end
-    
-    context "when ACPower options are invalid" do      
-      let(:params) do
-        { 
-          :options => { 
-            'portable' => { 'ACPower' => 'I should be a Hash' }
-          }
-        }
-      end
-      specify { expect { should compile }.to raise_error(Puppet::Error) }
-    end
-    
-    context "when ACPower options are valid" do
-      let(:params) do
-        { 
-          :options => options_energysaver
-        }
-      end
-      specify do
-        should contain_mobileconfig('managedmac.energysaver.alacarte')\
-        .with_content(/ACPower.*/)
-      end
-    end
-    
-    context "when BatteryPower options are invalid" do      
-      let(:params) do
-        { 
-          :options => { 
-            'portable' => { 'BatteryPower' => 'I should be a Hash' }
-          }
-        }
-      end
-      specify { expect { should compile }.to raise_error(Puppet::Error) }
-    end
-    
-    context "when BatteryPower options are valid" do
-      let(:params) do
-        { 
-          :options => options_energysaver
-        }
-      end
-      specify do
-        should contain_mobileconfig('managedmac.energysaver.alacarte')\
-        .with_content(/BatteryPower.*/)
-      end
-    end
-    
   end
-  
-  context "when the machine is a desktop" do
-    let(:facts) { { :productname => 'iMac', } }
-    
-    context "when there are no desktop options set" do
-      let(:params) do
-        { 
-          :options => { 'portable' => {} }
-        }
-      end
-      specify { expect { should compile }.to raise_error(Puppet::Error) }
+
+  context "when $portable is an empty Hash" do
+    let(:params) do
+      { :portable => {}, }
     end
-    
-    context "when desktop options are set" do
-      let(:params) do
-        { 
-          :options => { 'desktop' => {} }
-        }
-      end
-      specify do
-        should contain_mobileconfig('managedmac.energysaver.alacarte')
-      end
+    it do
+      should contain_mobileconfig('managedmac.energysaver.alacarte').with_ensure('absent')
     end
-    
-    context "when ACPower options are invalid" do      
-      let(:params) do
-        { 
-          :options => { 
-            'desktop' => { 'ACPower' => 'I should be a Hash' }
-          }
-        }
-      end
-      specify { expect { should compile }.to raise_error(Puppet::Error) }
-    end
-    
-    context "when ACPower options are valid" do
-      let(:params) do
-        { 
-          :options => options_energysaver
-        }
-      end
-      specify do
-        should contain_mobileconfig('managedmac.energysaver.alacarte')\
-        .with_content(/ACPower.*/)
-      end
-    end
-    
-    context "when Schedule options are invalid" do      
-      let(:params) do
-        { 
-          :options => { 
-            'desktop' => { 'Schedule' => 'I should be a Hash' }
-          }
-        }
-      end
-      specify { expect { should compile }.to raise_error(Puppet::Error) }
-    end
-    
-    context "when Schedule options are valid" do
-      let(:params) do
-        { 
-          :options => options_energysaver
-        }
-      end
-      specify do
-        should contain_mobileconfig('managedmac.energysaver.alacarte')\
-        .with_content(/RepeatingPowerOff.*/)
-      end
-    end
-    
   end
-  
+
+  context "when $desktop is NOT an empty Hash" do
+    let(:params) do
+      { :desktop => options_energysaver['desktop'], }
+    end
+    it do
+      should contain_mobileconfig('managedmac.energysaver.alacarte').with_ensure('present')
+    end
+  end
+
+  context "when $portable is NOT an empty Hash" do
+    let(:params) do
+      { :portable => options_energysaver['portable'], }
+    end
+    it do
+      should contain_mobileconfig('managedmac.energysaver.alacarte').with_ensure('present')
+    end
+  end
+
 end
