@@ -1,13 +1,13 @@
 # == Class: managedmac::logouthook
 #
 # Simple class for activating or deactivating OS X logouthooks and specifying
-# a directory of scripts to execute at logout time.
+# a directory of scripts to execute at login time.
 #
 # How does it work?
 #
 # Employs Managedmac::Hook defined type to create a master logouthook.
 #   /etc/masterhooks/logouthook.rb
-# It then activates the hook by setting the LogoutHook key in the root
+# It then activates the hook by setting the LoginHook key in the root
 # com.apple.loginwindow preferences domain.
 #
 # Once the hook is activated, each time a user logs in, the scripts directory
@@ -27,15 +27,13 @@
 #
 # === Parameters
 #
-# There 2 parameters, the $enable parameter is required.
-#
 # [*enable*]
-#   Type: Boolen
+#   Whether to active the master logouthook or not.
+#   Type: Boolean
 #
 # [*scripts*]
 #   An absolute path on the local machine that will store the scripts you want
 #   executed by the master logouthook. Optional parameter.
-#   Default: /etc/logouthooks
 #   Type: String
 #
 # === Variables
@@ -43,6 +41,7 @@
 # Not applicable
 #
 # === Examples
+#
 # This class was designed to be used with Hiera. As such, the best way to pass
 # options is to specify them in your Hiera datadir:
 #
@@ -59,7 +58,10 @@
 # If you just wish to test the functionality of this class, you could also do
 # something along these lines:
 #
-#  class { 'managedmac::logouthook': enable => true, }
+#  class { 'managedmac::logouthook':
+#     enable  => true,
+#     scripts => '/path/to/your/scripts',
+#  }
 #
 # === Authors
 #
@@ -69,11 +71,25 @@
 #
 # Copyright 2014 Simon Fraser University, unless otherwise noted.
 #
-class managedmac::logouthook ($enable, $scripts = '/etc/logouthooks') {
+class managedmac::logouthook (
 
-  managedmac::hook {'logout':
-    enable  => $enable,
-    scripts => $scripts,
+  $enable  = undef,
+  $scripts = undef,
+
+) {
+
+  unless $enable == undef {
+
+    validate_bool ($enable)
+
+    if $enable {
+      validate_absolute_path ($scripts)
+    }
+
+    managedmac::hook {'logout':
+      enable  => $enable,
+      scripts => $scripts,
+    }
   }
 
 }
