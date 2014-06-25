@@ -3,11 +3,7 @@ require 'spec_helper'
 describe "managedmac::logouthook", :type => 'class' do
 
   context "when passed no params" do
-    specify do
-      expect {
-        should compile
-      }.to raise_error(Puppet::Error, /Must pass enable/)
-    end
+    it { should_not contain_managedmac__hook('logout') }
   end
 
   context "when enable == true" do
@@ -16,11 +12,11 @@ describe "managedmac::logouthook", :type => 'class' do
       let(:params) do
         { :enable => true }
       end
-
-      it { should contain_managedmac__hook('logout').with(
-        'enable'  => true,
-        'scripts' => '/etc/logouthooks',
-      )}
+      specify do
+        expect {
+          should compile
+        }.to raise_error(Puppet::Error, /not an absolute path/)
+      end
     end
 
     context "when scripts is defined" do
@@ -28,7 +24,6 @@ describe "managedmac::logouthook", :type => 'class' do
       let(:params) do
         { :enable => true, :scripts => the_scripts }
       end
-
       it { should contain_managedmac__hook('logout').with(
         'enable'  => true,
         'scripts' => the_scripts,
@@ -41,10 +36,9 @@ describe "managedmac::logouthook", :type => 'class' do
     let(:params) do
       { :enable => false }
     end
-
     it { should contain_managedmac__hook('logout').with(
       'enable'  => false,
-      'scripts' => '/etc/logouthooks',
+      'scripts' => '',
     )}
   end
 

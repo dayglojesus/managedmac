@@ -40,29 +40,31 @@ describe 'managedmac', :type => 'class' do
       {
         :osfamily => 'Darwin',
         :macosx_productversion_major => '10.9',
-        :ntp_offset => 60,
       }
     end
 
-    let :hiera_data do
-      {
-        'managedmac::ntp::options' => options_ntp,
-        'managedmac::activedirectory::options' => options_activedirectory,
-        'managedmac::loginwindow::acl' => acl_loginwindow,
-        'managedmac::loginhook::enable' => true,
-        'managedmac::logouthook::enable' => true,
-      }
-    end
+    it { should contain_class('managedmac::ntp') }
+    it { should contain_class('managedmac::activedirectory') }
+    it { should contain_class('managedmac::security') }
+    it { should contain_class('managedmac::mcx') }
+    it { should contain_class('managedmac::filevault') }
+    it { should contain_class('managedmac::loginwindow') }
+    it { should contain_class('managedmac::softwareupdate') }
+    it { should contain_class('managedmac::authorization') }
+    it { should contain_class('managedmac::energysaver') }
+    it { should contain_class('managedmac::portablehomes') }
+    it { should contain_class('managedmac::loginhook') }
+    it { should contain_class('managedmac::logouthook') }
+    it { should contain_class('managedmac::sshd') }
+    it { should contain_class('managedmac::remotemanagement') }
+    it { should contain_class('managedmac::screensharing') }
+    it { should contain_class('managedmac::mobileconfigs') }
+    it { should contain_class('managedmac::propertylists') }
+    it { should contain_class('managedmac::execs') }
+    it { should contain_class('managedmac::files') }
+    it { should contain_class('managedmac::users') }
+    it { should contain_class('managedmac::groups') }
 
-    context "class configuration options are set" do
-      it { should contain_class('managedmac::ntp') }
-      it { should contain_class('managedmac::activedirectory') }
-      it { should contain_managedmac__acl('com.apple.access_loginwindow') }
-      it { should contain_class('managedmac::loginhook') }
-      it { should contain_class('managedmac::logouthook') }
-    end
-
-    it { should compile.with_all_deps }
   end
 
 end

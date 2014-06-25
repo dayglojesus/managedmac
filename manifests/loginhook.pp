@@ -27,15 +27,13 @@
 #
 # === Parameters
 #
-# There 2 parameters, the $enable parameter is required.
-#
 # [*enable*]
-#   Type: Boolen
+#   Whether to active the master loginhook or not.
+#   Type: Boolean
 #
 # [*scripts*]
 #   An absolute path on the local machine that will store the scripts you want
 #   executed by the master loginhook. Optional parameter.
-#   Default: /etc/loginhooks
 #   Type: String
 #
 # === Variables
@@ -43,6 +41,7 @@
 # Not applicable
 #
 # === Examples
+#
 # This class was designed to be used with Hiera. As such, the best way to pass
 # options is to specify them in your Hiera datadir:
 #
@@ -59,7 +58,10 @@
 # If you just wish to test the functionality of this class, you could also do
 # something along these lines:
 #
-#  class { 'managedmac::loginhook': enable => true, }
+#  class { 'managedmac::loginhook':
+#     enable  => true,
+#     scripts => '/path/to/your/scripts',
+#  }
 #
 # === Authors
 #
@@ -69,11 +71,25 @@
 #
 # Copyright 2014 Simon Fraser University, unless otherwise noted.
 #
-class managedmac::loginhook ($enable, $scripts = '/etc/loginhooks') {
+class managedmac::loginhook (
 
-  managedmac::hook {'login':
-    enable  => $enable,
-    scripts => $scripts,
+  $enable  = undef,
+  $scripts = undef,
+
+) {
+
+  unless $enable == undef {
+
+    validate_bool ($enable)
+
+    if $enable {
+      validate_absolute_path ($scripts)
+    }
+
+    managedmac::hook {'login':
+      enable  => $enable,
+      scripts => $scripts,
+    }
   }
 
 }

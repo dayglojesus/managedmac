@@ -45,40 +45,32 @@ class managedmac {
     fail("unsupported product version: ${::macosx_productversion_major}")
   }
 
-  if is_hash(hiera('managedmac::ntp::options', false)) {
-    contain managedmac::ntp
+  # Require the CFPropertyList gem
+  package { 'CFPropertyList':
+    ensure   => 'installed',
+    provider => 'gem',
   }
 
-  if is_hash(hiera('managedmac::activedirectory::options', false)) {
-    contain managedmac::activedirectory
-  }
-
-  if is_hash(hiera('managedmac::loginwindow::acl', false)) {
-
-    $loginwindow_acl   = hiera('managedmac::loginwindow::acl')
-    $loginwindow_group = 'com.apple.access_loginwindow'
-
-    managedmac::acl {'com.apple.access_loginwindow':
-      users   => $loginwindow_acl[users],
-      groups  => $loginwindow_acl[groups],
-      destroy => true,
-    }
-
-  } else {
-
-    managedmac::acl {'com.apple.access_loginwindow':
-      state   => disabled,
-      destroy => true,
-    }
-
-  }
-
-  if type(hiera('managedmac::loginhook::enable', '')) == 'boolean' {
-    contain managedmac::loginhook
-  }
-
-  if type(hiera('managedmac::logouthook::enable', '')) == 'boolean' {
-    contain managedmac::logouthook
-  }
+  contain managedmac::ntp
+  contain managedmac::activedirectory
+  contain managedmac::security
+  contain managedmac::mcx
+  contain managedmac::filevault
+  contain managedmac::loginwindow
+  contain managedmac::softwareupdate
+  contain managedmac::authorization
+  contain managedmac::energysaver
+  contain managedmac::portablehomes
+  contain managedmac::loginhook
+  contain managedmac::logouthook
+  contain managedmac::sshd
+  contain managedmac::remotemanagement
+  contain managedmac::screensharing
+  contain managedmac::mobileconfigs
+  contain managedmac::propertylists
+  contain managedmac::execs
+  contain managedmac::files
+  contain managedmac::users
+  contain managedmac::groups
 
 }
