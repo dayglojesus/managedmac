@@ -51,6 +51,12 @@ class managedmac {
     provider => 'gem',
   }
 
+  # Require the sqlite3 gem
+  package { 'sqlite3':
+    ensure   => 'installed',
+    provider => 'gem',
+  }
+
   contain managedmac::ntp
   contain managedmac::activedirectory
   contain managedmac::security
