@@ -30,8 +30,8 @@
 #   Type: Array
 #
 # [*suppress_icloud_setup*]
-#   Allow iCloud Setup to run at login for new users.
-#   Type: Bool
+#   Suppress iCloud Setup dialogue for new users.
+#   Type: Boolean
 #
 # [*hidden_preference_panes*]
 #   A list of hidden System Preferences panes. Prefernce pane names MUST be
