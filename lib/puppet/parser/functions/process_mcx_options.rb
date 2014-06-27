@@ -1,4 +1,3 @@
-require 'pry'
 require 'cfpropertylist'
 module Puppet::Parser::Functions
   newfunction(:process_mcx_options, :type => :rvalue, :doc => <<-EOS
@@ -104,6 +103,22 @@ Returns MCX PropertyList as String.
     end
 
     return nil if settings.empty?
-    settings.to_plist(plist_options)
+
+    # This is a Hack.
+    # The content attrib equality test in the Puppet MCX type/provider compares
+    # the MCX as a String. This is silly, but so is the manner in which
+    # CFPropertyList formats the XML it outputs. The net result of these two
+    # mistakes is that Puppet will re-apply the resource on every run, just
+    # because the whitespace in the margins is out of whack.
+    #
+    # As a workaround, we pass the CFPropertyList XML through /usr/bin/plutil
+    # to conform it.
+    # Thanks to @glarizza for this little snippet...
+    # https://gist.github.com/glarizza/3185900
+    IO.popen('plutil -convert xml1 -o - -', mode='r+') do |io|
+      io.write settings.to_plist(plist_options)
+      io.close_write
+      io.read
+    end
   end
 end
