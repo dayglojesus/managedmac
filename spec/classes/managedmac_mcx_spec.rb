@@ -6,7 +6,16 @@ describe 'managedmac::mcx', :type => 'class' do
     { :macosx_productversion_major => "10.9" }
   end
 
-  it { should contain_exec('refresh_mcx') }
+  context "when passed NO params" do
+    it { should_not contain_exec('refresh_mcx') }
+  end
+
+  context "when passed ANY valid param" do
+    let(:params) do
+      { :bluetooth => 'on' }
+    end
+    it { should contain_exec('refresh_mcx') }
+  end
 
   context "when passed a BAD param" do
     let(:params) do
