@@ -55,17 +55,19 @@ Puppet::Type.newtype(:propertylist) do
     desc %q{The file's content, whole or in part.}
 
     def insync?(is)
-      this = [is].flatten
-      return this.eql? should if resource[:method] == :replace
-      case should
+      is = [is].flatten
+      return is.eql? should if resource[:method] == :replace
+      is_obj     = is.first
+      should_obj = should.first
+      case should_obj
       when Hash
-        (this.merge(should)).eql? is
+        (is_obj.merge(should_obj)).eql? is_obj
       when Array
-        (this | should).eql? is
+        (is_obj | should_obj).eql? is_obj
       when String, Fixnum, Float, TrueClass, FalseClass
-        this.eql? should
+        is_obj.eql? should_obj
       else
-        fail Puppet::Error, "No equality test for '#{should.class}: (#{should})'"
+        fail Puppet::Error, "No equality test for '#{should_obj.class}: (#{should_obj})'"
       end
     end
 
