@@ -110,6 +110,7 @@ Puppet::Type.newtype(:macgroup) do
 
     # Override #insync?
     # - We need to sort the Arrays before performing an equality test.
+    # - We also need to obey the :strict param and compare the Arrays appropriately
     def insync?(is)
       i, s = [is, should].collect do |a|
         if a == :absent
@@ -120,7 +121,8 @@ Puppet::Type.newtype(:macgroup) do
           a.sort!
         end
       end
-      i.eql? s
+      return i.eql? s if resource[:strict] == :true
+      (i | s).eql? i
     end
 
     # Normalize the should parameter
@@ -210,6 +212,7 @@ Puppet::Type.newtype(:macgroup) do
 
     # Override #insync?
     # - We need to sort the Arrays before performing an equality test.
+    # - We also need to obey the :strict param and compare the Arrays appropriately
     def insync?(is)
       i, s = [is, should].collect do |a|
         if a == :absent
@@ -220,7 +223,8 @@ Puppet::Type.newtype(:macgroup) do
           a.sort!
         end
       end
-      i.eql? s
+      return i.eql? s if resource[:strict] == :true
+      (i | s).eql? i
     end
 
     # Normalize the should parameter
@@ -250,13 +254,7 @@ Puppet::Type.newtype(:macgroup) do
       ensure that the users/groups you specify in the resource are members, and
       ignore any other records in the list(s).
 
-      To accomplish this, you can set the strict parameter to false, with one
-      GIANT caveat...
-
-      Puppet will update the defined resource EVERYTIME it runs. Yes, that is
-      the price you will pay. This makes management of this particular resource
-      attribute LESS THAN IDEMPOTENT. There no simple way around this, but in
-      the event you need such a feature... Hey! There it is...
+      To accomplish this, you can set the strict parameter to false.
 
       Default is :true (purge)
     }
