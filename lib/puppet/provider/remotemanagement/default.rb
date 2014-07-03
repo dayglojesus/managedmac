@@ -227,6 +227,7 @@ Puppet::Type.type(:remotemanagement).provide(:default) do
       'WBEMIncomingAccessEnabled'     => resource[:allow_wbem_requests],
     }.delete_if { |k,v| v.nil? }
     self.class.write_plist(ARD_PREFERENCES, prefs, :xml)
+    system('/usr/bin/killall', 'cfprefsd')
   end
 
   def flush
