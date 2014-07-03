@@ -31,10 +31,11 @@ Puppet::Type.type(:propertylist).provide(:default) do
       absent = { :name => path, :ensure => :absent }
 
       unless File.exists?(path)
-        unless File.file?(path)
-          raise Puppet::Error, "Error: #{path} is not a file, [#{File.ftype(path)}]."
-        end
         return absent
+      end
+
+      unless File.file?(path)
+        raise Puppet::Error, "Error: #{path} is not a file, [#{File.ftype(path)}]."
       end
 
       return absent unless format = get_format(path)
@@ -121,7 +122,11 @@ Puppet::Type.type(:propertylist).provide(:default) do
 
   def set_content
     path    = resource[:path]
-    content = resource[:content]
+    content = if resource[:content].size != 1
+      resource[:content]
+    else
+      resource[:content].first
+    end
     if resource[:method] == :insert
       if File.exists?(path) and File.file?(path)
         original = self.class.read_plist path
