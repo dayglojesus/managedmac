@@ -22,8 +22,8 @@ Puppet::Type.type(:propertylist).provide(:default) do
     end
 
     def prefetch(resources)
-      if resource = resources.values.first
-        resource.provider = new(get_propertylist_properties(resources.keys.first))
+      resources.each do |k,v|
+        v.provider = new(get_propertylist_properties(k))
       end
     end
 
