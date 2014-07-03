@@ -32,7 +32,7 @@ module ManagedMacCommon
     when Array
       data.map { |e| destringify e }
     when Hash
-      Hash[ data.map { |k, v| [k, destringify(v)] } ]
+      Hash[ data.map { |k, v| [k.to_s, destringify(v)] } ]
     else
       raise Puppet::Error, "Cast Error: #destringify unknown type:
         #{data.class}, #{data}"
