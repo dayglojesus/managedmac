@@ -30,8 +30,8 @@
 #   Type: Array
 #
 # [*suppress_icloud_setup*]
-#   Allow iCloud Setup to run at login for new users.
-#   Type: Bool
+#   Suppress iCloud Setup dialogue for new users.
+#   Type: Boolean
 #
 # [*hidden_preference_panes*]
 #   A list of hidden System Preferences panes. Prefernce pane names MUST be
@@ -112,14 +112,14 @@ class managedmac::mcx (
   }
 
   validate_array ($loginitems)
-  
+
   unless $suppress_icloud_setup == undef {
     validate_bool ($suppress_icloud_setup)
   }
 
   validate_array ($hidden_preference_panes)
 
-  $content = process_mcx_options($bluetooth_state, 
+  $content = process_mcx_options($bluetooth_state,
     $wifi_state, $loginitems, $suppress_icloud_setup, $hidden_preference_panes)
 
   $ensure = empty($content) ? {
@@ -138,8 +138,10 @@ class managedmac::mcx (
     require => Computer['mcx_puppet'],
   }
 
-  exec { 'refresh_mcx':
-    command => '/System/Library/CoreServices/ManagedClient.app/Contents/MacOS/ManagedClient -f',
+  if $ensure == present {
+    exec { 'refresh_mcx':
+      command => '/System/Library/CoreServices/ManagedClient.app/Contents/MacOS/ManagedClient -f',
+    }
   }
 
 }

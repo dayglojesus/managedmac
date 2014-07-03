@@ -11,17 +11,20 @@
 #   Default: undef
 #
 # [*hostname*]
-#   The Active Directory domain to join
+#   The Active Directory domain to join. This parameter is required when
+#   :enabled is true.
 #   Type: String
 #   Default: undef
 #
 # [*username*]
-#   User name of the account used to join the domain
+#   User name of the account used to join the domain. This parameter is
+#   required when :enabled is true.
 #   Type: String
 #   Default: undef
 #
 # [*password*]
-#   Password of the account used to join the domain
+#   Password of the account used to join the domain. This parameter is
+#   required when :enabled is true.
 #   Type: String
 #   Default: undef
 #
@@ -79,13 +82,13 @@
 #
 # [*packet_sign*]
 #   Packet signing: "allow", "disable" or "require"; "allow" is default
-#   Type: Boolean
+#   Type: String
 #   Default: undef
 #
 # [*packet_encrypt*]
 #   Packet encryption: "allow", "disable", "require" or "ssl"; "allow"
 #   is default
-#   Type: Boolean
+#   Type: String
 #   Default: undef
 #
 # [*create_mobile_account_at_login*]
@@ -206,15 +209,15 @@ class managedmac::activedirectory (
     unless $enable == false {
 
       if $hostname == undef {
-        fail("You must specify a hostname param!")
+        fail("You must specify a :hostname param!")
       }
 
       if $username == undef {
-        fail("You must specify a username param!")
+        fail("You must specify a :username param!")
       }
 
       if $password == undef {
-        fail("You must specify a password param!")
+        fail("You must specify a :password param!")
       }
 
       unless $organizational_unit == undef {
@@ -222,7 +225,9 @@ class managedmac::activedirectory (
       }
 
       unless $mount_style == undef {
-        validate_string ($mount_style)
+        unless $mount_style =~ /\Aafp\z|\Asmb\z/ {
+          fail("Parameter :mount_style must be \'afp\' or \'smb\', [${mount_style}]")
+        }
       }
 
       unless $default_user_shell == undef {
@@ -246,7 +251,9 @@ class managedmac::activedirectory (
       }
 
       unless $namespace == undef {
-        validate_string ($namespace)
+        unless $namespace =~ /\Aforest\z|\Adomain\z/ {
+          fail("Parameter :namespace must be \'forest\' or \'domain\', [${namespace}]")
+        }
       }
 
       unless empty($domain_admin_group_list) {
@@ -254,15 +261,19 @@ class managedmac::activedirectory (
       }
 
       unless $restrict_ddns == undef {
-        validate_bool ($restrict_ddns)
+        validate_string ($restrict_ddns)
       }
 
       unless $packet_sign == undef {
-        validate_bool ($packet_sign)
+        unless $packet_sign =~ /\Aallow\z|\Adisable\z|\Arequire\z/ {
+          fail("Parameter :packet_sign must be \'allow\', \'disable\' or \'require\', [${packet_sign}]")
+        }
       }
 
       unless $packet_encrypt == undef {
-        validate_bool ($packet_encrypt)
+        unless $packet_encrypt =~ /\Aallow\z|\Adisable\z|\Arequire\z|\Assl\z/ {
+          fail("Parameter :packet_encrypt must must be \'allow\', \'disable\', \'require\' or \'ssl\', ${packet_encrypt}")
+        }
       }
 
       unless $create_mobile_account_at_login == undef {

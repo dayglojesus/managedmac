@@ -51,20 +51,23 @@ Puppet::Type.newtype(:propertylist) do
     defaultto '0644'
   end
 
-  newproperty(:content) do
+  newproperty(:content, :array_matching => :all) do
     desc %q{The file's content, whole or in part.}
 
     def insync?(is)
+      is = [is].flatten
       return is.eql? should if resource[:method] == :replace
-      case should
+      is_obj     = is.first
+      should_obj = should.first
+      case should_obj
       when Hash
-        (is.merge(should)).eql? is
+        (is_obj.merge(should_obj)).eql? is_obj
       when Array
-        (is | should).eql? is
+        (is_obj | should_obj).eql? is_obj
       when String, Fixnum, Float, TrueClass, FalseClass
-        is.eql? should
+        is_obj.eql? should_obj
       else
-        fail Puppet::Error, "No equality test for '#{should.class}: (#{should})'"
+        fail Puppet::Error, "No equality test for '#{should_obj.class}: (#{should_obj})'"
       end
     end
 
@@ -80,8 +83,12 @@ Puppet::Type.newtype(:propertylist) do
     alias should_to_s is_to_s
 
     validate do |value|
-      if value.nil? or value.empty?
-        raise Puppet::Error, 'Content parameter cannot be nil or empty.'
+      err = 'Content parameter cannot be'
+      case value
+      when Hash, Array, String
+        raise Puppet::Error, "#{err} empty!" if value.empty?
+      else
+        raise Puppet::Error, "#{err} nil!" if value.nil?
       end
     end
   end
