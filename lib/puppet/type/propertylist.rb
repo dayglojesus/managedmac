@@ -56,19 +56,26 @@ Puppet::Type.newtype(:propertylist) do
 
     def insync?(is)
       is = [is].flatten
+
       return is.eql? should if resource[:method] == :replace
-      is_obj     = is.first
-      should_obj = should.first
-      case should_obj
-      when Hash
-        (is_obj.merge(should_obj)).eql? is_obj
-      when Array
-        (is_obj | should_obj).eql? is_obj
-      when String, Fixnum, Float, TrueClass, FalseClass
-        is_obj.eql? should_obj
-      else
-        fail Puppet::Error, "No equality test for '#{should_obj.class}: (#{should_obj})'"
+
+      result = should.zip(is).collect do |s,i|
+        if s.nil? or i.nil?
+          false
+        else
+          case s
+          when Hash
+            (i.merge(s)).eql? i
+          when Array
+            (i | s).eql? i
+          when String, Fixnum, Float, TrueClass, FalseClass
+            i.eql? s
+          else
+            fail Puppet::Error, "No equality test for '#{s.class}: (#{s})'"
+          end
+        end
       end
+      result.all?
     end
 
     # Normalize the :content value
