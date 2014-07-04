@@ -132,7 +132,7 @@ class Puppet::Provider::PropertyList < Puppet::Provider
         when Hash
           content = original.merge(content)
         when Array
-          content = original | content
+          content = original.zip(content).collect { |x| x.compact.last }
         else
           content = content
         end
