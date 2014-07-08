@@ -127,12 +127,13 @@ class managedmac::softwareupdate (
 
   unless empty($store_plist_content) {
     propertylist { '/Library/Preferences/com.apple.storeagent.plist':
-      ensure  => present,
-      content => $store_plist_content,
-      owner   => 'root',
-      group   => 'wheel',
-      mode    => '0644',
-      method  => insert,
+      ensure   => present,
+      content  => $store_plist_content,
+      owner    => 'root',
+      group    => 'wheel',
+      mode     => '0644',
+      method   => insert,
+      provider => defaults,
     }
   }
 
@@ -148,12 +149,13 @@ class managedmac::softwareupdate (
 
   unless empty($swup_plist_content) {
     propertylist { '/Library/Preferences/com.apple.SoftwareUpdate.plist':
-      ensure  => present,
-      content => $swup_plist_content,
-      owner   => 'root',
-      group   => 'wheel',
-      mode    => '0644',
-      method  => insert,
+      ensure   => present,
+      content  => $swup_plist_content,
+      owner    => 'root',
+      group    => 'wheel',
+      mode     => '0644',
+      method   => insert,
+      provider => defaults,
     }
   }
 
