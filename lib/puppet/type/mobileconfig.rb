@@ -154,7 +154,7 @@ Puppet::Type.newtype(:mobileconfig) do
         raise ArgumentError, "Expected String, got #{value.class}"
       end
     end
-    defaultto 'Puppet Labs'
+    defaultto 'Simon Fraser University'
   end
   
   newproperty(:removaldisallowed) do
