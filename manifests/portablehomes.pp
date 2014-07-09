@@ -617,6 +617,8 @@ class managedmac::portablehomes (
     'alertOnFailedMounts'                  => $alertOnFailedMounts,
   }
 
+  $organization = hiera('managedmac::organization', 'Simon Fraser University')
+
   mobileconfig { 'managedmac.portablehomes.alacarte':
     ensure       => $enable ? {
       true     => 'present',
@@ -625,7 +627,7 @@ class managedmac::portablehomes (
     content      => [$menu_payload, $mcx_payload, $homesync_payload],
     displayname  => 'Managed Mac: Portable Home Directories',
     description  => 'Portable Home Directory configuration. Installed by Puppet.',
-    organization => 'Simon Fraser University',
+    organization => $organization,
   }
 
 }
