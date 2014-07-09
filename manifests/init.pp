@@ -1,39 +1,35 @@
 # == Class: managedmac
 #
-# Full description of class managedmac here.
+# Module initializer.
+#
+# This module only supports OS X 10.9 or greater.
 #
 # === Parameters
 #
-# Document parameters here.
-#
-# [*sample_parameter*]
-#   Explanation of what this parameter affects and what it defaults to.
-#   e.g. "Specify one or more upstream ntp servers as an array."
+# None
 #
 # === Variables
 #
-# Here you should define a list of variables that this module would require.
+# [*osfamily*]
+#   The osfamily must be Darwin. If not, Puppet will fail.
 #
-# [*sample_variable*]
-#   Explanation of how this variable affects the funtion of this class and if
-#   it has a default. e.g. "The parameter enc_ntp_servers must be set by the
-#   External Node Classifier as a comma separated list of hostnames." (Note,
-#   global variables should be avoided in favor of class parameters as
-#   of Puppet 2.6.)
+# [*macosx_productversion_major*]
+#   The macosx_productversion_major must be 10.9 or greate. If not, Puppet
+#   will fail.
 #
 # === Examples
 #
-#  class { managedmac:
-#    servers => [ 'pool.ntp.org', 'ntp.local.company.com' ],
-#  }
+#  include managedmac
+#
+#  class { managedmac: }
 #
 # === Authors
 #
-# Author Name <author@domain.com>
+# Brian Warsing <bcw@sfu.ca>
 #
 # === Copyright
 #
-# Copyright 2014 Your name here, unless otherwise noted.
+# Copyright 2014 Simon Fraser University, unless otherwise noted.
 #
 class managedmac {
 
