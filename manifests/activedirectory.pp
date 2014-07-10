@@ -331,6 +331,9 @@ class managedmac::activedirectory (
 
     $options = process_mobileconfig_params($params)
 
+    $organization = hiera('managedmac::organization',
+      'Simon Fraser University')
+
     mobileconfig { 'managedmac.activedirectory.alacarte':
       ensure       => $enable ? {
         true  => present,
@@ -339,7 +342,7 @@ class managedmac::activedirectory (
       provider     => activedirectory,
       displayname  => 'Managed Mac: Active Directory',
       description  => 'Active Directory configuration. Installed by Puppet.',
-      organization => 'Simon Fraser University',
+      organization => $organization,
       content      => $options,
     }
 

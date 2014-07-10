@@ -172,11 +172,13 @@ class managedmac::softwareupdate (
     false => 'present',
   }
 
+  $organization = hiera('managedmac::organization', 'Simon Fraser University')
+
   mobileconfig { 'managedmac.softwareupdate.alacarte':
     ensure       => $mobileconfig_ensure,
     displayname  => 'Managed Mac: Software Update',
     description  => 'Software Update configuration. Installed by Puppet.',
-    organization => 'Simon Fraser University',
+    organization => $organization,
     content      => $mobileconfig_content,
   }
 

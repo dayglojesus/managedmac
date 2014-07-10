@@ -153,6 +153,8 @@ class managedmac::energysaver (
 
   $mobileconfig_ensure = empty($desktop) and empty($portable)
 
+  $organization = hiera('managedmac::organization', 'Simon Fraser University')
+
   mobileconfig { 'managedmac.energysaver.alacarte':
     ensure => $mobileconfig_ensure ? {
       true  => 'absent',
@@ -160,7 +162,7 @@ class managedmac::energysaver (
     },
     displayname  => 'Managed Mac: Energy Saver',
     description  => 'Energy Saver configuration. Installed by Puppet.',
-    organization => 'Simon Fraser University',
+    organization => $organization,
     content      => $content,
   }
 

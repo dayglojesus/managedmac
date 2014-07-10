@@ -63,11 +63,13 @@ class managedmac::mounts ($urls = []) {
 
   $compiled_options = process_mounts($urls)
 
+  $organization = hiera('managedmac::organization', 'Simon Fraser University')
+
   mobileconfig { 'managedmac.mounts.alacarte':
     ensure       => $ensure,
     displayname  => 'Managed Mac: Mounts',
     description  => 'Mounts. Installed by Puppet.',
-    organization => 'Simon Fraser University',
+    organization => $organization,
     content      => [$compiled_options],
   }
 

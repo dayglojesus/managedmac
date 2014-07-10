@@ -169,12 +169,14 @@ class managedmac::security (
     false => 'present',
   }
 
+  $organization = hiera('managedmac::organization', 'Simon Fraser University')
+
   mobileconfig { 'managedmac.security.alacarte':
     ensure       => $mobileconfig_ensure,
     content      => $content,
     displayname  => 'Managed Mac: Security',
     description  => 'Security configuration. Installed by Puppet.',
-    organization => 'Simon Fraser University',
+    organization => $organization,
   }
 
 }

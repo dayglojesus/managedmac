@@ -362,11 +362,13 @@ class managedmac::loginwindow (
     nestedgroups => $groups,
   }
 
+  $organization = hiera('managedmac::organization', 'Simon Fraser University')
+
   mobileconfig { 'managedmac.loginwindow.alacarte':
     ensure       => $mobileconfig_ensure,
     displayname  => 'Managed Mac: Loginwindow',
     description  => 'Loginwindow configuration. Installed by Puppet.',
-    organization => 'Simon Fraser University',
+    organization => $organization,
     content      => $content,
   }
 

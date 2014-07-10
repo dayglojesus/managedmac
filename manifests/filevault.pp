@@ -165,6 +165,9 @@ class managedmac::filevault (
 
     $content = process_mobileconfig_params($params)
 
+    $organization = hiera('managedmac::organization',
+      'Simon Fraser University')
+
     mobileconfig { 'managedmac.filevault.alacarte':
       ensure => $enable ? {
         true     => 'present',
@@ -173,7 +176,7 @@ class managedmac::filevault (
       content      => $content,
       displayname  => 'Managed Mac: FileVault 2',
       description  => 'FileVault 2 configuration. Installed by Puppet.',
-      organization => 'Simon Fraser University',
+      organization => $organization,
     }
 
     if ($enable == false) and ($::filevault_active == true) and ($remove_fde == true)  {
