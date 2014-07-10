@@ -64,10 +64,15 @@ Puppet::Type.newtype(:macgroup) do
     newvalues(/^\d+$/)
 
     def insync?(is)
-      i, s = [is, should].each do |a|
-        Array(a).first
+      i, s = [is, should].map do |a|
+        Array(a.to_i).first
       end
-      i.eql? s
+      i == s
+    end
+
+    # Normalize the :gid
+    munge do |value|
+      value.to_i
     end
   end
 
