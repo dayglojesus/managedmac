@@ -82,7 +82,7 @@ Puppet::Type.type(:macgroup).provide(:default) do
   end
 
   # Method for handling the two membership setter attributes
-  def update_membership(type, value)
+  def update_membership(type)
     type = type.to_sym
     unless [:users, :nestedgroups].member? type
       raise Puppet::Error, "unknown membership type: #{type}"
@@ -111,14 +111,6 @@ Puppet::Type.type(:macgroup).provide(:default) do
     dscl(args)
   end
 
-  def users=(value)
-    update_membership :users, value
-  end
-
-  def nestedgroups=(value)
-    update_membership :nestedgroups, value
-  end
-
   # Provider Helper method
   # Create the group OR destroy it
   def manage_group
@@ -137,15 +129,32 @@ Puppet::Type.type(:macgroup).provide(:default) do
       cmd_args += ['delete', name]
       dseditgroup(cmd_args)
     else
-      # Create the group
-      cmd_args << 'create'
+      # Edit or Create the group
+      op = :edit
+      begin
+        dseditgroup([cmd_args, 'read', name].flatten)
+      rescue Puppet::ExecutionFailure => e
+        op = :create
+      end
+      cmd_args << op
+
+      # The dsmemberutil :edit operation will not edit a GID that already
+      # exists, EVEN IF it belongs to the group we are editing!!! So, don't
+      # try and edit the GID unless we have to. Of course, if the GID
+      # being assigned to the target group already belongs to another entity,
+      # a Puppet::ExecutionFailure will be raised, but that's probably a
+      # good thing. Probably.
+      unless @resource[:gid].eql? @property_hash[:gid]
+        cmd_args += ['-i', "#{gid}"]
+      end
+
       cmd_args += ['-r', "#{realname}" ] if realname
       cmd_args += ['-c', "#{comment}"  ] if comment
-      cmd_args += ['-i', "#{gid}"      ] if gid
       cmd_args << name
+
       dseditgroup(cmd_args)
-      self.users        = users if users
-      self.nestedgroups = nestedgroups if nestedgroups
+      update_membership(:users)        if users
+      update_membership(:nestedgroups) if nestedgroups
     end
 
   end
