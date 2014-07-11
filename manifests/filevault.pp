@@ -142,9 +142,9 @@ class managedmac::filevault (
         ensure => file,
         owner  => root,
         group  => wheel,
-        mode   => 0644,
+        mode   => '0644',
         path   => '/Library/Keychains/FileVaultMaster.keychain',
-        source => "${keychain_file}";
+        source => $keychain_file;
       }
     }
 
@@ -168,18 +168,21 @@ class managedmac::filevault (
     $organization = hiera('managedmac::organization',
       'Simon Fraser University')
 
+    $ensure = $enable ? {
+      true     => present,
+      default  => absent,
+    }
+
     mobileconfig { 'managedmac.filevault.alacarte':
-      ensure => $enable ? {
-        true     => 'present',
-        default  => 'absent',
-      },
+      ensure       => $ensure,
       content      => $content,
       displayname  => 'Managed Mac: FileVault 2',
       description  => 'FileVault 2 configuration. Installed by Puppet.',
       organization => $organization,
     }
 
-    if ($enable == false) and ($::filevault_active == true) and ($remove_fde == true)  {
+    if ($enable == false) and ($::filevault_active == true) and
+($remove_fde == true)  {
       exec { 'decrypt_the_disk':
         command => '/usr/bin/fdesetup disable',
         returns => [0,1],

@@ -54,7 +54,9 @@
 # $defaults = { 'organization' => 'Puppet Labs'}
 # $payloads = {
 #   'managedmac.dock.alacarte' => {
-#     'content' => { 'orientation' => 'left', 'PayloadType' => 'com.apple.dock' },
+#     'content' => { 'orientation' => 'left',
+#        'PayloadType' => 'com.apple.dock'
+#      },
 #     'displayname' => 'My Custom Dock',
 #   },
 # }

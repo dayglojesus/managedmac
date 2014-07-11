@@ -148,7 +148,8 @@ class managedmac::security (
       'EnableAssessment'          => $gatekeeper_enable_assessment,
     },
     'com.apple.loginwindow' => {
-      'ChangePasswordDisabled'                     => $dont_allow_password_reset_ui,
+      'ChangePasswordDisabled'                     =>
+        $dont_allow_password_reset_ui,
       'com.apple.login.mcx.DisableAutoLoginClient' => $disable_autologin,
     },
     'com.apple.preference.security' => {

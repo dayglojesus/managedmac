@@ -84,7 +84,8 @@ class managedmac::authorization (
 
     'system.preferences' => {
       group   => $sys_prefs_group,
-      comment => 'Checked by the Admin framework when making changes to certain System Preferences.',
+      comment => 'Checked by the Admin framework when making changes to \
+certain System Preferences.',
     },
 
     'system.preferences.energysaver' => {
@@ -92,7 +93,8 @@ class managedmac::authorization (
         true    => 'everyone',
         default => 'admin',
       },
-      comment => 'Checked by the Admin framework when making changes to the Energy Saver preference pane.',
+      comment => 'Checked by the Admin framework when making changes to the \
+Energy Saver preference pane.',
     },
 
     'system.preferences.datetime' => {
@@ -100,7 +102,8 @@ class managedmac::authorization (
         true    => 'everyone',
         default => 'admin',
       },
-      comment => 'Checked by the Admin framework when making changes to the Date & Time preference pane.',
+      comment => 'Checked by the Admin framework when making changes to the \
+Date & Time preference pane.',
     },
 
     'system.preferences.timemachine' => {
@@ -108,17 +111,18 @@ class managedmac::authorization (
         true    => 'everyone',
         default => 'admin',
       },
-      comment => 'Checked by the Admin framework when making changes to the Time Machine preference pane.',
+      comment => 'Checked by the Admin framework when making changes to the \
+Time Machine preference pane.',
     },
 
   }
 
   $defaults = {
-    allow_root        => 'true',
+    allow_root        => true,
     auth_class        => 'user',
     auth_type         => 'right',
-    authenticate_user => 'true',
-    shared            => 'true',
+    authenticate_user => true,
+    shared            => true,
     timeout           => '2147483647',
     tries             => '10000',
   }

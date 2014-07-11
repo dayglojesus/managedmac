@@ -310,8 +310,10 @@ class managedmac::loginwindow (
     'com.apple.loginwindow' => {
       'AllowList'                                  => $allow_list,
       'DenyList'                                   => $deny_list,
-      'DisableConsoleAccess'                       => $disable_console_access,
-      'EnableExternalAccounts'                     => $enable_external_accounts,
+      'DisableConsoleAccess'                       =>
+        $disable_console_access,
+      'EnableExternalAccounts'                     =>
+        $enable_external_accounts,
       'HideAdminUsers'                             => $hide_admin_users,
       'HideLocalUsers'                             => $hide_local_users,
       'HideMobileAccounts'                         => $hide_mobile_accounts,
@@ -322,7 +324,8 @@ class managedmac::loginwindow (
       'ShutDownDisabled'                           => $shutdown_disabled,
       'SleepDisabled'                              => $sleep_disabled,
       'RetriesUntilHint'                           => $retries_until_hint,
-      'SHOWFULLNAME'                               => $show_name_and_password_fields,
+      'SHOWFULLNAME'                               =>
+        $show_name_and_password_fields,
       'SHOWOTHERUSERS_MANAGED'                     => $show_other_button,
       'com.apple.login.mcx.DisableAutoLoginClient' => $disable_autologin,
       'DisableFDEAutoLogin'                        => $disable_fde_autologin,

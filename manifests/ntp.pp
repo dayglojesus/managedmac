@@ -70,16 +70,18 @@ class managedmac::ntp (
     $ntp_conf_template = inline_template("<%= (@servers.collect {
       |x| ['server', x].join('\s') }).join('\n') %>")
 
+    $content = $enable ? {
+      true  => $ntp_conf_template,
+      false => $ntp_conf_default,
+    }
+
     file { 'ntp_conf':
       ensure  => file,
       owner   => 'root',
       group   => 'wheel',
       mode    => '0644',
       path    => '/private/etc/ntp.conf',
-      content => $enable ? {
-        true  => $ntp_conf_template,
-        false => $ntp_conf_default,
-      },
+      content => $content,
       notify  => Service[$ntp_service_label],
     }
 

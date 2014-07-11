@@ -1,0 +1,23 @@
+{
+  "name": "sfu-managedmac",
+  "version": "0.4.0",
+  "author": "Brian Warsing <bcw@sfu.ca>",
+  "summary": "Comprehensive OS X Configuration and Management",
+  "license": "Apache License, Version 2.0",
+  "source": "https://github.com/dayglojesus/managedmac",
+  "project_page": "https://github.com/dayglojesus/managedmac",
+  "issues_url": "https://github.com/dayglojesus/managedmac/issues",
+  "description": "A giant Puppet module for OS X. Abstracts all the things.",
+  "dependencies": [
+    {
+      "name": "puppetlabs/stdlib",
+      "version_requirement": ">= 4.1.0"
+    }
+  ],
+  "operatingsystem_support": [
+       {
+           "operatingsystem": "Darwin",
+           "operatingsystemrelease": ["10.9", "10.10"]
+       }
+   ]
+}

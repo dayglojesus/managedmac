@@ -138,14 +138,15 @@ class managedmac::energysaver (
 
   $params = {
     'com.apple.MCX' => {
-      "com.apple.EnergySaver.desktop.ACPower"       => $desktop['ACPower'],
-      "com.apple.EnergySaver.desktop.Schedule"      => $desktop['Schedule'],
-      "com.apple.EnergySaver.portable.ACPower"      => $portable['ACPower'],
-      "com.apple.EnergySaver.portable.BatteryPower" => $portable['BatteryPower'],
-      "com.apple.EnergySaver.portable.Schedule"     => $portable['Schedule'],
-      "com.apple.EnergySaver.desktop.ACPower-ProfileNumber"       => -1,
-      "com.apple.EnergySaver.portable.ACPower-ProfileNumber"      => -1,
-      "com.apple.EnergySaver.portable.BatteryPower-ProfileNumber" => -1,
+      'com.apple.EnergySaver.desktop.ACPower'       => $desktop['ACPower'],
+      'com.apple.EnergySaver.desktop.Schedule'      => $desktop['Schedule'],
+      'com.apple.EnergySaver.portable.ACPower'      => $portable['ACPower'],
+      'com.apple.EnergySaver.portable.BatteryPower' =>
+        $portable['BatteryPower'],
+      'com.apple.EnergySaver.portable.Schedule'     => $portable['Schedule'],
+      'com.apple.EnergySaver.desktop.ACPower-ProfileNumber'       => -1,
+      'com.apple.EnergySaver.portable.ACPower-ProfileNumber'      => -1,
+      'com.apple.EnergySaver.portable.BatteryPower-ProfileNumber' => -1,
     }
   }
 
@@ -153,13 +154,15 @@ class managedmac::energysaver (
 
   $mobileconfig_ensure = empty($desktop) and empty($portable)
 
+  $ensure = $mobileconfig_ensure ? {
+    true  => absent,
+    false => present,
+  }
+
   $organization = hiera('managedmac::organization', 'Simon Fraser University')
 
   mobileconfig { 'managedmac.energysaver.alacarte':
-    ensure => $mobileconfig_ensure ? {
-      true  => 'absent',
-      false => 'present',
-    },
+    ensure       => $ensure,
     displayname  => 'Managed Mac: Energy Saver',
     description  => 'Energy Saver configuration. Installed by Puppet.',
     organization => $organization,
