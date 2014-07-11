@@ -1,3 +1,23 @@
+# Definition: managedmac::hook
+#
+# This class installs a master login or logout hook.
+#
+# Parameters:
+# - $enable Whether to activate the master hook or not.
+# - $scripts An absolute path on the local machine that will store the scripts
+# you want executed by the master hook. Optional parameter.
+#
+# Actions:
+# - Installs a master login or logout hook and tells them where to find the
+# child scripts
+#
+#
+# Sample Usage:
+# managedmac::hook {'login':
+#   enable  => $enable,
+#   scripts => $scripts,
+# }
+#
 define managedmac::hook ($enable, $scripts) {
 
   # We only handle names login and logout. There are no other types of
@@ -41,8 +61,8 @@ define managedmac::hook ($enable, $scripts) {
     }
 
     file { $hook:
-      require => File["${masterhooks}"],
       ensure  => file,
+      require => File[$masterhooks],
       owner   => 'root',
       group   => 'wheel',
       mode    => '0750',
