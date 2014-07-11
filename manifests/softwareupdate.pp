@@ -122,8 +122,8 @@ class managedmac::softwareupdate (
     'AutoUpdate' => $auto_update_apps,
   }
 
-  $store_plist_ensure = inline_template("<%= @store_plist_content.delete_if { |k,v|
-    (v.respond_to?(:empty?) and v.empty?) or v == :undef } %>")
+  $store_plist_ensure = inline_template("<%= @store_plist_content.delete_if {
+    |k,v| (v.respond_to?(:empty?) and v.empty?) or v == :undef } %>")
 
   unless empty($store_plist_content) {
     propertylist { '/Library/Preferences/com.apple.storeagent.plist':
@@ -144,8 +144,8 @@ class managedmac::softwareupdate (
     'CriticalUpdateInstall' => $critical_update_install,
   }
 
-  $swup_plist_ensure = inline_template("<%= @swup_plist_content.delete_if { |k,v|
-    (v.respond_to?(:empty?) and v.empty?) or v == :undef } %>")
+  $swup_plist_ensure = inline_template("<%= @swup_plist_content.delete_if {
+    |k,v| (v.respond_to?(:empty?) and v.empty?) or v == :undef } %>")
 
   unless empty($swup_plist_content) {
     propertylist { '/Library/Preferences/com.apple.SoftwareUpdate.plist':
