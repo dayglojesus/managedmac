@@ -339,7 +339,10 @@ class managedmac::portablehomes (
 
   $enable                               = false,
   $syncedFolders                        = ['~'],
-  $syncedPrefFolders                    = ['~/Library', '~/Documents/Microsoft User Data'],
+  $syncedPrefFolders                    = [
+    '~/Library',
+    '~/Documents/Microsoft User Data'
+  ],
   $excludedItems                        = {
     fullPath => [ '~/.SymAVQSFile',
                   '~/Documents/Microsoft User Data/Entourage Temp',
@@ -434,11 +437,13 @@ class managedmac::portablehomes (
     }
 
     unless is_integer($loginSyncDialogTimeoutSeconds) {
-      fail("loginSyncDialogTimeoutSeconds not an Integer: ${loginSyncDialogTimeoutSeconds}")
+      fail("loginSyncDialogTimeoutSeconds not an Integer: \
+${loginSyncDialogTimeoutSeconds}")
     }
 
     unless is_integer($logoutSyncDialogTimeoutSeconds) {
-      fail("logoutSyncDialogTimeoutSeconds not an Integer: ${logoutSyncDialogTimeoutSeconds}")
+      fail("logoutSyncDialogTimeoutSeconds not an Integer: \
+${logoutSyncDialogTimeoutSeconds}")
     }
 
     unless is_integer($progressDelaySeconds) {
@@ -453,23 +458,28 @@ class managedmac::portablehomes (
     ]
 
     unless member($allowed_conflict_res, $loginPrefSyncConflictResolution) {
-      fail("Parameter Error: invalid value for :loginPrefSyncConflictResolution, ${loginPrefSyncConflictResolution}")
+      fail("Parameter Error: invalid value for \
+:loginPrefSyncConflictResolution, ${loginPrefSyncConflictResolution}")
     }
 
     unless member($allowed_conflict_res, $loginNonprefSyncConflictResolution) {
-      fail("Parameter Error: invalid value for :loginNonprefSyncConflictResolution, ${loginNonprefSyncConflictResolution}")
+      fail("Parameter Error: invalid value for \
+:loginNonprefSyncConflictResolution, ${loginNonprefSyncConflictResolution}")
     }
 
     unless member($allowed_conflict_res, $logoutPrefSyncConflictResolution) {
-      fail("Parameter Error: invalid value for :logoutPrefSyncConflictResolution, ${logoutPrefSyncConflictResolution}")
+      fail("Parameter Error: invalid value for \
+:logoutPrefSyncConflictResolution, ${logoutPrefSyncConflictResolution}")
     }
 
     unless member($allowed_conflict_res, $logoutNonprefSyncConflictResolution) {
-      fail("Parameter Error: invalid value for :logoutNonprefSyncConflictResolution, ${logoutNonprefSyncConflictResolution}")
+      fail("Parameter Error: invalid value for \
+:logoutNonprefSyncConflictResolution, ${logoutNonprefSyncConflictResolution}")
     }
 
     unless member($allowed_conflict_res, $backgroundConflictResolution) {
-      fail("Parameter Error: invalid value for :backgroundConflictResolution, ${backgroundConflictResolution}")
+      fail("Parameter Error: invalid value for \
+:backgroundConflictResolution, ${backgroundConflictResolution}")
     }
 
     #
@@ -478,35 +488,43 @@ class managedmac::portablehomes (
     $allowed_sync_rules = ['automatic', 'sync', 'dontSync']
 
     unless member($allowed_sync_rules, $syncPreferencesAtLogin) {
-      fail("Parameter Error: invalid value for :syncPreferencesAtLogin, ${syncPreferencesAtLogin}")
+      fail("Parameter Error: invalid value for :syncPreferencesAtLogin, \
+${syncPreferencesAtLogin}")
     }
 
     unless member($allowed_sync_rules, $syncPreferencesAtLogout) {
-      fail("Parameter Error: invalid value for :syncPreferencesAtLogout, ${syncPreferencesAtLogout}")
+      fail("Parameter Error: invalid value for :syncPreferencesAtLogout, \
+${syncPreferencesAtLogout}")
     }
 
     unless member($allowed_sync_rules, $syncPreferencesAtSyncNow) {
-      fail("Parameter Error: invalid value for :syncPreferencesAtSyncNow, ${syncPreferencesAtSyncNow}")
+      fail("Parameter Error: invalid value for :syncPreferencesAtSyncNow, \
+${syncPreferencesAtSyncNow}")
     }
 
     unless member($allowed_sync_rules, $syncPreferencesInBackground) {
-      fail("Parameter Error: invalid value for :syncPreferencesInBackground, ${syncPreferencesInBackground}")
+      fail("Parameter Error: invalid value for :syncPreferencesInBackground, \
+${syncPreferencesInBackground}")
     }
 
     unless member($allowed_sync_rules, $syncBackgroundSetAtLogin) {
-      fail("Parameter Error: invalid value for :syncBackgroundSetAtLogin, ${syncBackgroundSetAtLogin}")
+      fail("Parameter Error: invalid value for :syncBackgroundSetAtLogin, \
+${syncBackgroundSetAtLogin}")
     }
 
     unless member($allowed_sync_rules, $syncBackgroundSetAtLogout) {
-      fail("Parameter Error: invalid value for :syncBackgroundSetAtLogout, ${syncBackgroundSetAtLogout}")
+      fail("Parameter Error: invalid value for :syncBackgroundSetAtLogout, \
+${syncBackgroundSetAtLogout}")
     }
 
     unless member($allowed_sync_rules, $syncBackgroundSetAtSyncNow) {
-      fail("Parameter Error: invalid value for :syncBackgroundSetAtSyncNow, ${syncBackgroundSetAtSyncNow}")
+      fail("Parameter Error: invalid value for :syncBackgroundSetAtSyncNow, \
+${syncBackgroundSetAtSyncNow}")
     }
 
     unless member($allowed_sync_rules, $syncBackgroundSetInBackground) {
-      fail("Parameter Error: invalid value for :syncBackgroundSetInBackground, ${syncBackgroundSetInBackground}")
+      fail("Parameter Error: invalid value for :syncBackgroundSetInBackground, \
+${syncBackgroundSetInBackground}")
     }
 
     #
@@ -552,9 +570,11 @@ class managedmac::portablehomes (
   }
 
   $mcx_payload  = { 'PayloadType' => 'com.apple.MCX',
-      'cachedaccounts.WarnOnCreate.allowNever'              => $warnOnCreateAllowNever,
+      'cachedaccounts.WarnOnCreate.allowNever'              =>
+        $warnOnCreateAllowNever,
       'com.apple.cachedaccounts.CreateAtLogin'              => $createAtLogin,
-      'com.apple.cachedaccounts.CreatePHDAtLogin'           => $createPHDAtLogin,
+      'com.apple.cachedaccounts.CreatePHDAtLogin'           =>
+        $createPHDAtLogin,
       'com.apple.cachedaccounts.WarnOnCreate'               => $warnOnCreate,
       'cachedaccounts.create.encrypt'                       => false,
       'cachedaccounts.create.encrypt.requireMasterPassword' => false,
@@ -567,10 +587,14 @@ class managedmac::portablehomes (
   }
 
   $homesync_payload = { 'PayloadType' => 'com.apple.homeSync',
-    'syncedFolders-managed'                => portablehomes_synced_folders($syncedFolders),
-    'syncedPrefFolders-managed'            => portablehomes_synced_folders($syncedPrefFolders),
-    'excludedItems'                        => portablehomes_excluded_items($excludedItems),
-    'excludedPrefItems'                    => portablehomes_excluded_items($excludedPrefItems),
+    'syncedFolders-managed'                =>
+      portablehomes_synced_folders($syncedFolders),
+    'syncedPrefFolders-managed'            =>
+      portablehomes_synced_folders($syncedPrefFolders),
+    'excludedItems'                        =>
+      portablehomes_excluded_items($excludedItems),
+    'excludedPrefItems'                    =>
+      portablehomes_excluded_items($excludedPrefItems),
     'warnOnCreateAllowNever'               => $warnOnCreateAllowNever,
     'createAtLogin'                        => $createAtLogin,
     'createPHDAtLogin'                     => $createPHDAtLogin,
@@ -582,9 +606,12 @@ class managedmac::portablehomes (
     'replaceUserSyncList'                  => $replaceUserSyncList,
     'replaceUserPrefSyncList'              => $replaceUserPrefSyncList,
     'loginPrefSyncConflictResolution'      => $loginPrefSyncConflictResolution,
-    'loginNonprefSyncConflictResolution'   => $loginNonprefSyncConflictResolution,
-    'logoutPrefSyncConflictResolution'     => $logoutPrefSyncConflictResolution,
-    'logoutNonprefSyncConflictResolution'  => $logoutNonprefSyncConflictResolution,
+    'loginNonprefSyncConflictResolution'   =>
+      $loginNonprefSyncConflictResolution,
+    'logoutPrefSyncConflictResolution'     =>
+      $logoutPrefSyncConflictResolution,
+    'logoutNonprefSyncConflictResolution'  =>
+      $logoutNonprefSyncConflictResolution,
     'backgroundConflictResolution'         => $backgroundConflictResolution,
     'syncPreferencesAtLogin'               => $syncPreferencesAtLogin,
     'syncPreferencesAtLogout'              => $syncPreferencesAtLogout,
@@ -619,14 +646,17 @@ class managedmac::portablehomes (
 
   $organization = hiera('managedmac::organization', 'Simon Fraser University')
 
+  $ensure = $enable ? {
+    true     => present,
+    default  => absent,
+  }
+
   mobileconfig { 'managedmac.portablehomes.alacarte':
-    ensure       => $enable ? {
-      true     => 'present',
-      default  => 'absent',
-    },
+    ensure       => $ensure,
     content      => [$menu_payload, $mcx_payload, $homesync_payload],
     displayname  => 'Managed Mac: Portable Home Directories',
-    description  => 'Portable Home Directory configuration. Installed by Puppet.',
+    description  => 'Portable Home Directory configuration. \
+Installed by Puppet.',
     organization => $organization,
   }
 
