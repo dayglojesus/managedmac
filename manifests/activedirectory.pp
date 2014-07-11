@@ -209,15 +209,15 @@ class managedmac::activedirectory (
     unless $enable == false {
 
       if $hostname == undef {
-        fail("You must specify a :hostname param!")
+        fail('You must specify a :hostname param!')
       }
 
       if $username == undef {
-        fail("You must specify a :username param!")
+        fail('You must specify a :username param!')
       }
 
       if $password == undef {
-        fail("You must specify a :password param!")
+        fail('You must specify a :password param!')
       }
 
       unless $organizational_unit == undef {
@@ -226,7 +226,8 @@ class managedmac::activedirectory (
 
       unless $mount_style == undef {
         unless $mount_style =~ /\Aafp\z|\Asmb\z/ {
-          fail("Parameter :mount_style must be \'afp\' or \'smb\', [${mount_style}]")
+          fail("Parameter :mount_style must be \'afp\' or \'smb\', \
+[${mount_style}]")
         }
       }
 
@@ -252,7 +253,8 @@ class managedmac::activedirectory (
 
       unless $namespace == undef {
         unless $namespace =~ /\Aforest\z|\Adomain\z/ {
-          fail("Parameter :namespace must be \'forest\' or \'domain\', [${namespace}]")
+          fail("Parameter :namespace must be \'forest\' or \'domain\', \
+[${namespace}]")
         }
       }
 
@@ -266,13 +268,15 @@ class managedmac::activedirectory (
 
       unless $packet_sign == undef {
         unless $packet_sign =~ /\Aallow\z|\Adisable\z|\Arequire\z/ {
-          fail("Parameter :packet_sign must be \'allow\', \'disable\' or \'require\', [${packet_sign}]")
+          fail("Parameter :packet_sign must be \'allow\', \'disable\' or \
+\'require\', [${packet_sign}]")
         }
       }
 
       unless $packet_encrypt == undef {
         unless $packet_encrypt =~ /\Aallow\z|\Adisable\z|\Arequire\z|\Assl\z/ {
-          fail("Parameter :packet_encrypt must must be \'allow\', \'disable\', \'require\' or \'ssl\', ${packet_encrypt}")
+          fail("Parameter :packet_encrypt must must be \'allow\', \'disable\',\
+ \'require\' or \'ssl\', ${packet_encrypt}")
         }
       }
 
@@ -298,7 +302,8 @@ class managedmac::activedirectory (
 
       unless $trust_change_pass_interval_days == undef {
         unless is_integer($trust_change_pass_interval_days) {
-          fail("trust_change_pass_interval_days not an Integer: ${trust_change_pass_interval_days}")
+          fail("trust_change_pass_interval_days not an Integer: \
+${trust_change_pass_interval_days}")
         }
       }
     }
@@ -334,11 +339,13 @@ class managedmac::activedirectory (
     $organization = hiera('managedmac::organization',
       'Simon Fraser University')
 
+    $ensure = $enable ? {
+      true  => present,
+      false => absent,
+    }
+
     mobileconfig { 'managedmac.activedirectory.alacarte':
-      ensure       => $enable ? {
-        true  => present,
-        false => absent,
-      },
+      ensure       => $ensure,
       provider     => activedirectory,
       displayname  => 'Managed Mac: Active Directory',
       description  => 'Active Directory configuration. Installed by Puppet.',
