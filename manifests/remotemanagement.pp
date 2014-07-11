@@ -156,11 +156,13 @@ class managedmac::remotemanagement (
     validate_hash   ($users)
     validate_bool   ($strict)
 
+    $ensure = $enable ? {
+      true     => running,
+      default  => stopped,
+    }
+
     remotemanagement { 'apple_remote_desktop':
-      ensure => $enable ? {
-        true     => running,
-        default  => stopped,
-      },
+      ensure               => $ensure,
       allow_all_users      => $allow_all_users,
       all_users_privs      => $all_users_privs,
       enable_menu_extra    => $enable_menu_extra,
