@@ -38,7 +38,8 @@
 #     owner: root
 #     group: admin
 #     mode: 0644
-#     content: "This is an example of how to create a file using the content parameter."
+#     content: "This is an example of how to create a file using the \
+# content parameter."
 #   /Users/Shared/example_file_b.txt:
 #     ensure: file
 #     owner: root
@@ -81,13 +82,13 @@
 #
 class managedmac::files (
 
-  $objects  = undef, 
+  $objects  = undef,
   $defaults = {},
 
 ) {
-  
+
   unless $objects == undef {
-    
+
     validate_hash ($objects)
     validate_hash ($defaults)
 
@@ -105,7 +106,7 @@ class managedmac::files (
 
       create_resources(file, $objects, $defaults)
     }
-    
+
   }
 
 }
