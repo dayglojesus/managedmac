@@ -93,7 +93,8 @@ class managedmac::mcx (
     /on|true|enable/    => false,
     /off|false|disable/ => true,
     undef               => undef,
-    default             => "Parameter Error: invalid value for :bluetooth, ${bluetooth}",
+    default             => "Parameter Error: invalid value for :bluetooth, \
+${bluetooth}",
   }
 
   $wifi_state = $wifi ? {
@@ -138,9 +139,11 @@ class managedmac::mcx (
     require => Computer['mcx_puppet'],
   }
 
+  $cmd_path = '/System/Library/CoreServices/ManagedClient.app/Contents/MacOS'
+
   if $ensure == present {
     exec { 'refresh_mcx':
-      command => '/System/Library/CoreServices/ManagedClient.app/Contents/MacOS/ManagedClient -f',
+      command => "${cmd_path}/ManagedClient -f",
     }
   }
 
