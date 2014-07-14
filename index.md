@@ -7,7 +7,7 @@ title: managedmac
 
 Managedmac is a module designed to make using Puppet to configure OS X simple.
 
-You don't even need to understand Puppet to use it.
+You don't need to understand Puppet to use it (though it helps).
 
 Once you've installed the components, all you need to do is create a configuration file and run Puppet.
 
