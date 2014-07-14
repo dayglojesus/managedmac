@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: types
 title: Custom Types
 ---
 ## Custom Types
@@ -7,6 +7,7 @@ title: Custom Types
 There are a few custom types used in this module. Naturally, once you've installed the module, these types will be available to use in your own Puppet code if you don't fancy using any of the builtin classes.
 
 ---
+<a id="Macuthdb"></a>
 ### Macuthdb
 
 This is an alternative to the native Puppet _Macauthorization_ type.
@@ -31,6 +32,7 @@ For those who were using _Macauthorization_, the interface will be very similar.
     }
 
 ---
+<a id="Macgroup"></a>
 ### Macgroup
 
 This is an alternative to the native Puppet _Group_ type.
@@ -54,6 +56,7 @@ When you provide a list of group names, the _Macgroup_ type will attempt to reso
 If it cannot resolve the record name to GeneratedUID, the _Macgroup_ type will generate a warning and _skip_ configuration of the unresolvable record.
 
 ---
+<a id="Mobileconfig"></a>
 ### Mobileconfig
 
 This type is unique to this module and is very much at the center of what it does. It's pretty straightforward.
@@ -98,6 +101,7 @@ Another example of concealing security details happens with the [Advanced Active
 *Those are the 3 edge cases I have found -- there may be more...*
 
 ---
+<a id="Propertylist"></a>
 ### Propertylist
 
 There have been a few good Puppet modules that provide support for managing OS X Property Lists, most notably @glarizza's [property\_list\_key](https://forge.puppetlabs.com/glarizza/property_list_key). This type takes its cue from Gary's module but introduces some new features:
@@ -162,6 +166,7 @@ The defaults provider will not write directly to disk. Instead, it uses the /usr
 When you use the `defaults` provider, the content property MUST be a Hash (Dictionary) because that is what OS X `defaults` demands. If you attempt to use another primitive, Puppet will raise an exception.
 
 ---
+<a id="Remotemanagement"></a>
 ### Remotemanagement
 
 This is a direct port of the remotemanagement type from [x_types](https://github.com/dayglojesus/x_types) with a few improvements.
