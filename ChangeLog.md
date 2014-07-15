@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.4.1
+- fix issues #4 and #5
+- some clean-up
+
+## 0.4.0
+* inital release
+
 ## 0.3.3
 * clean-up and organize some documentation in preparation for Github
 
