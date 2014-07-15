@@ -3,7 +3,7 @@ layout: default
 title: managedmac
 ---
 
-## Overview
+## What is it?
 
 Managedmac is a module designed to make using Puppet to configure OS X simple.
 
