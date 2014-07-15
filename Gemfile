@@ -8,9 +8,11 @@ group :development, :test do
   gem 'hiera-puppet-helper', :git => 'git://github.com/mmz-srf/hiera-puppet-helper.git'
   gem 'CFPropertyList', '>=2.2.7'
   gem 'sqlite3', '>=1.3.7'
+  gem 'github-pages', '>=20'
 end
 
 group :production do
   gem 'CFPropertyList', '>=2.2.7'
   gem 'sqlite3', '>=1.3.7'
+  gem 'github-pages', '>=20'
 end
