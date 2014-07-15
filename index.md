@@ -5,7 +5,7 @@ title: managedmac
 
 ## What is it?
 
-Managedmac is a module designed to make using Puppet to configure OS X simple.
+Managedmac is a Puppet module designed to make OS X configuration simple.
 
 You don't need to understand Puppet to use it (though it helps).
 
