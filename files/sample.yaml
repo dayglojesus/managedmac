@@ -1,0 +1,1736 @@
+---
+#####################################################################
+#
+# MANAGEDMAC
+#
+# This is a sample Hiera configuration file for the
+# managedmac module.
+#
+# In addition to the complete list of parameters, you will find
+# details and examples for each class.
+#
+# This file is NOT suitable to use as defaults.
+#
+# Thu Jun 26 09:25:35 PDT 2014, bcw@sfu.ca
+#
+#####################################################################
+
+#####################################################################
+#
+# GLOBAL: MANAGEDMAC
+#
+#####################################################################
+
+#####################################################################
+# Controls the value of the organization property for all of the
+# mobileconfigs included in this module
+# Type: String
+#####################################################################
+
+managedmac::organization: Simon Fraser University
+
+#####################################################################
+#
+# CLASS: MANAGEDMAC::NTP
+#
+#####################################################################
+
+#####################################################################
+# Enable configuration of NTP
+# Type: Boolean
+#####################################################################
+
+managedmac::ntp::enable: true
+
+#####################################################################
+# A list of NTP servers to use
+# Type: Array
+#####################################################################
+
+managedmac::ntp::servers:
+  - time.apple.com
+
+#####################################################################
+#
+# CLASS: MANAGEDMAC::ACTIVEDIRECTORY
+#
+#####################################################################
+
+#####################################################################
+# Whether to apply the resource or remove it.
+# Type: Boolean
+#####################################################################
+
+managedmac::activedirectory::enable: true
+
+#####################################################################
+# The Active Directory domain to join
+# Type: String
+#####################################################################
+
+managedmac::activedirectory::hostname: ad.apple.com
+
+#####################################################################
+# User name of the account used to join the domain
+# Type: String
+#####################################################################
+
+managedmac::activedirectory::username: some_account
+
+#####################################################################
+# Password of the account used to join the domain
+# Type: String
+#####################################################################
+
+managedmac::activedirectory::password: some_password
+
+#####################################################################
+# The organizational unit (OU) in which to place the computer object
+# Type: String
+#####################################################################
+
+managedmac::activedirectory::organizational_unit:
+  'cn=computers,dc=ad,dc=apple,dc=com'
+
+#####################################################################
+# Network home protocol to use: "afp" or "smb"
+# Type: String
+#####################################################################
+
+managedmac::activedirectory::mount_style: afp
+
+#####################################################################
+# Default user shell; e.g. /bin/bash
+# Type: String
+#####################################################################
+
+managedmac::activedirectory::default_user_shell: /bin/bash
+
+#####################################################################
+# Map UID to attribute
+# Type: String
+#####################################################################
+
+managedmac::activedirectory::map_uid_attribute: uidNumber
+
+#####################################################################
+# Map user GID to attribute
+# Type: String
+#####################################################################
+
+managedmac::activedirectory::map_gid_attribute: gidNumber
+
+#####################################################################
+# Map group GID to attribute
+# Type: String
+#####################################################################
+
+managedmac::activedirectory::map_ggid_attribute: ggidNumber
+
+#####################################################################
+# Prefer this domain server
+# Type: String
+#####################################################################
+
+managedmac::activedirectory::preferred_dc_server: dc1.ad.apple.com
+
+#####################################################################
+# Restrict Dynamic DNS updates to the specified interfaces
+# (e.g. en0, en1, etc)
+# Type: String
+#####################################################################
+
+managedmac::activedirectory::restrict_ddns: en0
+
+#####################################################################
+# Set primary user account naming convention: "forest" or "domain";
+# "domain" is default
+# Type: String
+#####################################################################
+
+managedmac::activedirectory::namespace: domain
+
+#####################################################################
+# Allow administration by specified Active Directory groups
+# Type: Array
+#####################################################################
+
+managedmac::activedirectory::domain_admin_group_list:
+  - APPLE\Domain Admins
+  - APPLE\Enterprise Admins
+
+#####################################################################
+# Packet signing: "allow", "disable" or "require"; "allow" is default
+# Type: String
+#####################################################################
+
+managedmac::activedirectory::packet_sign: allow
+
+#####################################################################
+# Packet encryption: "allow", "disable", "require" or "ssl"; "allow"
+# is default
+# Type: String
+#####################################################################
+
+managedmac::activedirectory::packet_encrypt: allow
+
+#####################################################################
+# Create mobile account at login
+# Type: Boolean
+#####################################################################
+
+managedmac::activedirectory::create_mobile_account_at_login: true
+
+#####################################################################
+# Warn user before creating a Mobile Account
+# Type: Boolean
+#####################################################################
+
+managedmac::activedirectory::warn_user_before_creating_ma: false
+
+#####################################################################
+# Force local home directory
+# Type: Boolean
+#####################################################################
+
+managedmac::activedirectory::force_home_local: true
+
+#####################################################################
+# Use UNC path from Active Directory to derive network home location
+# Type: Boolean
+#####################################################################
+
+managedmac::activedirectory::use_windows_unc_path: true
+
+#####################################################################
+# Allow authentication from any domain in the forest
+# Type: Boolean
+#####################################################################
+
+managedmac::activedirectory::allow_multi_domain_auth: true
+
+#####################################################################
+# How often to require change of the computer trust account password
+# in days; "0" is disabled
+# Type: Integer
+#####################################################################
+
+managedmac::activedirectory::trust_change_pass_interval_days: 0
+
+#####################################################################
+#
+# CLASS: MANAGEDMAC::SECURITY
+#
+#####################################################################
+
+#####################################################################
+# Require a password after sleep or screensaver begins
+# Type: Boolean
+#####################################################################
+
+managedmac::security::ask_for_password: true
+
+#####################################################################
+# The interval in seconds before the screensaver demands a password.
+# Type: Integer
+#####################################################################
+
+managedmac::security::ask_for_password_delay: 300
+
+#####################################################################
+# Prevent users from using autologin during startup.
+# Type: Boolean
+#####################################################################
+
+managedmac::security::disable_autologin: true
+
+#####################################################################
+# Only allow apps and packages from Mac App Store and identified
+# developers. If this value is false, Gatekeeper will allow unsigned
+# apps and packages to be installed. This equates to the 'Anywhere'
+# UI setting. True means only allow trusted apps/packages.
+# Type: Boolean
+#####################################################################
+
+managedmac::security::gatekeeper_enable_assessment: true
+
+#####################################################################
+# Allow apps/packages from 'Mac App Store' or 'Mac App Store and
+# identified developers'.
+# This toggles the Gatekeeper UI: 'Mac App Store' and
+# 'Mac App Store and identified developers'.
+# False is Mac App Store ONLY.
+# True is both.
+# Type: Boolean
+#####################################################################
+
+managedmac::security::gatekeeper_allow_identified_developers: true
+
+#####################################################################
+# Control disables the Finder's contextual menu that allows bypass of
+# System Policy restrictions.
+# Type: Boolean
+#####################################################################
+
+managedmac::security::gatekeeper_disable_override: true
+
+#####################################################################
+# Don't allow user to set lock message
+# Type: Boolean
+#####################################################################
+
+managedmac::security::dont_allow_lock_message_ui: false
+
+#####################################################################
+# Don't allow user to change password
+# Type: Boolean
+#####################################################################
+
+managedmac::security::dont_allow_password_reset_ui: true
+
+#####################################################################
+#
+# CLASS: MANAGEDMAC::MCX
+#
+#####################################################################
+
+#####################################################################
+# Enable or disable Bluetooth power and administrative controls.
+# Accepts values: on/off, true/false, enable/disable. Values are
+# enforced, so if you set it to on/true/enable, users will not be
+# able to turn off the service.
+# Type: String or Boolean
+#####################################################################
+
+managedmac::mcx::bluetooth: off
+
+#####################################################################
+# Enable or disable Airport power and administrative controls.
+# Accepts values: on/off, true/false, enable/disable. Values are
+# enforced, so if you set it to on/true/enable, users will not be
+# able to turn off the service.
+# Type: String or Boolean
+#####################################################################
+
+managedmac::mcx::wifi: off
+
+#####################################################################
+# Accepts a list of items you want launched at login time.
+# Paths are NOT validated.
+# Type: Array
+#####################################################################
+
+managedmac::mcx::loginitems:
+  - /Applications/Chess.app
+  - /Applications/Calculator.app
+
+#####################################################################
+# Suppress iCloud Setup at login for new users.
+# Type: Bool
+#####################################################################
+
+managedmac::mcx::suppress_icloud_setup: true
+
+#####################################################################
+# A list of hidden System Preferences panes. Prefernce pane names
+# MUST be specified by their reverse domain ID.
+# (Eg. com.apple.preferences.icloud)
+# Type: Array
+#####################################################################
+
+managedmac::mcx::hidden_preference_panes:
+  - com.apple.preferences.icloud
+  - com.apple.preferences.users
+
+#####################################################################
+#
+# CLASS: MANAGEDMAC::FILEVAULT
+#
+#####################################################################
+
+#####################################################################
+# Whether to enable FileVault or not.
+# Type: Boolean
+#####################################################################
+
+managedmac::filevault::enable: true
+
+#####################################################################
+# Set to true to create a personal recovery key.
+# Type: Boolean
+#####################################################################
+
+managedmac::filevault::use_recovery_key: true
+
+#####################################################################
+# Set to true to display the personal recovery key to the user after
+# FileVault is enabled.
+# Type: Boolean
+#####################################################################
+
+managedmac::filevault::show_recovery_key: false
+
+#####################################################################
+# Path to the location where the recovery key and computer
+# information plist will be stored.
+# Type: String
+#####################################################################
+
+managedmac::filevault::output_path: /private/var/root/fdesetup_output.plist
+
+#####################################################################
+# If set to true and no certificate information is provided in this
+# payload, the keychain already created at
+# /Library/Keychains/FileVaultMaster.keychain will be used when the
+# institutional recovery key is added.
+# Type: Boolean
+#####################################################################
+
+managedmac::filevault::use_keychain: true
+
+#####################################################################
+# An absolute path or puppet:/// style URI from whence to gather an
+# FVMI. It will install and manage
+# /Library/Keychains/FileVaultMaster.keychain.
+# Only works when $use_keychain is true.
+# Type: String
+#####################################################################
+
+managedmac::filevault::keychain_file:
+  'puppet:///modules/some_module/FileVaultMaster.keychain'
+
+#####################################################################
+# Prevent saving the key across standby modes.
+# Type: Boolean
+#####################################################################
+
+managedmac::filevault::destroy_fv_key_on_standby: false
+
+#####################################################################
+# Prevent users from disabling FDE.
+# Type: Boolean
+#####################################################################
+
+managedmac::filevault::dont_allow_fde_disable: false
+
+#####################################################################
+# Removes FDE if $enable is false and the disk is encrypted.
+# Type: Boolean
+#####################################################################
+
+managedmac::filevault::remove_fde: true
+
+#####################################################################
+#
+# CLASS: MANAGEDMAC::LOGINWINDOW
+#
+#####################################################################
+
+#####################################################################
+# A list of user names allowed to access the machine via the
+# loginwindow. This control is implemented in the
+# com.apple.access_loginwindow ACL group. By default, this group
+# does not exist.
+# Type: Array
+#####################################################################
+
+managedmac::loginwindow::users:
+  - bender
+  - fry
+  - leela
+
+#####################################################################
+# A list of groups (names or GUIDs) allowed to access the machine
+# via the loginwindow. This control is implemented in the
+# com.apple.access_loginwindow ACL group. By default, this group
+# does not exist.
+# Type: Array
+#####################################################################
+
+managedmac::loginwindow::groups:
+  - robothouse
+  - 20EFB92F-4842-4218-8973-9F4738963660
+
+#####################################################################
+# A list of GUIDs corresponding to allowed users or groups.
+# Corresponds to the AllowList key.
+# Type: Array
+#####################################################################
+
+managedmac::loginwindow::allow_list:
+  - D2C2107F-CE19-4C9F-9235-688BEB01D8C0
+  - 779A91D0-885B-4066-97FC-BEECB737E6AF
+
+#####################################################################
+# A list of GUIDs corresponding to denied users or groups.
+# Corresponds to the DenyList key.
+# Type: Array
+#####################################################################
+
+managedmac::loginwindow::deny_list:
+  - C3F27BC2-8F89-4D56-9525-95B5133D8F25
+  - F1A496E4-86EB-4387-A4D6-5D6FAD9201E7
+
+#####################################################################
+# Users can access the OS X console by entering the special
+# username: '> console'. Setting this to true will disable this
+# feature. Corresponds to the DisableConsoleAccess key.
+# Type: Boolean
+#####################################################################
+
+managedmac::loginwindow::disable_console_access: true
+
+#####################################################################
+# Enable the external accounts feature that allows users to store
+# their home directory and account information on a removable disk.
+# Corresponds to the EnableExternalAccounts key.
+# Type: Boolean
+#####################################################################
+
+managedmac::loginwindow::enable_external_accounts: false
+
+#####################################################################
+# Hide administrator accounts when displaying accounts at the
+# loginwindow. Corresponds to the HideAdminUsers key.
+# Type: Boolean
+#####################################################################
+
+managedmac::loginwindow::hide_admin_users: false
+
+#####################################################################
+# Hide local user accounts when displaying accounts at the
+# loginwindow. Corresponds to the HideLocalUsers key.
+# Type: Boolean
+#####################################################################
+
+managedmac::loginwindow::hide_local_users: false
+
+#####################################################################
+# Hide mobile user accounts when displaying accounts at the
+# loginwindow. Corresponds to the HideMobileAccounts key.
+# Type: Boolean
+#####################################################################
+
+managedmac::loginwindow::hide_mobile_accounts: false
+
+#####################################################################
+# Include network user accounts when displaying accounts at the
+# loginwindow. Corresponds to the IncludeNetworkUser key.
+# Type: Boolean
+#####################################################################
+
+managedmac::loginwindow::show_network_users: false
+
+#####################################################################
+# Allow local-only account users to login.
+# Corresponds to the LocalUserLoginEnabled key.
+# Type: Boolean
+#####################################################################
+
+managedmac::loginwindow::allow_local_only_users: true
+
+#####################################################################
+# Specifies a message to post on the loginwindow.
+# Corresponds to the LoginwindowText key.
+# Type: String
+#####################################################################
+
+managedmac::loginwindow::loginwindow_text: "Good News Everyone!"
+
+#####################################################################
+# Disable/Remove the Restart button from the loginwindow.
+# Corresponds to the RestartDisabled key.
+# Type: Boolean
+#####################################################################
+
+managedmac::loginwindow::restart_disabled: false
+
+#####################################################################
+# Disable/Remove the Shutdown button from the loginwindow.
+# Corresponds to the ShutDownDisabled key.
+# Type: Boolean
+#####################################################################
+
+managedmac::loginwindow::shutdown_disabled: false
+
+#####################################################################
+# Disable/Remove the Sleep button from the loginwindow.
+# Corresponds to the SleepDisabled key.
+# Type: Boolean
+#####################################################################
+
+managedmac::loginwindow::sleep_disabled: false
+
+#####################################################################
+# The number of failed login attempts a user gets until they are
+# given a password hint. Corresponds to the RetriesUntilHint key.
+# Type: Integer
+#####################################################################
+
+managedmac::loginwindow::retries_until_hint: 100000000
+
+#####################################################################
+# Use the name and password fields rather than display each account
+# at the loginwindow. Setting this to true will override many other
+# related keys. Corresponds to the SHOWFULLNAME key.
+# Type: Boolean
+#####################################################################
+
+managedmac::loginwindow::show_name_and_password_fields: true
+
+#####################################################################
+# Show the "Other" button when displaying accounts at the
+# loginwindow. Corresponds to the SHOWOTHERUSERS_MANAGED key.
+# Type: Boolean
+#####################################################################
+
+managedmac::loginwindow::show_other_button: false
+
+#####################################################################
+# Disable the use of the OS X autologin feature.
+# Corresponds to the com.apple.login.mcx.DisableAutoLoginClient key.
+# Type: Boolean
+#####################################################################
+
+managedmac::loginwindow::disable_autologin: true
+
+#####################################################################
+# Disable the the OS X Guest login feature.
+# Type: Boolean
+#####################################################################
+
+managedmac::loginwindow::disable_guest_account: true
+
+#####################################################################
+# Forces a logout after the machine is idle for n seconds.
+# Type: Integer
+#####################################################################
+
+managedmac::loginwindow::auto_logout_delay: 3600
+
+#####################################################################
+# Enable or disable Fast User Switching.
+# Type: Boolean
+#####################################################################
+
+managedmac::loginwindow::enable_fast_user_switching: false
+
+#####################################################################
+# Disable autologin after FileVault EFI is unlocked.
+# Type: Boolean
+#####################################################################
+
+managedmac::loginwindow::disable_fde_autologin: true
+
+#####################################################################
+#
+# MANAGEDMAC::SOFTWAREUPDATE
+#
+#####################################################################
+
+#####################################################################
+# The URL for your Apple Software Update server.
+# This will be validated using regex, so it needs to at least have
+# the appearnce of being a URL. Corresponds to CatalogURL.
+# Managed as a profile.
+# Type: String
+#####################################################################
+
+managedmac::softwareupdate::catalog_url:
+  'http://swscan.apple.com/content/catalogs/index-1.sucatalog'
+
+#####################################################################
+# Whether or not to automatically check for Apple Software Updates.
+# Corresponds to AutomaticCheckEnabled. Managed in global preferences
+# by directly modifying the property list.
+# Type: Boolean
+#####################################################################
+
+managedmac::softwareupdate::automatic_update_check: true
+
+#####################################################################
+# Whether or not to automatically install App Store app updates.
+# Corresponds to AutoUpdate. Managed in global preferences by
+# directly modifying the com.apple.storeagent property list.
+# Type: Boolean
+#####################################################################
+
+managedmac::softwareupdate::auto_update_apps: true
+
+#####################################################################
+# Whether or not to automatically download required Apple Software
+# Updates. Corresponds to AutomaticDownload. Managed in global
+# preferences by directly modifying the property list.
+# Type: Boolean
+#####################################################################
+
+managedmac::softwareupdate::automatic_download: false
+
+#####################################################################
+# Whether or not to automatically download and install updated
+# system data files and security updates (Eg. XProtect). Corresponds
+# to ConfigDataInstall. Managed in global preferences by directly
+# modifying the property list.
+# Type: Boolean
+#####################################################################
+
+managedmac::softwareupdate::config_data_install: false
+
+#####################################################################
+# Whether or not to automatically download and install critical
+# system and security updates (Eg. Security Update 2014-002).
+# Corresponds to CriticalUpdateInstall. Managed in global
+# preferences by directly modifying the property list.
+# Type: Boolean
+#####################################################################
+
+managedmac::softwareupdate::critical_update_install: false
+
+#####################################################################
+#
+# MANAGEDMAC::AUTHORIZATION
+#
+#####################################################################
+
+#####################################################################
+# Allow 'everyone' access to the Energy Saver settings pane
+# Default: false
+# Type: Boolean
+#####################################################################
+
+managedmac::authorization::allow_energysaver: true
+
+#####################################################################
+# Allow 'everyone' access to the Date & Time settings pane
+# Default: false
+# Type: Boolean
+#####################################################################
+
+managedmac::authorization::allow_datetime: true
+
+#####################################################################
+# Allow 'everyone' access to the Time Machine settings pane
+# Default: false
+# Type: Boolean
+#####################################################################
+
+managedmac::authorization::allow_timemachine: true
+
+#####################################################################
+#
+# MANAGEDMAC::ENERGYSAVER
+#
+#####################################################################
+
+#####################################################################
+# The settings to apply for Desktop machines. This is a compound
+# parameter containing the raw keys/values for configuring
+# EnergySaver. The structure is rather complex. See the example for
+# complete details.
+# Type: Hash
+#####################################################################
+
+managedmac::energysaver::desktop:
+  ACPower:
+    'Automatic Restart On Power Loss': true
+    'Disk Sleep Timer-boolean': true
+    'Display Sleep Timer': 15
+    'Sleep On Power Button': false
+    'Wake On LAN': true
+    'System Sleep Timer': 30
+  Schedule:
+    RepeatingPowerOff:
+      eventtype: sleep
+      time: 1410
+      weekdays: 127
+    RepeatingPowerOn:
+      eventtype: wakepoweron
+      time: 480
+      weekdays: 127
+
+#####################################################################
+# The settings to apply for Laptop machines. This is a compound
+# parameter containing the raw keys/values for configuring
+# EnergySaver. The structure is rather complex. See the example for
+# complete details.
+# Type: Hash
+#####################################################################
+
+managedmac::energysaver::portable:
+  ACPower:
+    'Automatic Restart On Power Loss': true
+    'Disk Sleep Timer-boolean': true
+    'Display Sleep Timer': 15
+    'Wake On LAN': true
+    'System Sleep Timer': 30
+  BatteryPower:
+    'Automatic Restart On Power Loss': false
+    'Disk Sleep Timer-boolean': true
+    'Display Sleep Timer': 5
+    'System Sleep Timer': 10
+    'Wake On LAN': true
+
+#####################################################################
+#
+# MANAGEDMAC::PORTABLEHOMES
+#
+#####################################################################
+
+#####################################################################
+# Enable Portable Home Directory Synchromization
+# Type: Boolean
+#####################################################################
+
+managedmac::portablehomes::enable: true
+
+#####################################################################
+# Enable the PHD Menu Extra
+# Type: Boolean
+#####################################################################
+
+managedmac::portablehomes::menuextra: on
+
+#####################################################################
+# New Mobile Account
+# Set to True if this is a new mobile account that should be synced
+# initially.
+# Type: Boolean
+#####################################################################
+
+managedmac::portablehomes::isNewMobileAccount: false
+
+#####################################################################
+# Background Sync On
+# Set to True to sync in the background.
+# Type: Boolean
+#####################################################################
+
+managedmac::portablehomes::periodicSyncOn: true
+
+#####################################################################
+# Background Sync Interval
+# Background sync interval in seconds.
+# Type: Integer
+#####################################################################
+
+managedmac::portablehomes::syncPeriodSeconds: 1200
+
+#####################################################################
+# Sync On File Change
+# Set to True to sync when a file changes.
+# Type: Boolean
+#####################################################################
+
+managedmac::portablehomes::syncOnChange: false
+
+#####################################################################
+# Override Home Sync Prefs
+# Set to True to replace the user's Home Sync preferences with
+# managed preferences. Set to False to combine with managed
+# preferences.
+# Type: Boolean
+#####################################################################
+
+managedmac::portablehomes::replaceUserSyncList: true
+
+#####################################################################
+# Override Preference Sync Prefs
+# Set to True to replace the user's Preference sync preferences with
+# managed preferences. Set to False to combine them with managed
+# preferences.
+# Type: Boolean
+#####################################################################
+
+managedmac::portablehomes::replaceUserPrefSyncList: false
+
+#####################################################################
+# Managed Home Sync Items
+# Included managed items to sync in the background while the user is
+# logged in.
+# Type: Array
+#####################################################################
+
+managedmac::portablehomes::syncedFolders_managed:
+  - '~'
+
+#####################################################################
+# Managed Preference Sync Items
+# Include managed items to sync when a user logs in or logs out.
+# Type: Array
+#####################################################################
+
+managedmac::portablehomes::syncedPrefFolders_managed:
+  - '~/Documents/Microsoft User Data'
+  - '~/Library/Fonts'
+  - '~/Documents/Microsoft User Data'
+  - '~/Library/Preferences'
+  - '~/Library/Keychains'
+  - '~/Library/Application Support/Firefox'
+  - '~/Library/Application Support/Google'
+  - '~/Library/Application Support/LaunchBar'
+  - '~/Library/Application Support/TextMate'
+  - '~/Library/Application Support/Terminal'
+  - '~/Library/Application Support/Textual'
+  - '~/Library/Application Support/Sublime Text 2'
+  - '~/Library/Application Support/Zimbra'
+  - '~/Library/Application Support/Screen Sharing'
+  - '~/Library/Application Support/Remote Desktop'
+  - '~/Library/Application Support/Omni Group'
+  - '~/Library/Application Support/Microsoft'
+  - '~/Library/Application Support/Cyberduck'
+  - '~/Library/Application Support/Adium 2.0'
+  - '~/Library/Calendars'
+  - '~/Library/Safari'
+  - '~/Library/Services'
+  - '~/Library/Widgets'
+  - '~/Library/StickiesDatabase'
+  - '~/Library/Recent Servers'
+  - '~/Library/Application Support/Skype'
+
+#####################################################################
+# Managed Home Sync Exclusions
+# List managed items to exclude from Home Sync.
+# Put your matchers in separate arrays: startsWith, endsWith,
+# contains, is, fullPath, partialPath, regex, regexPath
+# Type: Array
+#####################################################################
+
+managedmac::portablehomes::excludedItems:
+  fullPath:
+    - '~/.SymAVQSFile'
+    - '~/.Trash'
+    - '~/.Trashes'
+    - '~/Documents/Microsoft User Data'
+    - '~/Library'
+    - '~/NAVMac800QSFile'
+    - '~/Music/iTunes'
+    - '~/Pictures/iPhoto Library'
+    - '~/Documents/Virtual Machines'
+    - '~/Documents/Parallels'
+    - '~/Movies'
+    - '~/Pictures/Photo Booth'
+    - '~/Documents/Virtual Machines.localized'
+    - '~/Dropbox'
+    - '~/.crxde'
+    - '~/Documents/Virtual PC'
+    - '~/.dropbox'
+    - '~/Downloads'
+    - '~/Personal'
+    - '~/Documents/Final Cut Express Documents'
+    - '~/Google Drive'
+  endsWith:
+    - '.vmwarevm'
+    - '.idlk'
+    - '.aplibrary'
+  is:
+    - 'addons.sqlite'
+
+
+#####################################################################
+# Managed Preference Sync Exclusions
+# List managed items to exclude from Preference Sync.
+# Put your matchers in separate arrays: startsWith, endsWith,
+# contains, is, fullPath, partialPath, regex, regexPath
+# Type: Array
+#####################################################################
+
+managedmac::portablehomes::excludedPrefItems:
+  fullPath:
+    - '~/.SymAVQSFile'
+    - '~/Documents/Microsoft User Data/Entourage Temp'
+    - '~/Library/Application Support/SyncServices'
+    - '~/Library/Application Support/MobileSync'
+    - '~/Library/Caches'
+    - '~/Library/Calendars/Calendar Cache'
+    - '~/Library/Logs'
+    - '~/Library/Mail/AvailableFeeds'
+    - '~/Library/Mail/Envelope Index'
+    - '~/Library/Preferences/Macromedia/Flash Player'
+    - '~/Library/Printers'
+    - '~/Library/PubSub/Database'
+    - '~/Library/PubSub/Downloads'
+    - '~/Library/PubSub/Feeds'
+    - '~/Library/Safari/Icons.db'
+    - '~/Library/Safari/HistoryIndex.sk'
+    - '~/Library/iTunes/iPhone Software Updates'
+    - '~/Library/Preferences/ByHost'
+    - '~/Library/Preferences/SDMHelpData'
+  is:
+    - '.GlobalPreferences.plist'
+    - '.localized'
+    - '.DS_Store'
+    - 'addons.sqlite'
+  endsWith:
+    - '.lockfile'
+    - 'network.plist'
+  regex:
+    - '.*ByHost.*'
+  contains:
+    - '-network-'
+  startsWith:
+    - 'IMAP-'
+    - 'Exchange-'
+    - 'EWS-'
+    - 'Mac-'
+
+#####################################################################
+# Login Preference Sync Conflict Resolution
+# This setting affects syncing ~/Library at login. Set to
+# "mobileHomeWins" to merge homes and have the local (mobile) home
+# win conflicts "mobileHomeCopy" to copy the local home to the
+# network home "automatic" or "networkHomeWins" to merge homes and
+# have the network home win conflicts or "networkHomeCopy" to copy
+# the network home to the local home.
+# Type: String
+#####################################################################
+
+managedmac::portablehomes::loginPrefSyncConflictResolution: automatic
+
+#####################################################################
+# Login Non-preference Sync Conflict Resolution
+# This setting affects syncing everything besides ~/Library at login.
+# Set to "showConflictDialogs" to show dialogs when conflicts occur
+# "mobileHomeWins" to merge homes and have the local (mobile) home
+# win conflicts "mobileHomeCopy" to copy the local home to the
+# network home "automatic" or "networkHomeWins" to merge homes and
+# have the network home win conflicts or "networkHomeCopy" to copy
+# the network home to the local home.
+# Type: String
+#####################################################################
+
+managedmac::portablehomes::loginNonprefSyncConflictResolution: automatic
+
+#####################################################################
+# Logout Preference Sync Conflict Resolution
+# This setting affects syncing ~/Library at logout. Set to
+# "mobileHomeWins" to merge homes and have the local (mobile) home
+# win conflicts "mobileHomeCopy" to copy the local home to the
+# network home "networkHomeWins" to merge homes and have the network
+# home win conflicts or "networkHomeCopy" to copy the network home to
+# the local home.
+# Type: String
+#####################################################################
+
+managedmac::portablehomes::logoutPrefSyncConflictResolution: automatic
+
+#####################################################################
+# Logout Non-preference Sync Conflict Resolution
+# This setting affects syncing everything besides ~/Library at
+# logout. Set to "showConflictDialogs" to show dialogs when conflicts
+# occur "automatic" or "mobileHomeWins" to merge homes and have the
+# local (mobile) home win conflicts "mobileHomeCopy" to copy the
+# local home to the network home "networkHomeWins" to merge homes and
+# have the network home win conflicts or "networkHomeCopy" to copy
+# the network home to the local home.
+# Type: String
+#####################################################################
+
+managedmac::portablehomes::logoutNonprefSyncConflictResolution: automatic
+
+#####################################################################
+# Home Sync Conflict Resolution
+# This setting affects syncing everything besides ~/Library in the
+# background. Set to "automatic" or "showConflictDialogs" to show
+# dialogs when conflicts occur "mobileHomeWins" to merge homes and
+# have the local (mobile) home win conflicts "mobileHomeCopy" to copy
+# the local home to the network home "networkHomeWins" to merge homes
+# and have the network home win conflicts or "networkHomeCopy" to
+# copy the network home to the local home.
+# Type: String
+#####################################################################
+
+managedmac::portablehomes::backgroundConflictResolution: automatic
+
+#####################################################################
+# Sync Preference Set During Login
+# This setting allows you to sync Preference Sync items during login.
+# Set to "automatic" or "sync" to sync Preference Sync items at
+# login, or "dontSync" to not sync Preference Sync items at login.
+# Type: String
+#####################################################################
+
+managedmac::portablehomes::syncPreferencesAtLogin: automatic
+
+#####################################################################
+# Sync Preference Set During Logout
+# This setting allows you to sync Preference Sync items during
+# logout. Set to "automatic" or "sync" to sync Preference Sync items
+# at logout, or "dontSync" to not sync Preference Sync items at
+# logout.
+# Type: String
+#####################################################################
+
+managedmac::portablehomes::syncPreferencesAtLogout: automatic
+
+#####################################################################
+# Sync Preferences During Manual Sync
+# This setting allows you to sync preferences during a manual sync.
+# Set to "automatic" or "sync" to sync preferences during a manual
+# sync, or "dontSync" to not sync preferences during a manual sync.
+# Type: String
+#####################################################################
+
+managedmac::portablehomes::syncPreferencesAtSyncNow: automatic
+
+#####################################################################
+# Sync Preferences in the Background
+# This setting allows you to sync preferences during a background
+# sync. Set to "automatic" or "sync" to sync preferences in the
+# background, or "dontSync" to not synchronize preferences in the
+# background.
+# Type: String
+#####################################################################
+
+managedmac::portablehomes::syncPreferencesInBackground: automatic
+
+#####################################################################
+# Sync Home Set During Login
+# This setting allows you to sync Home Sync items during login. Set
+# to "automatic" or "sync" to sync Home Sync items at login, or
+# "dontSync" to not sync Home Sync items at login.
+# Type: String
+#####################################################################
+
+managedmac::portablehomes::syncBackgroundSetAtLogin: automatic
+
+#####################################################################
+# Sync Home Set During Logout
+# This setting allows you to sync Home Sync items during logout. Set
+# to "automatic" or "sync" to sync Home Sync items at logout, or
+# "dontSync" to not sync Home Sync items at logout.
+# Type: String
+#####################################################################
+
+managedmac::portablehomes::syncBackgroundSetAtLogout: automatic
+
+#####################################################################
+# Sync Preferences During Manual Sync
+# This setting allows you to sync Home Sync items during a manual
+# sync. Set to "automatic" or "sync" to sync Home Sync items during
+# a manual sync\, or "dontSync" to not sync Home Sync items during a
+# manual sync.
+# Type: String
+#####################################################################
+
+managedmac::portablehomes::syncBackgroundSetAtSyncNow: automatic
+
+#####################################################################
+# Sync Preferences in the Background
+# This setting allows you to sync Home Sync items during a background
+# sync. Set to "automatic" or "sync" to sync Home Sync items in the
+# background, or "dontSync" to not synchronize Home Sync items in the
+# background.
+# Type: String
+#####################################################################
+
+managedmac::portablehomes::syncBackgroundSetInBackground: automatic
+
+#####################################################################
+# Suppress Login Preference Sync Errors
+# Set to True to suppress error dialogs during login sync of
+# ~/Library.
+# Type: Boolean
+#####################################################################
+
+managedmac::portablehomes::loginPrefSuppressErrors: false
+
+#####################################################################
+# Suppress Login Non-preference Sync Errors
+# Set to True to suppress error dialogs during login sync of
+# everything besides ~/Library.
+# Type: Boolean
+#####################################################################
+
+managedmac::portablehomes::loginNonprefSuppressErrors: false
+
+#####################################################################
+# Suppress Logout Preference Sync Errors
+# Set to True to suppress error dialogs during logout sync of
+# ~/Library.
+# Type: Boolean
+#####################################################################
+
+managedmac::portablehomes::logoutPrefSuppressErrors: false
+
+#####################################################################
+# Suppress Logout Non-preference Sync Errors
+# Set to True to suppress error dialogs during logout sync of
+# everything besides ~/Library.
+# Type: Boolean
+#####################################################################
+
+managedmac::portablehomes::logoutNonprefSuppressErrors: false
+
+#####################################################################
+# Suppress Home Sync Errors
+# Set to True to suppress error dialogs during home sync.
+# Type: Boolean
+#####################################################################
+
+managedmac::portablehomes::backgroundSuppressErrors: false
+
+#####################################################################
+# Suppress Initial Sync Errors
+# Set to True to suppress error dialogs during initial sync.
+# Type: Boolean
+#####################################################################
+
+managedmac::portablehomes::firstSyncSuppressErrors: false
+
+#####################################################################
+# Suppress Sync Now Sync Errors
+# Set to True to suppress error dialogs during Sync Now.
+# Type: Boolean
+#####################################################################
+
+managedmac::portablehomes::syncNowAllPrefsSuppressErrors: false
+
+#####################################################################
+# Suppress Login Preference Sync Conflicts
+# Set to True to suppress conflict dialogs during login sync of
+# ~/Library.
+# Type: Boolean
+#####################################################################
+
+managedmac::portablehomes::loginPrefSuppressConflicts: false
+
+#####################################################################
+# Suppress Login Non-preference Sync Conflicts
+# Set to True to suppress conflict dialogs during login sync of
+# everything besides ~/Library.
+#####################################################################
+
+managedmac::portablehomes::loginNonprefSuppressConflicts: false
+
+#####################################################################
+# Suppress Logout Preference Sync Conflicts
+# Set to True to suppress conflict dialogs during logout sync of
+# ~/Library.
+#####################################################################
+
+managedmac::portablehomes::logoutPrefSuppressConflicts: false
+
+#####################################################################
+# Suppress Logout Non-preference Sync Conflicts
+# Set to True to suppress conflict dialogs during logout sync of
+# everything besides ~/Library.
+# Type: Boolean
+#####################################################################
+
+managedmac::portablehomes::logoutNonprefSuppressConflicts: false
+
+#####################################################################
+# Suppress Home Sync Conflicts
+# Set to True to suppress conflict dialogs during home sync.
+# Type: Boolean
+#####################################################################
+
+managedmac::portablehomes::backgroundSuppressConflicts: false
+
+#####################################################################
+# Suppress Initial Sync Conflicts
+# Set to True to suppress conflict dialogs during initial sync.
+# Type: Boolean
+#####################################################################
+
+managedmac::portablehomes::firstSyncSuppressConflicts: false
+
+#####################################################################
+# Suppress Sync Now Conflicts
+# Set to True to suppress conflict dialogs during Sync Now.
+# Type: Boolean
+#####################################################################
+
+managedmac::portablehomes::syncNowAllPrefsSuppressConflicts: false
+
+#####################################################################
+# Disable First Time Sync Cancel
+# Set to True to disable canceling a first time sync.
+# Type: Boolean
+#####################################################################
+
+managedmac::portablehomes::disableFirstSyncCancel: false
+
+#####################################################################
+# Disable Login Sync Cancel
+# Set to True to disable canceling a login sync.
+# Type: Boolean
+#####################################################################
+
+managedmac::portablehomes::disableLoginSyncCancel: false
+
+#####################################################################
+# Disable Logout Sync Cancel
+# Set to True to disable canceling a logout sync.
+# Type: Boolean
+#####################################################################
+
+managedmac::portablehomes::disableLogoutSyncCancel: false
+
+#####################################################################
+# Login Dialog Timeout
+# Maximum seconds to display login error or conflict dialogs. Set
+# to 0 for no time limit.
+# Type: Integer
+#####################################################################
+
+managedmac::portablehomes::loginSyncDialogTimeoutSeconds: 0
+
+#####################################################################
+# Logout Dialog Timeout
+# Maximum seconds to display logout error or conflict dialogs. Set
+# to 0 for no time limit.
+# Type: Integer
+#####################################################################
+
+managedmac::portablehomes::logoutSyncDialogTimeoutSeconds: 0
+
+#####################################################################
+# Time To Delay Progress Dialog
+# The time in whole seconds that the progress dialog delays for
+# various reasons.  The default is set to 0.5 seconds if you do not
+# set this key.
+# Type: Boolean
+#####################################################################
+
+managedmac::portablehomes::progressDelaySeconds: 2
+
+#####################################################################
+# Alert On Failed Mounts
+# Set to True if you want an alert if the network home mount fails.
+# Type: Boolean
+#####################################################################
+
+managedmac::portablehomes::alertOnFailedMounts: false
+
+#####################################################################
+#
+# MANAGEDMAC::LOGINHOOK
+#
+#####################################################################
+
+#####################################################################
+# Whether to activate the master loginhook or not.
+# Type: Boolean
+#####################################################################
+
+managedmac::loginhook::enable: true
+
+#####################################################################
+# An absolute path on the local machine that will store the scripts
+# you want executed by the master loginhook.
+# Type: String
+#####################################################################
+
+managedmac::loginhook::scripts: /Library/loginhooks
+
+#####################################################################
+#
+# MANAGEDMAC::LOGOUTHOOK
+#
+#####################################################################
+
+#####################################################################
+# Whether to activate the master logouthook or not.
+# Type: Boolean
+#####################################################################
+
+managedmac::logouthook::enable: true
+
+#####################################################################
+# An absolute path on the local machine that will store the scripts
+# you want executed by the master logouthook.
+# Type: String
+#####################################################################
+
+managedmac::logouthook::scripts: /Library/logouthooks
+
+#####################################################################
+#
+# MANAGEDMAC::SSHD
+#
+#####################################################################
+
+#####################################################################
+# Whether to enable the service or not, true or false.
+# Type: Bool
+#####################################################################
+
+managedmac::sshd::enable: true
+
+#####################################################################
+# Path to file on your Puppet master or a local system.
+# Type: String
+#####################################################################
+
+managedmac::sshd::sshd_config:
+  'puppet:///modules/your_module/sshd_config'
+
+#####################################################################
+# Path to file on your Puppet master or a local system.
+# Type: String
+#####################################################################
+
+managedmac::sshd::sshd_banner:
+  'puppet:///modules/your_module/sshd_banner'
+
+#####################################################################
+# A list of user accounts permitted to access the service.
+# Type: Array
+#####################################################################
+
+managedmac::sshd::users:
+  - fry
+  - bender
+
+#####################################################################
+# A list of user groups permitted to access the service.
+# Type: Array
+#####################################################################
+
+managedmac::sshd::groups:
+  - robothouse
+
+#####################################################################
+#
+# MANAGEDMAC::REMOTEMANAGEMENT
+#
+#####################################################################
+
+#####################################################################
+# Whether to enable the service or not.
+# Type: Boolean
+#####################################################################
+
+managedmac::remotemanagement::enable: false
+
+#####################################################################
+# Whether to enable access for ALL local users or not.
+# Type: Boolean
+#####################################################################
+
+managedmac::remotemanagement::allow_all_users: false
+
+#####################################################################
+# The privileges granted to connected users when the allow_all_users param
+# is true. Privileges are are represented using a signed integer stored as a
+# string. Yes, confusing. Use this Bit map chart to figure it out:
+#
+#  64 Bit Hex Int Bit Decimal Checkbox Item
+#  ================================================================
+#  FFFFFFFFC0000000 0 -1073741824 enabled but nothing set
+#  FFFFFFFFC0000001 1 -1073741823 send text msgs
+#  FFFFFFFFC0000002 2 -1073741822 control and observe, show when observing
+#  FFFFFFFFC0000004 3 -1073741820 copy items
+#  FFFFFFFFC0000008 4 -1073741816 delete and replace items
+#  FFFFFFFFC0000010 5 -1073741808 generate reports
+#  FFFFFFFFC0000020 6 -1073741792 open and quit apps
+#  FFFFFFFFC0000040 7 -1073741760 change settings
+#  FFFFFFFFC0000080 8 -1073741696 restart and shutdown
+#
+#  FFFFFFFF80000002 -2147483646 control and observe don't show when observing
+#  FFFFFFFFC00000FF -1073741569 all enabled
+#  FFFFFFFFC00000FF -2147483648 all disabled
+#
+# Type: String
+#####################################################################
+
+managedmac::remotemanagement::all_users_privs: -2147483648
+
+#####################################################################
+# Whether or not to activate the ARD menu extra.
+# Type: Boolean
+#####################################################################
+
+managedmac::remotemanagement::enable_menu_extra: true
+
+#####################################################################
+# Whether or not to enable the Open Directory group ACLs.
+# Type: Boolean
+#####################################################################
+
+managedmac::remotemanagement::enable_dir_logins: true
+
+#####################################################################
+# The list of directory groups to use as ARD ACLs.
+# Type: Array
+#####################################################################
+
+managedmac::remotemanagement::allowed_dir_groups:
+  - com.apple.local.ard_admin
+  - com.apple.local.ard_interact
+  - com.apple.local.ard_manage
+  - com.apple.local.ard_reports
+
+#####################################################################
+# Whether or not to allow legacy VNC connections.
+# Type: Boolean
+#####################################################################
+
+managedmac::remotemanagement::enable_legacy_vnc: false
+
+#####################################################################
+# The VNC plain text password for connecting. I highly recommend not
+# using this.
+# Type: String
+#####################################################################
+
+managedmac::remotemanagement::vnc_password: dumbdumb
+
+#####################################################################
+# Whether or not to allow_webm_requests incoming VNC requests.
+# Type: Boolean
+#####################################################################
+
+managedmac::remotemanagement::allow_vnc_requests: false
+
+#####################################################################
+# Whether or not to allow_webm_requests incoming WBEM requests.
+# Type: Boolean
+#####################################################################
+
+managedmac::remotemanagement::allow_webm_requests: false
+
+#####################################################################
+# A Hash mapping user names to respective ARD privs. Keys are user 
+# names as String, values are privs as String.
+# Example:
+# { 'fry'    => -1073741569,
+#   'bender' => -2147483646, 
+#   'leela'  => -1073741822 },
+# Type: Hash
+#####################################################################
+
+managedmac::remotemanagement::users:
+  fry:    -1073741569
+  bender: -2147483646
+  leela:  -1073741569
+
+#####################################################################
+# Controls the exclusivity of the user list. When true, only the 
+# listed users will be allowed access to ARD. Other users with 
+# existing rights will have their privs revoked.
+# Type: Boolean
+#####################################################################
+
+managedmac::remotemanagement::strict: false
+
+#####################################################################
+#
+# MANAGEDMAC::SCREENSHARING
+#
+#####################################################################
+
+#####################################################################
+# Whether to enable the service or not, true or false.
+# Type: Boolean
+#####################################################################
+
+managedmac::screensharing::enable: true
+
+#####################################################################
+# A list of user accounts permitted to access the service.
+# Type: Array
+#####################################################################
+
+managedmac::screensharing::users:
+   - fry
+   - bender
+
+#####################################################################
+# A list of user groups permitted to access the service.
+# Type: Array
+#####################################################################
+
+managedmac::screensharing::groups:
+   - robothouse
+
+#####################################################################
+#
+# MANAGEDMAC::MOBILECONFIGS
+#
+#####################################################################
+
+#####################################################################
+# This is a Hash of Hashes.
+# The hash should be in the form { title => { parameters } }.
+# See http://tinyurl.com/7783b9l, and the examples below for details.
+# Type: Hash
+#####################################################################
+
+managedmac::mobileconfigs::payloads:
+  'managedmac.dock.alacarte':
+    content:
+      largesize: 128
+      orientation: left
+      tilesize: 128
+      autohide: true
+      PayloadType: 'com.apple.dock'
+    displayname: 'Managed Mac: Dock Settings'
+
+#####################################################################
+# A Hash that defines the default values for the resources created.
+# See http://tinyurl.com/7783b9l, and the examples below for details.
+# Type: Hash
+#####################################################################
+
+managedmac::mobileconfigs::defaults:
+  description:  'Installed by Puppet.'
+  organization: 'Puppet Labs'
+
+#####################################################################
+#
+# MANAGEDMAC::PROPERTYLISTS
+#
+#####################################################################
+
+#####################################################################
+# This is a Hash of Hashes.
+# The hash should be in the form { title => { parameters } }.
+# See http://tinyurl.com/7783b9l, and the examples below for details.
+# Type: Hash
+#####################################################################
+
+managedmac::propertylists::files:
+  '/Users/itsvan/Desktop/file_a.plist':
+    content:
+      - 'A string.'
+      - a_hash_key: 1
+      - 42
+  '/Users/itsvan/Desktop/file_b.plist':
+    content:
+      0: 1
+      foo: bar
+      bar: baz
+      an_array:
+         - 99
+
+#####################################################################
+# A Hash that defines the default values for the resources created.
+# See http://tinyurl.com/7783b9l, and the examples below for details.
+# Type: Hash
+#####################################################################
+
+managedmac::propertylists::defaults:
+  owner: root
+  group: wheel
+  format: xml
+
+#####################################################################
+#
+# MANAGEDMAC::EXECS
+#
+#####################################################################
+
+#####################################################################
+# This is a Hash of Hashes.
+# The hash should be in the form { title => { parameters } }.
+# See http://tinyurl.com/7783b9l, and the examples below for details.
+# Type: Hash
+#####################################################################
+
+managedmac::execs::commands:
+  who_dump:
+    command: '/usr/bin/who > /Users/itsvan/Desktop/who.dump'
+  ps_dump:
+    command: '/bin/ps aux > /Users/itsvan/Desktop/ps.dump'
+
+#####################################################################
+# A Hash that defines the default values for the resources created.
+# See http://tinyurl.com/7783b9l, and the examples below for details.
+# Type: Hash
+#####################################################################
+
+managedmac::execs::defaults:
+  returns:
+    - 0
+    - 1
+
+#####################################################################
+#
+# MANAGEDMAC::FILES
+#
+#####################################################################
+
+#####################################################################
+# This is a Hash of Hashes.
+# The hash should be in the form { title => { parameters } }.
+# See http://tinyurl.com/7783b9l, and the examples below for details.
+# Type: Hash
+#####################################################################
+
+managedmac::files::objects:
+  /Users/Shared/example_file_a.txt:
+    content: 
+      "This is an example of how to create a file using the content parameter."
+  /Users/Shared/example_file_b.txt:
+    source: puppet:///modules/some_module/some_file.txt
+  /Users/Shared/example_directory:
+    ensure: directory
+    group: wheel
+    mode: 0755
+
+#####################################################################
+# A Hash that defines the default values for the resources created.
+# See http://tinyurl.com/7783b9l, and the examples below for details.
+# Type: Hash
+#####################################################################
+
+managedmac::files::defaults:
+  owner: root
+  group: admin
+  ensure: file
+  mode: 0644
+
+#####################################################################
+#
+# MANAGEDMAC::USERS
+#
+#####################################################################
+
+#####################################################################
+# This is a Hash of Hashes.
+# The hash should be in the form { title => { parameters } }.
+# See http://tinyurl.com/7783b9l, and the examples below for details.
+# Type: Hash
+#####################################################################
+
+managedmac::users::accounts:
+  fry:
+    uid: 505
+    iterations: 31786
+    password: 4f5942e989e7566954d42421dc4b81c0fa45f6fb2ecbc1026b2183060c8ecbec38582b1a8a6459574ebe1a2d7884d9e8d2a460e8ea3fcf179964a6325a688d7ee7cc60bbb8b8abf252c6a6a799760da0b0fe6e4562f506b2355b03f272580ed9bdbbae55152dfbac066d9c62a799ee184f9904da153a3c20d66657cf3b60d5c8
+    salt: 77586e8902d744f651758b402b45e174d7943b10b145c921b3b71affbaf9a32d
+  bender:
+    uid: 506
+    iterations: 32486
+    password: a85ea7ce2df74b13be298d6584edbbb5558b74616a70e579252416a6b76d0a615c88b7d566280fa5e035e8db7b1a0c4e3ee4b8cd6204652dcb6c89e6e450a60ca7ed0cc9fa545326ca25211e6f600835f50642ab9d407fa30999c68c05b92d9281eff4a66c67f44ed2f8b8eaf8b62283db202bc98e21c0df9a95cf9abb359b69
+    salt: 9ab79307a7bfbb293b4f015af748d227123481bcd4e5801f450697d15fb67144
+
+#####################################################################
+# A Hash that defines the default values for the resources created.
+# See http://tinyurl.com/7783b9l, and the examples below for details.
+# Type: Hash
+#####################################################################
+
+managedmac::users::defaults:
+  gid: 20
+
+#####################################################################
+#
+# MANAGEDMAC::GROUPS
+#
+#####################################################################
+
+managedmac::groups::defaults:
+  ensure: present
+managedmac::groups::accounts:
+  robothouse:
+    gid: 998
+    users:
+      - bender
+  robotmafia:
+    gid: 999
+    nestedgroups:
+      - robothouse
+

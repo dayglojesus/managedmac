@@ -1,0 +1,46 @@
+#!/usr/bin/ruby
+
+require 'syslog'
+require 'fileutils'
+require 'etc'
+
+@scripts      = '<%= @scripts %>'
+@type         = '<%= @type %>'
+@label        = @type + 'hook'
+@log          = Syslog.open(@label)
+@username     = ARGV.join(' ')
+@user_info    = Etc.getpwnam(@username)
+
+# Check each element in the list
+# - returns sorted list of executable files
+def check_scripts(list)
+  list = list.select do |file|
+    next if File.directory? file
+    unless File.executable? file
+      @log.notice("=> Error: #{file} is not a valid executable.")
+      next
+    end
+    file
+  end
+  list.sort
+end
+
+@hooks = check_scripts(Dir.glob("#{@scripts}/*"))
+
+@log.notice("#{@type.capitalize}: #{@username}, uid=#{@user_info.uid}, gid=#{@user_info.gid}")
+
+unless @hooks.empty?
+  @hooks.each_with_index do |hook, priority|
+    @log.notice("=> Exec: #{hook} #{@username}, [Priority: #{priority}]")
+    cmd_args = [hook, "#{@username}", "#{@user_info.uid}", "#{@user_info.gid}"]
+    unless system(*cmd_args)
+      @log.notice("=> Error: #{hook} exited with non-zero status [#{$?.exitstatus}]")
+    end
+  end
+end
+
+@log.notice("#{@type.capitalize}: #{@username}, complete.")
+
+Syslog.close
+
+exit 0

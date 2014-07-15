@@ -1,41 +1,78 @@
-# == Class: mmv3
+# == Class: managedmac
 #
-# Full description of class mmv3 here.
+# Module initializer.
+#
+# This module only supports OS X 10.9 or greater.
 #
 # === Parameters
 #
-# Document parameters here.
-#
-# [*sample_parameter*]
-#   Explanation of what this parameter affects and what it defaults to.
-#   e.g. "Specify one or more upstream ntp servers as an array."
+# None
 #
 # === Variables
 #
-# Here you should define a list of variables that this module would require.
+# [*osfamily*]
+#   The osfamily must be Darwin. If not, Puppet will fail.
 #
-# [*sample_variable*]
-#   Explanation of how this variable affects the funtion of this class and if
-#   it has a default. e.g. "The parameter enc_ntp_servers must be set by the
-#   External Node Classifier as a comma separated list of hostnames." (Note,
-#   global variables should be avoided in favor of class parameters as
-#   of Puppet 2.6.)
+# [*macosx_productversion_major*]
+#   The macosx_productversion_major must be 10.9 or greate. If not, Puppet
+#   will fail.
 #
 # === Examples
 #
-#  class { mmv3:
-#    servers => [ 'pool.ntp.org', 'ntp.local.company.com' ],
-#  }
+#  include managedmac
+#
+#  class { managedmac: }
 #
 # === Authors
 #
-# Author Name <author@domain.com>
+# Brian Warsing <bcw@sfu.ca>
 #
 # === Copyright
 #
-# Copyright 2014 Your name here, unless otherwise noted.
+# Copyright 2014 Simon Fraser University, unless otherwise noted.
 #
-class mmv3 {
+class managedmac {
 
+  if $::osfamily != 'Darwin' {
+    fail("unsupported osfamily: ${::osfamily}")
+  }
+
+  if $::macosx_productversion_major < 10.9 {
+    fail("unsupported product version: ${::macosx_productversion_major}")
+  }
+
+  # Require the CFPropertyList gem
+  package { 'CFPropertyList':
+    ensure   => 'installed',
+    provider => 'gem',
+  }
+
+  # Require the sqlite3 gem
+  package { 'sqlite3':
+    ensure   => 'installed',
+    provider => 'gem',
+  }
+
+  contain managedmac::ntp
+  contain managedmac::activedirectory
+  contain managedmac::security
+  contain managedmac::mcx
+  contain managedmac::filevault
+  contain managedmac::loginwindow
+  contain managedmac::softwareupdate
+  contain managedmac::authorization
+  contain managedmac::energysaver
+  contain managedmac::portablehomes
+  contain managedmac::loginhook
+  contain managedmac::logouthook
+  contain managedmac::sshd
+  contain managedmac::remotemanagement
+  contain managedmac::screensharing
+  contain managedmac::mobileconfigs
+  contain managedmac::propertylists
+  contain managedmac::execs
+  contain managedmac::files
+  contain managedmac::users
+  contain managedmac::groups
 
 }

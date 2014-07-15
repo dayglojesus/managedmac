@@ -1,0 +1,51 @@
+#!/usr/bin/env ruby
+
+require 'rake'
+require 'puppetlabs_spec_helper/rake_tasks'
+
+require 'puppet-lint/tasks/puppet-lint'
+PuppetLint.configuration.ignore_paths = ["spec/**/*.pp", "vendor/**/*.pp"]
+
+def div_line
+  "=" * 65
+end
+
+def fail
+  puts div_line
+  puts "FAILED: puppet-lint style error(s)!!!"
+  puts "You must repair these errors before you can commit."
+  puts div_line
+  result = false
+end
+
+def succeed
+  puts "PASSED: You are good looking and write stylish Puppet code!"
+  puts div_line
+end
+
+puts div_line
+puts "Running: pre-commit hook..."
+puts "puppet-lint: "
+puts div_line
+
+result = true
+
+modified_manifests = `git diff --name-only --cached`.split.grep /\A.*\.pp/
+
+if modified_manifests.empty?
+  puts "No change to manifests. Skipping lint check..."
+  puts div_line
+elsif modified_manifests.size == 1
+  `/usr/bin/puppet-lint #{modified_manifests.first.chomp}`
+  $?.success? ? succeed : fail
+else
+  begin
+    if Rake.application['lint'].invoke
+      succeed
+    end
+  rescue RuntimeError
+    fail
+  end
+end
+
+exit result
