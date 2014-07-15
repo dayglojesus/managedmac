@@ -70,7 +70,7 @@ Now, try running this and inspecting the output...
 ---
 ## More Documentation
 
-The demonstration above provides just one quick example of what can be accomplished. There are hundred of builtin configurations that can be made. 
+The demonstration above provides just one quick example of what can be accomplished. There are hundreds of configurations that can be made.
 
-To learn more about this module and how it works, see the documention on Custom Types and Classes.
+To learn more about this module and how it works, read the [Overview](/overview) and see the documentation on [Custom Types](/types) and [Classes](/classes).
 
