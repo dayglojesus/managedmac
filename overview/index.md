@@ -18,7 +18,7 @@ Managedmac was designed to be a sort of OS X world-engine.
 
 Once the components are installed, the only thing you need to begin terraforming is a configuration file.
 
-You've already seen this in the [Quick Start!](/#quickstart)
+You've already seen this in the [Quick Start!]({{ site.baseurl }}/#quickstart)
 
 The file we created was a Hiera `defaults.yaml` file. In simple terms, Hiera is a Puppet component that allows you to pass data (params) to Puppet classes without using the DSL.
 
