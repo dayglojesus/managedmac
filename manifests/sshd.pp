@@ -129,6 +129,7 @@ class managedmac::sshd (
 
     macgroup { $acl_group:
       ensure       => present,
+      gid          => 399,
       users        => $users_attr,
       nestedgroups => $groups_attr,
     }

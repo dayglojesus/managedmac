@@ -10,7 +10,6 @@ Puppet::Type.type(:macgroup).provide(:default) do
 
   mk_resource_methods
 
-  # DSLOCAL_ROOT = '/Local/Default'
   GROUPS_ROOT  = '/private/var/db/dslocal/nodes/Default/groups'
 
   class << self
@@ -74,6 +73,7 @@ Puppet::Type.type(:macgroup).provide(:default) do
   end
 
   def exists?
+    @original_properties = @property_hash.dup
     @property_hash[:ensure] == :present
   end
 
@@ -144,8 +144,10 @@ Puppet::Type.type(:macgroup).provide(:default) do
       # being assigned to the target group already belongs to another entity,
       # a Puppet::ExecutionFailure will be raised, but that's probably a
       # good thing. Probably.
-      unless @resource[:gid].eql? @property_hash[:gid]
-        cmd_args += ['-i', "#{gid}"]
+      if gid
+        unless gid.to_i == @original_properties[:gid].to_i
+          cmd_args += ['-i', "#{gid}"]
+        end
       end
 
       cmd_args += ['-r', "#{realname}" ] if realname

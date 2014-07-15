@@ -1,6 +1,6 @@
 Puppet::Type.newtype(:macauthdb) do
 
-  @doc = "Manage the OS X authorization database. See the
+  @doc = %q{Manage the OS X authorization database. See the
     [Apple developer site](http://developer.apple.com/library/mac/documentation/Security/Conceptual/AuthenticationAndAuthorizationGuide/Introduction/Introduction.html)
     for more information.
 
@@ -9,9 +9,43 @@ Puppet::Type.newtype(:macauthdb) do
     in identifiers.
 
     **Autorequires:** If Puppet is managing the `/System/Library/Security/authorization.plist` file, each
-    macauthdb resource will autorequire it."
+    macauthdb resource will autorequire it.
 
-  # ensurable
+    Example:
+
+    # Allow everyone to modify Energy Saver settings in the System Prefernces control panel
+
+    # First change the parent class
+    macauthdb { 'system.preferences':
+      ensure            => 'present',
+      allow_root        => 'true',
+      auth_class        => 'user',
+      auth_type         => 'right',
+      authenticate_user => 'true',
+      comment           => 'Checked by the Admin framework when making changes to certain System Preferences.',
+      group             => 'everyone',
+      session_owner     => 'false',
+      shared            => 'true',
+      timeout           => '2147483647',
+      tries             => '10000',
+    }
+
+    # Then change the target
+    macauthdb { 'system.preferences.energysaver':
+      ensure            => 'present',
+      allow_root        => 'true',
+      auth_class        => 'user',
+      auth_type         => 'right',
+      authenticate_user => 'true',
+      comment           => 'Checked by the Admin framework when making changes to the Energy Saver preference pane.',
+      group             => 'everyone',
+      session_owner     => 'false',
+      shared            => 'true',
+      timeout           => '2147483647',
+      tries             => '10000',
+    }
+
+  }
 
   ensurable do
     newvalue(:present) do
