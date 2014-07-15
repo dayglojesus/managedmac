@@ -14,6 +14,7 @@ Once you've installed the components, all you need to do is create a configurati
 It's that simple.
 
 ---
+<a id="quickstart"></a>
 ## Quick Start
 
 ### 1. Install Packages
