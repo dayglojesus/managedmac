@@ -29,6 +29,11 @@
 #   Default: false
 #   Type: Bool
 #
+# [*allow_printers*]
+#   Allow 'everyone' access to the Printers settings pane, true or false.
+#   Default: false
+#   Type: Bool
+#
 # === Variables
 #
 # Not applicable
@@ -71,6 +76,7 @@ class managedmac::authorization (
   $allow_datetime    = false,
   $allow_timemachine = false,
   $allow_dvd_initial = false,
+  $allow_printers    = false,
 
 ) {
 
@@ -78,6 +84,7 @@ class managedmac::authorization (
   validate_bool ($allow_datetime)
   validate_bool ($allow_timemachine)
   validate_bool ($allow_dvd_initial)
+  validate_bool ($allow_printers)
 
   $sum = (bool2num($allow_energysaver) + bool2num($allow_datetime) +
     bool2num($allow_timemachine)) > 0
@@ -131,6 +138,16 @@ Time Machine preference pane.',
       comment => "Used by the DVD player to set the region code the first time. \
 Note that changing the region code after it has been set requires a different \
 right (system.device.dvd.setregion.change).",
+    },
+
+    'system.preferences.printing' => {
+      group => $allow_printers ? {
+        true    => 'everyone',
+        default => 'admin',
+      },
+
+      comment => "Checked by the Admin framework when making changes to the \
+Printing preference pane.",
     },
 
   }
