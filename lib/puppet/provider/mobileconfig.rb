@@ -106,6 +106,54 @@ class Puppet::Provider::MobileConfig < Puppet::Provider
   def initialize(value={})
     super(value)
     @property_flush = {}
+
+    # A little Ruby metaprogramming magic...
+    #
+    # Insert a singleton method after intialization that overrides the #content
+    # getter so that we can intercept any Password key/values.
+    #
+    # To enable this to work with the `mk_resource_methods` method (a class
+    # method which we like for its convenience) the content method must be
+    # fasionably late to the party. So, use the define_singleton_method after
+    # super init to ensure our method isn't squashed.
+    #
+    # Why do we need this method override?
+    #
+    # Certain PayloadTypes contain information that gets scrubbed from the
+    # `/usr/bin/profiles` output. In particular, these:
+    # - com.apple.wifi.managed
+    # - com.apple.firstactiveethernet.managed
+    # - com.apple.DirectoryService.managed
+    #
+    # All of these PayloadTypes use a Password key whose value is output as:
+    # '********' -- negating Puppet's ability to compare it with the content
+    # specified in the resource declaration.
+    #
+    # As a workaround, we perform a substitution, re-inserting the specified
+    # value. This is sub-optimal and means that this value is
+    # NOT IDEMPOTENT (ie. changes to this value, will not trigger a puppet
+    # apply).
+    #
+    # However, there is a workaround if you follow this rule of thumb:
+    #
+    # If you change the password, rotate/change/set the PayloadUUID inside
+    # the affected Payload.
+    #
+    # Doing this will signal Puppet that something has changed and it will
+    # reinstall the profile.
+
+    define_singleton_method(:content) do
+      if @resource[:content]
+        return @property_hash[:content].each_with_index.map do |hash, i|
+          if hash.key?('Password')
+            hash['Password'] = @resource[:content][i]['Password']
+            hash
+          end
+        end
+      end
+      @property_hash[:content]
+    end
+
   end
 
   def create
