@@ -101,30 +101,6 @@ describe "managedmac::authorization", :type => 'class' do
     end
   end
 
-  context "when $allow_dvd_initial == true" do
-    let(:params) do
-      { :allow_energysaver => false,
-        :allow_datetime => false,
-        :allow_dvd_initial => true,
-      }
-    end
-
-    it do
-      should contain_macauthdb('system.preferences.energysaver').with(
-        'group' => 'admin',)
-    end
-
-    it do
-      should contain_macauthdb('system.preferences.datetime').with(
-        'group' => 'admin',)
-    end
-
-    it do
-      should contain_macauthdb('system.device.dvd.setregion.initial').with(
-        'group' => 'everyone',)
-    end
-  end
-
   context "when $allow_printers == true" do
     let(:params) do
       { :allow_energysaver => false,
@@ -146,6 +122,30 @@ describe "managedmac::authorization", :type => 'class' do
     it do
       should contain_macauthdb('system.preferences.printing').with(
         'group' => 'everyone',)
+    end
+  end
+
+  context "when $allow_dvd_setregion_initial == true" do
+    let(:params) do
+      { :allow_energysaver => false,
+        :allow_datetime => false,
+        :allow_dvd_setregion_initial => true,
+      }
+    end
+
+    it do
+      should contain_macauthdb('system.preferences.energysaver').with(
+        'group' => 'admin',)
+    end
+
+    it do
+      should contain_macauthdb('system.preferences.datetime').with(
+        'group' => 'admin',)
+    end
+
+    it do
+      should contain_macauthdb('system.device.dvd.setregion.initial').with(
+        'auth_class' => 'allow',)
     end
   end
 
