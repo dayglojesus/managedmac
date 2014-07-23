@@ -1,13 +1,9 @@
 # == Class: managedmac::authorization
 #
-# Unlock select System Preferences panes by setting a bool.
-#
-# So far, the only panes we're controlling are: Energy Saver, Date & Time,
-# and Time Machine.
+# Controls various system authorization keys, granting users access to system
+# resources otherwise only accessible by administrators.
 #
 # === Parameters
-#
-# There 3 parameters, all are BOOLS.
 #
 # [*allow_energysaver*]
 #   Allow 'everyone' access to the Energy Saver settings pane, true or false.
@@ -25,7 +21,7 @@
 #   Type: Bool
 #
 # [*allow_dvd_initial*]
-#   Allow 'everyone' access to set the DVD region code, true or false.
+#   Allow 'everyone' to set the inital DVD region code, true or false.
 #   Default: false
 #   Type: Bool
 #
@@ -134,7 +130,6 @@ Time Machine preference pane.',
         true    => 'everyone',
         default => 'admin',
       },
-
       comment => "Used by the DVD player to set the region code the first time. \
 Note that changing the region code after it has been set requires a different \
 right (system.device.dvd.setregion.change).",
@@ -145,7 +140,6 @@ right (system.device.dvd.setregion.change).",
         true    => 'everyone',
         default => 'admin',
       },
-
       comment => "Checked by the Admin framework when making changes to the \
 Printing preference pane.",
     },
