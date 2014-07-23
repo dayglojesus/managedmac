@@ -79,16 +79,17 @@ _Mobileconfig_ is capable of dynamically creating and managing the installation 
       removaldisallowed => false,
     }
 
-_Mobileconfig_ actually sports two providers:
-
-* _activedirectory_ whose sole purpose is to perform [Advanced Active Directory binding](http://support.apple.com/kb/HT5981?viewlocale=en_US&locale=en_US)
-* _default_ which handles everything else
-
-Generally speaking, the default is all you'll need, unless you want to roll your own bind-to-activedirectory Puppet class.
-
 #### IMPORTANT:
 
 Before you get caught off-guard, there are some limitations to this custom type that you need to know about. Simply put, the limitations are borne of the utility on which it relies, `/usr/bin/profiles`. This utility, while extremely useful, is also the sole purveyor of information about profile installations and it has some quirks.
+
+There are 3 known edge cases:
+
+- Profiles that contain Passwords (fixed in 0.4.5)
+- Profiles that contain MCX
+- Profiles that contain Embedded Certificates
+
+In first case, *Passwords*, _this problem is solved by using MD5 hashing_. However, these other cases are pesky.
 
 For example, if you install a profile that contains a `com.apple.ManagedClient.preferences` payload and run `/usr/bin/profiles -P -o ~/Desktop/all_profiles.plist` the resulting file will contain no trace of the MCX settings you placed in the payload.
 
@@ -96,9 +97,7 @@ For example, if you install a profile that contains a `com.apple.ManagedClient.p
 
 Another interesting no-show in `profiles` are embedded certificates -- `profiles` will display the profile, but the certificate payloads will NOT be displayed. Unlike the MCX payload, this one is almost certainly a conscious effort to conceal vital security details. Moreover, profiles that contain embedded certs (probably) have the certs stripped and added to the System.keychain. The information regarding which profile installed which certificate is SOMEWHERE on the system, but `profiles` does not return any authoritative link between the profile and the certs.
 
-Another example of concealing security details happens with the [Advanced Active Directory configuration profile](http://support.apple.com/kb/HT5981?viewlocale=en_US&locale=en_US). This profile accepts a username and password which it uses to bind to your AD. Of course, exposing the password via `profiles` would likely be a bad idea. This means checking the value of the password you handed Puppet becomes tricky. To deal with this, a separate provider (activedirectory) was created. See manifests/activedirectory.pp for an example of using the activedirectory provider.
-
-*Those are the 3 edge cases I have found -- there may be more...*
+####[If you discover another edge case, please file a bug report.](https://github.com/dayglojesus/managedmac/issues)
 
 ---
 <a id="Propertylist"></a>
