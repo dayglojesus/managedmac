@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.4.3
+- fix issue #11: merge pull-request from @groob
+- fix documentation and add tests
+- lock down gem versions
+
 ## 0.4.2
 - fix issues #10 and #13
 - many changes to Mobileconfig, see log for details
