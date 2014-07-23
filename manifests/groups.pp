@@ -77,7 +77,7 @@ class managedmac::groups (
 
 ) {
 
-  if is_hash(hiera('managedmac::activedirectory::options', false)) {
+  if is_hash(hiera('managedmac::activedirectory::enable', false)) {
     require managedmac::activedirectory
   }
 
