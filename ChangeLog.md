@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.4.5
+- release 0.4.5
+- update metadata.json and build
+
 ## 0.4.4
 - more authorization fixes and enhancements (see log)
 - fix issue #11, Mobileconfig#content was failing to process an empty array
@@ -19,7 +23,7 @@
 - some clean-up
 
 ## 0.4.0
-* inital release
+* initial release
 
 ## 0.3.3
 * clean-up and organize some documentation in preparation for Github
