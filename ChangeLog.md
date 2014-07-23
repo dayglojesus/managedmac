@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.4.2
+- fix issues #10 and #13
+- many changes to Mobileconfig, see log for details
+
 ## 0.4.1
 - fix issues #4 and #5
 - some clean-up
