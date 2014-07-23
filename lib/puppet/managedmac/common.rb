@@ -1,4 +1,5 @@
 require 'cfpropertylist'
+require 'digest/md5'
 
 module ManagedMacCommon
 
@@ -11,8 +12,14 @@ module ManagedMacCommon
                              'PayloadOrganization',
                              'PayloadRemovalDisallowed',
                              'PayloadScope',
-                             'PayloadUUID',
                              'PayloadVersion',]
+
+  # Generate a UUID using the supplied content
+  def self.content_to_uuid(content)
+    digest  = Digest::MD5.hexdigest content.to_s
+    pattern = /\A([0-9a-f]{8})([0-9a-f]{4})([0-9a-f]{4})([0-9a-f]{4})([0-9a-f]{12})\z/
+    digest.gsub pattern, "\\1-\\2-\\3-\\4-\\5"
+  end
 
   # Recurse the data argument and transform it into real Ruby objects
   def self.destringify(data)
