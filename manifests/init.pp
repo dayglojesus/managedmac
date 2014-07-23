@@ -41,18 +41,6 @@ class managedmac {
     fail("unsupported product version: ${::macosx_productversion_major}")
   }
 
-  # Require the CFPropertyList gem
-  package { 'CFPropertyList':
-    ensure   => 'installed',
-    provider => 'gem',
-  }
-
-  # Require the sqlite3 gem
-  package { 'sqlite3':
-    ensure   => 'installed',
-    provider => 'gem',
-  }
-
   contain managedmac::ntp
   contain managedmac::activedirectory
   contain managedmac::security
