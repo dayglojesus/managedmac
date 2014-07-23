@@ -105,11 +105,20 @@ Puppet::Type.newtype(:mobileconfig) do
     # - We need to sort the Arrays before performing an equality test. We do
     # this using the PayloadType key because it is guarnteed to be present.
     def insync?(is)
-      key = 'PayloadType'
-      i, s = [is, should].each do |a|
-        a.sort! { |x, y| x[key] <=> y[key] }
+      # Dupe the is and should values
+      i, s = is.dup, should.dup
+      # Collect Arrays of sorted Hashes and compare those
+      [i, s].collect! do |a|
+        a.collect! do |hash|
+          # We insert a PayloadUUID/MD5 sum into each Hash if it's missing
+          unless hash['PayloadUUID']
+            hash['PayloadUUID'] = ::ManagedMacCommon::content_to_uuid hash.sort
+          end
+          hash.sort
+        end
+        a.sort!
       end
-      i.eql? s
+      i == s
     end
 
     # Normalize the :content array
