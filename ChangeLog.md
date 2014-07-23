@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.4.4
+- more authorization fixes and enhancements (see log)
+- fix issue #11, Mobileconfig#content was failing to process an empty array
+- fix issue #6, changed variable name
+
 ## 0.4.3
 - fix issue #11: merge pull-request from @groob
 - fix documentation and add tests
