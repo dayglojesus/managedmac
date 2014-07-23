@@ -20,13 +20,13 @@
 #   Default: false
 #   Type: Bool
 #
-# [*allow_dvd_initial*]
-#   Allow 'everyone' to set the inital DVD region code, true or false.
+# [*allow_printers*]
+#   Allow 'everyone' access to the Printers settings pane, true or false.
 #   Default: false
 #   Type: Bool
 #
-# [*allow_printers*]
-#   Allow 'everyone' access to the Printers settings pane, true or false.
+# [*allow_dvd_setregion_initial*]
+#   Allow 'everyone' to set the inital DVD region code, true or false.
 #   Default: false
 #   Type: Bool
 #
@@ -35,6 +35,7 @@
 # Not applicable
 #
 # === Examples
+#
 # This class was designed to be used with Hiera. As such, the best way to pass
 # options is to specify them in your Hiera datadir:
 #
@@ -54,7 +55,7 @@
 #
 #  class { 'managedmac::authorization':
 #    allow_energysaver => true,
-#    allow_datetime => true,
+#    allow_datetime    => true,
 #    allow_timemachine => true,
 #  }
 #
@@ -68,22 +69,34 @@
 #
 class managedmac::authorization (
 
-  $allow_energysaver = false,
-  $allow_datetime    = false,
-  $allow_timemachine = false,
-  $allow_dvd_initial = false,
-  $allow_printers    = false,
+  $allow_energysaver            = false,
+  $allow_datetime               = false,
+  $allow_timemachine            = false,
+  $allow_printers               = false,
+  $allow_dvd_setregion_initial  = false,
 
 ) {
 
+  # System Preference Panes
   validate_bool ($allow_energysaver)
   validate_bool ($allow_datetime)
   validate_bool ($allow_timemachine)
-  validate_bool ($allow_dvd_initial)
   validate_bool ($allow_printers)
 
+  # Other options
+  validate_bool ($allow_dvd_setregion_initial)
+
+  # Getting System Preference panes unlocked for non-admins requires us to
+  # first change the parent right 'system.preferences'. To know whether or not
+  # this needs to happen, we convert all the System Prefs related bool values
+  # into Integers, add them up, and if the $sum is greater than zero, the
+  # 'system.preferences' right is changed to 'everyone' to match the others.
+  #
+  # If you are adding new controls fro System Preferences panes, be sure and
+  # include the new bool value in this calculation.
+  #
   $sum = (bool2num($allow_energysaver) + bool2num($allow_datetime) +
-    bool2num($allow_timemachine)) > 0
+    bool2num($allow_timemachine)) + bool2num($allow_printers) > 0
 
   $sys_prefs_group = $sum ? {
     true    => 'everyone',
@@ -94,8 +107,8 @@ class managedmac::authorization (
 
     'system.preferences' => {
       group   => $sys_prefs_group,
-      comment => 'Checked by the Admin framework when making changes to \
-certain System Preferences.',
+      comment => "Checked by the Admin framework when making changes to \
+certain System Preferences.",
     },
 
     'system.preferences.energysaver' => {
@@ -103,8 +116,8 @@ certain System Preferences.',
         true    => 'everyone',
         default => 'admin',
       },
-      comment => 'Checked by the Admin framework when making changes to the \
-Energy Saver preference pane.',
+      comment => "Checked by the Admin framework when making changes to the \
+Energy Saver preference pane.",
     },
 
     'system.preferences.datetime' => {
@@ -112,8 +125,8 @@ Energy Saver preference pane.',
         true    => 'everyone',
         default => 'admin',
       },
-      comment => 'Checked by the Admin framework when making changes to the \
-Date & Time preference pane.',
+      comment => "Checked by the Admin framework when making changes to the \
+Date & Time preference pane.",
     },
 
     'system.preferences.timemachine' => {
@@ -121,18 +134,8 @@ Date & Time preference pane.',
         true    => 'everyone',
         default => 'admin',
       },
-      comment => 'Checked by the Admin framework when making changes to the \
-Time Machine preference pane.',
-    },
-
-    'system.device.dvd.setregion.initial' => {
-      group => $allow_dvd_initial ? {
-        true    => 'everyone',
-        default => 'admin',
-      },
-      comment => "Used by the DVD player to set the region code the first time. \
-Note that changing the region code after it has been set requires a different \
-right (system.device.dvd.setregion.change).",
+      comment => "Checked by the Admin framework when making changes to the \
+Time Machine preference pane.",
     },
 
     'system.preferences.printing' => {
@@ -144,6 +147,17 @@ right (system.device.dvd.setregion.change).",
 Printing preference pane.",
     },
 
+    'system.device.dvd.setregion.initial' => {
+      allow_root => false,
+      group      => 'admin',
+      auth_class => $allow_dvd_setregion_initial ? {
+        true    => 'allow',
+        default => 'user',
+      },
+      comment => "Used by the DVD player to set the region code the first \
+time.  Note that changing the region code after it has been set requires a different right (system.device.dvd.setregion.change).",
+    },
+
   }
 
   $defaults = {
@@ -151,6 +165,7 @@ Printing preference pane.",
     auth_class        => 'user',
     auth_type         => 'right',
     authenticate_user => true,
+    session_owner     => false,
     shared            => true,
     timeout           => '2147483647',
     tries             => '10000',
