@@ -346,7 +346,6 @@ ${trust_change_pass_interval_days}")
 
     mobileconfig { 'managedmac.activedirectory.alacarte':
       ensure       => $ensure,
-      provider     => activedirectory,
       displayname  => 'Managed Mac: Active Directory',
       description  => 'Active Directory configuration. Installed by Puppet.',
       organization => $organization,
