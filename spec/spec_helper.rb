@@ -6,6 +6,12 @@ require 'hiera-puppet-helper'
 require_relative './helpers'
 
 fixture_path = File.expand_path(File.join(__FILE__, '..', 'fixtures'))
+fixture_modules   = "#{fixture_path}/modules"
+fixture_manifests = "#{fixture_path}/manifests"
+
+Dir.glob("#{fixture_path}/modules/*").collect do |path|
+  $LOAD_PATH << "#{path}/lib"
+end
 
 RSpec.configure do |c|
   c.include Helpers
