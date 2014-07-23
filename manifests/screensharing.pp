@@ -96,6 +96,7 @@ class managedmac::screensharing (
 
       macgroup { $acl_group:
         ensure       => present,
+        gid          => 398,
         users        => $users_attr,
         nestedgroups => $groups_attr,
       }

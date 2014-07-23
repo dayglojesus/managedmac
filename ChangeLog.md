@@ -1,5 +1,30 @@
 # Change Log
 
+## 0.4.5
+- release 0.4.5
+- update metadata.json and build
+
+## 0.4.4
+- more authorization fixes and enhancements (see log)
+- fix issue #11, Mobileconfig#content was failing to process an empty array
+- fix issue #6, changed variable name
+
+## 0.4.3
+- fix issue #11: merge pull-request from @groob
+- fix documentation and add tests
+- lock down gem versions
+
+## 0.4.2
+- fix issues #10 and #13
+- many changes to Mobileconfig, see log for details
+
+## 0.4.1
+- fix issues #4 and #5
+- some clean-up
+
+## 0.4.0
+* initial release
+
 ## 0.3.3
 * clean-up and organize some documentation in preparation for Github
 

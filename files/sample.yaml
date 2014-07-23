@@ -717,6 +717,22 @@ managedmac::authorization::allow_datetime: true
 managedmac::authorization::allow_timemachine: true
 
 #####################################################################
+# Allow 'everyone' access to the Printers settings pane.
+# Default: false
+# Type: Boolean
+#####################################################################
+
+managedmac::authorization::allow_printers: true
+
+#####################################################################
+# Allow 'everyone' to set the inital DVD region code.
+# Default: false
+# Type: Boolean
+#####################################################################
+
+managedmac::authorization::allow_dvd_setregion_initial: true
+
+#####################################################################
 #
 # MANAGEDMAC::ENERGYSAVER
 #
@@ -1492,11 +1508,11 @@ managedmac::remotemanagement::allow_vnc_requests: false
 managedmac::remotemanagement::allow_webm_requests: false
 
 #####################################################################
-# A Hash mapping user names to respective ARD privs. Keys are user 
+# A Hash mapping user names to respective ARD privs. Keys are user
 # names as String, values are privs as String.
 # Example:
 # { 'fry'    => -1073741569,
-#   'bender' => -2147483646, 
+#   'bender' => -2147483646,
 #   'leela'  => -1073741822 },
 # Type: Hash
 #####################################################################
@@ -1507,8 +1523,8 @@ managedmac::remotemanagement::users:
   leela:  -1073741569
 
 #####################################################################
-# Controls the exclusivity of the user list. When true, only the 
-# listed users will be allowed access to ARD. Other users with 
+# Controls the exclusivity of the user list. When true, only the
+# listed users will be allowed access to ARD. Other users with
 # existing rights will have their privs revoked.
 # Type: Boolean
 #####################################################################
@@ -1661,7 +1677,7 @@ managedmac::execs::defaults:
 
 managedmac::files::objects:
   /Users/Shared/example_file_a.txt:
-    content: 
+    content:
       "This is an example of how to create a file using the content parameter."
   /Users/Shared/example_file_b.txt:
     source: puppet:///modules/some_module/some_file.txt

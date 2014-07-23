@@ -3,8 +3,11 @@ source 'https://rubygems.org'
 
 group :development, :test do
   gem 'pry', '>=0.9.12.6'
-  gem 'puppet-lint', '>=0.3.2'
-  gem 'puppetlabs_spec_helper', '>=0.4.1'
+  gem 'puppet', '~>3.6'
+  gem 'rspec', '<=2.9'
+  gem 'rspec-puppet', '~>1.0'
+  gem 'puppet-lint', '~>0.3'
+  gem 'puppetlabs_spec_helper', '~>0.4'
   gem 'hiera-puppet-helper', :git => 'git://github.com/mmz-srf/hiera-puppet-helper.git'
   gem 'CFPropertyList', '>=2.2.7'
   gem 'sqlite3', '>=1.3.7'
