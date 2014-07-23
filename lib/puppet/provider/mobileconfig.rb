@@ -159,7 +159,7 @@ class Puppet::Provider::MobileConfig < Puppet::Provider
     # reinstall the profile.
 
     define_singleton_method(:content) do
-      if @resource[:content]
+      if @resource[:content] and not @resource[:content].empty?
         return @property_hash[:content].each_with_index.map do |hash, i|
           if hash.key?('Password')
             hash['Password'] = @resource[:content][i]['Password']
