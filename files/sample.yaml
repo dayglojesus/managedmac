@@ -717,6 +717,22 @@ managedmac::authorization::allow_datetime: true
 managedmac::authorization::allow_timemachine: true
 
 #####################################################################
+# Allow 'everyone' to set the inital DVD region code.
+# Default: false
+# Type: Boolean
+#####################################################################
+
+managedmac::authorization::allow_dvd_initial: true
+
+#####################################################################
+# Allow 'everyone' access to the Printers settings pane.
+# Default: false
+# Type: Boolean
+#####################################################################
+
+managedmac::authorization::allow_printers: true
+
+#####################################################################
 #
 # MANAGEDMAC::ENERGYSAVER
 #
