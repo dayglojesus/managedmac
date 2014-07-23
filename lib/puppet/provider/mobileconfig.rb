@@ -11,16 +11,32 @@ class Puppet::Provider::MobileConfig < Puppet::Provider
 
     # Returns an Array of a provider instances for every resource discovered
     def instances
-      all = get_installed_profiles
-      all.collect { |profile| new(get_resource_properties(profile)) }
+      fetch_resources(true)
     end
 
     # Puppet MAGIC
     def prefetch(resources)
-      instances.each do |prov|
+      fetch_resources.each do |prov|
         if resource = resources[prov.name]
           resource.provider = prov
         end
+      end
+    end
+
+    # Rather than letting #instances control what a resource looks like, def
+    # a method to collect the data. This way we can choose whterh or not to
+    # scrub the PayloadUUID which we now use as a checksum.
+    def fetch_resources(scrub_uuids=false)
+      all = get_installed_profiles
+      all.collect do |profile|
+        resource = get_resource_properties(profile)
+        if scrub_uuids
+          resource[:content].collect! do |hash|
+            hash.delete('PayloadUUID')
+            hash
+          end
+        end
+        new(resource)
       end
     end
 
@@ -147,11 +163,11 @@ class Puppet::Provider::MobileConfig < Puppet::Provider
         return @property_hash[:content].each_with_index.map do |hash, i|
           if hash.key?('Password')
             hash['Password'] = @resource[:content][i]['Password']
-            hash
           end
+          hash
         end
       end
-      @property_hash[:content]
+      @property_hash[:content] || :absent
     end
 
   end
@@ -168,12 +184,69 @@ class Puppet::Provider::MobileConfig < Puppet::Provider
     @property_hash[:ensure] == :present
   end
 
+  # This used to be accomplished in the :activedirectory provider, but we are
+  # collapsing this functionality back into the parent class and abandoning the
+  # sub-classed provider.
+  #
+  # The Advanced Active Directory profile contains flag keys which inform
+  # the installation process which configuration keys should actually be
+  # activated.
+  #
+  # http://support.apple.com/kb/HT5981?viewlocale=en_US&locale=en_US
+  #
+  # For example, if we wanted to change the default shell for AD accounts, we
+  # would actually need to define two keys: a configuration key and a flag key.
+  #
+  # <key>ADDefaultUserShell</key>
+  # <string>/bin/zsh</string>
+  #
+  # <key>ADDefaultUserShellFlag</key>
+  # <true/>
+  #
+  # If you fail to specify this second key (the activation or "flag" key), the
+  # configuration key will be ignored when the mobileconfig is processed.
+  #
+  # To avoid having to activate and deactivate the configuration keys, we
+  # pre-process the content array by overriding the transform_content method
+  # and shoehorn these flag keys into place dynamically, as required.
+  #
+  def add_activedirectory_keys(payload)
+    needs_flag = ['ADAllowMultiDomainAuth',
+                  'ADCreateMobileAccountAtLogin',
+                  'ADDefaultUserShell',
+                  'ADDomainAdminGroupList',
+                  'ADForceHomeLocal',
+                  'ADNamespace',
+                  'ADPacketEncrypt',
+                  'ADPacketSign',
+                  'ADPreferredDCServer',
+                  'ADRestrictDDNS',
+                  'ADTrustChangePassIntervalDays',
+                  'ADUseWindowsUNCPath',
+                  'ADWarnUserBeforeCreatingMA',]
+
+    needs_flag.each do |e|
+      if payload.key?(e)
+        flag_key = e + 'Flag'
+        payload[flag_key] = true
+      end
+    end
+    payload
+  end
+
   # Formats and fortifies the PayloadContent array
   # - ensures required keys to each Hash
   def transform_content(content)
     return [] if content.empty?
-    content.collect do |payload|
-      embedded_payload_uuid = payload['PayloadUUID'] || SecureRandom.uuid
+    content.collect! do |payload|
+
+      # PayloadUUID for each Payload is modified MD5 sum of Payload itself,
+      # minus any of the other ephemeral keys. We can use this to check whether
+      # or not the content has been modified. Even when the Payload attributes
+      # cannot be compared (ie. Password keys).
+
+      payload.delete('PayloadUUID')
+      embedded_payload_uuid = ::ManagedMacCommon::content_to_uuid payload.sort
       embedded_payload_id   = payload['PayloadIdentifier'] || [@resource[:name],
                                       embedded_payload_uuid].join('.')
       payload.merge!({
@@ -182,7 +255,12 @@ class Puppet::Provider::MobileConfig < Puppet::Provider
         'PayloadEnabled'    => true,
         'PayloadVersion'    => 1,
       })
-      payload
+
+      if payload['PayloadType'].eql? 'com.apple.DirectoryService.managed'
+        add_activedirectory_keys(payload)
+      else
+        payload
+      end
     end
   end
 
