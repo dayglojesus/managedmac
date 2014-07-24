@@ -37,9 +37,7 @@ But until a parameter is passed to the class (from Hiera or another source) the 
 <a id="managedmac::activedirectory"></a>
 #### managedmac::activedirectory
 
-Enables binding of Macs to an Active Directory using an [advanced Active Directory OS X configuration profile](http://support.apple.com/kb/HT5981?viewlocale=en_US&locale=en_US).
-
-This class leverages the Mobileconfig type and :activedirectory provider.
+This class leverages the Mobileconfig type to bind of Macs to an Active Directory using an [advanced Active Directory OS X configuration profile](http://support.apple.com/kb/HT5981?viewlocale=en_US&locale=en_US).
 
 Example:
 
