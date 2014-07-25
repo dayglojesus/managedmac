@@ -72,5 +72,5 @@ Now, try running this and inspecting the output...
 
 The demonstration above provides just one quick example of what can be accomplished. There are hundreds of configurations that can be made.
 
-To learn more about this module and how it works, read the [Overview](/overview) and see the documentation on [Custom Types]({{ site.baseurl }}/types) and [Classes]({{ site.baseurl }}/classes).
+To learn more about this module and how it works, read the [Overview]({{ site.baseurl }}/overview) and see the documentation on [Custom Types]({{ site.baseurl }}/types) and [Classes]({{ site.baseurl }}/classes).
 
