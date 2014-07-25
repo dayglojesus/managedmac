@@ -7,7 +7,7 @@ title: Custom Types
 There are a few custom types used in this module. Naturally, once you've installed the module, these types will be available to use in your own Puppet code if you don't fancy using any of the builtin classes.
 
 ---
-<a id="Macuthdb"></a>
+<a id="Macauthdb"></a>
 ### Macuthdb
 
 This is an alternative to the native Puppet _Macauthorization_ type.
