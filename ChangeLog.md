@@ -1,5 +1,8 @@
 # Change Log
 
+## 0.4.6
+- bug fixes: #16 and #17
+
 ## 0.4.5
 - release 0.4.5
 - update metadata.json and build
