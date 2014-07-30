@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.4.7
+- fixes issue #20
+- Mobileconfig can now handle any kind of profile (in theory)
+- mcx.pp now places custom MCX into a profile; no more local MCX
+- fix some edges in the #destringify method
+
 ## 0.4.6
 - bug fixes: #16 and #17
 
