@@ -51,14 +51,14 @@ Returns a com.apple.ManagedClient.preferences Payload.
       settings.delete('loginwindow')
     else
       values = loginitems.collect do |path|
-        Hash['Hide', true, 'Path', path]
+        Hash['Hide', false, 'Path', path]
       end
       settings['loginwindow'] = {
         'Forced' => [
           { 'mcx_preference_settings' => {
-              'AutoLaunchedApplicationDictionary-raw' => values,
-              'DisableLoginItemsSuppression'          => false,
-              'LoginUserMayAddItems'                  => true
+              'AutoLaunchedApplicationDictionary-managed' => values,
+              'DisableLoginItemsSuppression'              => false,
+              'LoginUserMayAddItems'                      => true,
             }
           },
         ]
@@ -88,7 +88,7 @@ Returns a com.apple.ManagedClient.preferences Payload.
       settings['com.apple.systempreferences'] = {
         'Forced' => [
           { 'mcx_preference_settings' => {
-              'HiddenPreferencePanes-Raw' => hidden_preference_panes,
+              'HiddenPreferencePanes' => hidden_preference_panes,
             }
           },
         ]
