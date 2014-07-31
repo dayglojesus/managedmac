@@ -37,7 +37,9 @@ class managedmac {
     fail("unsupported osfamily: ${::osfamily}")
   }
 
-  if $::macosx_productversion_major < 10.9 {
+  $min_os_version = '10.9'
+
+  if version_compare($::macosx_productversion_major, $min_os_version) < 0 {
     fail("unsupported product version: ${::macosx_productversion_major}")
   }
 
