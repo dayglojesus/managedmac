@@ -39,19 +39,19 @@ describe 'managedmac::ntp', :type => 'class' do
       }
     end
     specify do
-      should contain_file('ntp_conf').that_notifies('Service[org.ntp.ntpd]')\
+      should contain_file('ntp_conf').that_comes_before('Service[org.ntp.ntpd]')\
         .with({
-          'content' => "server\stime.apple.com"
+          'content' => "server\stime.apple.com",
         })
     end
     specify do
       should contain_service('org.ntp.ntpd').that_requires('File[ntp_conf]')\
-        .with({ 'ensure' => false, 'enable' => 'true' })
+        .with({ 'ensure' => 'stopped', 'enable' => true })
     end
     it { should_not contain_exec('ntp_sync') }
   end
 
-  context "when $enable == false" do
+  context "when $enable == true" do
     let(:params) do
       {
         :enable  => true,
@@ -59,14 +59,14 @@ describe 'managedmac::ntp', :type => 'class' do
       }
     end
     specify do
-      should contain_file('ntp_conf').that_notifies('Service[org.ntp.ntpd]')\
+      should contain_file('ntp_conf').that_comes_before('Service[org.ntp.ntpd]')\
         .with({
           'content' => "server\stime.apple.com\nserver\stime1.google.com"
         })
     end
     specify do
       should contain_service('org.ntp.ntpd').that_requires('File[ntp_conf]')\
-        .with({ 'ensure' => true, 'enable' => 'true' })
+        .with({ 'ensure' => 'running', 'enable' => true })
     end
     it { should contain_exec('ntp_sync') }
   end

@@ -1,3 +1,4 @@
+require 'pry'
 require 'puppet/managedmac/common'
 
 Puppet::Type.newtype(:mobileconfig) do
@@ -78,11 +79,13 @@ Puppet::Type.newtype(:mobileconfig) do
     Corresponds to the PayloadContent key."
 
     def is_to_s(value)
-      value.hash
+      # value.hash
+      value.pretty_inspect
     end
 
     def should_to_s(value)
-      value.hash
+      # value.hash
+      value.pretty_inspect
     end
 
     # Make sure that each of the Hashes in the Array contains PayloadType key
@@ -192,6 +195,10 @@ Puppet::Type.newtype(:mobileconfig) do
       Corresponds to the PayloadRemovalDisallowed key."
     newvalues(:true, :false)
     defaultto :false
+    
+    def insync?(is)
+      is.to_sym == should.to_sym
+    end
   end
 
 end

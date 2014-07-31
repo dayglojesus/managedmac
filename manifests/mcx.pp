@@ -129,7 +129,7 @@ ${bluetooth}",
   }
 
   mobileconfig { 'managedmac.mcx.alacarte':
-    ensure            => present,
+    ensure            => $ensure,
     content           => $content,
     description       => 'Custom MCX Settings',
     displayname       => 'Managed Mac: Custom MCX',

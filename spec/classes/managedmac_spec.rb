@@ -39,7 +39,7 @@ describe 'managedmac', :type => 'class' do
     let :facts do
       {
         :osfamily => 'Darwin',
-        :macosx_productversion_major => '10.9',
+        :macosx_productversion_major => '10.10',
       }
     end
 

@@ -7,14 +7,18 @@ describe 'managedmac::mcx', :type => 'class' do
   end
 
   context "when passed NO params" do
-    it { should_not contain_exec('refresh_mcx') }
+    it { should contain_mobileconfig('managedmac.mcx.alacarte').with_ensure(
+      'absent')
+    }
   end
 
   context "when passed ANY valid param" do
     let(:params) do
       { :bluetooth => 'on' }
     end
-    it { should contain_exec('refresh_mcx') }
+    it { should contain_mobileconfig('managedmac.mcx.alacarte').with_ensure(
+      'present')
+    }
   end
 
   context "when passed a BAD param" do
@@ -32,151 +36,99 @@ describe 'managedmac::mcx', :type => 'class' do
     let(:params) do
       { :bluetooth => 'on' }
     end
-    it do
-      should contain_computer('mcx_puppet').with_ensure(
+    it { should contain_mobileconfig('managedmac.mcx.alacarte').with_ensure(
       'present')
-    end
-    it do
-      should contain_mcx('/Computers/mcx_puppet').with_content(
-        /DisableBluetooth/)
-    end
+    }
   end
 
   context "when $bluetooth == off" do
     let(:params) do
       { :bluetooth => 'off' }
     end
-    it do
-      should contain_computer('mcx_puppet').with_ensure(
+    it { should contain_mobileconfig('managedmac.mcx.alacarte').with_ensure(
       'present')
-    end
-    it do
-      should contain_mcx('/Computers/mcx_puppet').with_content(
-        /DisableBluetooth/)
-    end
+    }
   end
 
   context "when $bluetooth == enable" do
     let(:params) do
       { :bluetooth => 'enable' }
     end
-    it do
-      should contain_computer('mcx_puppet').with_ensure(
+    it { should contain_mobileconfig('managedmac.mcx.alacarte').with_ensure(
       'present')
-    end
-    it do
-      should contain_mcx('/Computers/mcx_puppet').with_content(
-        /DisableBluetooth/)
-    end
+    }
   end
 
   context "when $bluetooth == disable" do
     let(:params) do
       { :bluetooth => 'disable' }
     end
-    it do
-      should contain_computer('mcx_puppet').with_ensure(
+    it { should contain_mobileconfig('managedmac.mcx.alacarte').with_ensure(
       'present')
-    end
-    it do
-      should contain_mcx('/Computers/mcx_puppet').with_content(
-        /DisableBluetooth/)
-    end
+    }
   end
 
   context "when $bluetooth == true" do
     let(:params) do
       { :bluetooth => true }
     end
-    it do
-      should contain_computer('mcx_puppet').with_ensure(
+    it { should contain_mobileconfig('managedmac.mcx.alacarte').with_ensure(
       'present')
-    end
-    it do
-      should contain_mcx('/Computers/mcx_puppet').with_content(
-        /DisableBluetooth/)
-    end
+    }
   end
 
   context "when $bluetooth == false" do
     let(:params) do
       { :bluetooth => false }
     end
-    it do
-      should contain_computer('mcx_puppet').with_ensure(
+    it { should contain_mobileconfig('managedmac.mcx.alacarte').with_ensure(
       'present')
-    end
-    it do
-      should contain_mcx('/Computers/mcx_puppet').with_content(
-        /DisableBluetooth/)
-    end
+    }
   end
 
   context "when $wifi == true" do
     let(:params) do
       { :wifi => true }
     end
-    it do
-      should contain_computer('mcx_puppet').with_ensure(
+    it { should contain_mobileconfig('managedmac.mcx.alacarte').with_ensure(
       'present')
-    end
-    it do
-      should contain_mcx('/Computers/mcx_puppet').with_content(
-        /DisableAirPort/)
-    end
+    }
   end
 
   context "when $wifi == ''" do
     let(:params) do
       { :wifi => '' }
     end
-    it do
-      should contain_computer('mcx_puppet').with_ensure(
+    it { should contain_mobileconfig('managedmac.mcx.alacarte').with_ensure(
       'absent')
-    end
-    it do
-      should contain_mcx('/Computers/mcx_puppet').with_content('')
-    end
+    }
   end
 
   context "when $bluetooth == ''" do
     let(:params) do
       { :bluetooth => '' }
     end
-    it do
-      should contain_computer('mcx_puppet').with_ensure(
+    it { should contain_mobileconfig('managedmac.mcx.alacarte').with_ensure(
       'absent')
-    end
-    it do
-      should contain_mcx('/Computers/mcx_puppet').with_content('')
-    end
+    }
   end
 
   context "when $logintitems are defined" do
     let(:params) do
       { :loginitems => ['/path/to/some/file'] }
     end
-    it do
-      should contain_computer('mcx_puppet').with_ensure(
-      'present')
-    end
-    it do
-      should contain_mcx('/Computers/mcx_puppet').with_content(
-        /\/path\/to\/some\/file/)
-    end
+    it { should contain_mobileconfig('managedmac.mcx.alacarte').with_content(
+      /\/path\/to\/some\/file/)
+    }
   end
 
   context "when NO $logintitems are defined" do
     let(:params) do
       { :loginitems => [] }
     end
-    it do
-      should contain_computer('mcx_puppet').with_ensure(
+    it { should contain_mobileconfig('managedmac.mcx.alacarte').with_ensure(
       'absent')
-    end
-    it do
-      should contain_mcx('/Computers/mcx_puppet').with_content('')
-    end
+    }
   end
 
   context "when $logintitems is not an Array" do
@@ -194,55 +146,51 @@ describe 'managedmac::mcx', :type => 'class' do
     let(:params) do
       { :suppress_icloud_setup => false }
     end
-    it do
-      should contain_computer('mcx_puppet').with_ensure(
+    it { should contain_mobileconfig('managedmac.mcx.alacarte').with_ensure(
       'absent')
-    end
-    it do
-      should contain_mcx('/Computers/mcx_puppet').with_content('')
-    end
+    }
   end
 
   context "when $suppress_icloud_setup == true" do
-
     let(:params) do
       { :suppress_icloud_setup => true }
     end
-    it do
-      should contain_computer('mcx_puppet').with_ensure(
-      'present')
+    it { should contain_mobileconfig('managedmac.mcx.alacarte').with_content(
+      /DidSeeCloudSetup/)
+    }
+  end
+
+  context "$suppress_icloud_setup == true, NO $logintitems are defined" do
+    let(:params) do
+      {
+        :suppress_icloud_setup => true,
+        :loginitems => [],
+      }
     end
-    it do
-      should contain_mcx('/Computers/mcx_puppet').with_content(
-        /DidSeeCloudSetup/)
-    end
+    it { should contain_mobileconfig('managedmac.mcx.alacarte').with_content(
+      /DidSeeCloudSetup/)
+    }
+    it { should_not contain_mobileconfig('managedmac.mcx.alacarte').with_content(
+      /AutoLaunchedApplicationDictionary-managed/)
+    }
   end
 
   context "when $hidden_preference_panes are defined" do
     let(:params) do
       { :hidden_preference_panes => ['com.apple.preferences.icloud'] }
     end
-    it do
-      should contain_computer('mcx_puppet').with_ensure(
-      'present')
-    end
-    it do
-      should contain_mcx('/Computers/mcx_puppet').with_content(
-        /com\.apple\.preferences\.icloud/)
-    end
+    it { should contain_mobileconfig('managedmac.mcx.alacarte').with_content(
+      /com\.apple\.preferences\.icloud/)
+    }
   end
 
   context "when NO $hidden_preference_panes are defined" do
     let(:params) do
       { :hidden_preference_panes => [] }
     end
-    it do
-      should contain_computer('mcx_puppet').with_ensure(
+    it { should contain_mobileconfig('managedmac.mcx.alacarte').with_ensure(
       'absent')
-    end
-    it do
-      should contain_mcx('/Computers/mcx_puppet').with_content('')
-    end
+    }
   end
 
   context "when $hidden_preference_panes is not an Array" do
