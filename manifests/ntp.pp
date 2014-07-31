@@ -75,6 +75,11 @@ class managedmac::ntp (
       false => $ntp_conf_default,
     }
 
+    $ensure = $enable ? {
+      true  => 'running',
+      false => 'stopped',
+    }
+
     file { 'ntp_conf':
       ensure  => file,
       owner   => 'root',
@@ -82,11 +87,11 @@ class managedmac::ntp (
       mode    => '0644',
       path    => '/private/etc/ntp.conf',
       content => $content,
-      notify  => Service[$ntp_service_label],
+      before  => Service[$ntp_service_label],
     }
 
     service { $ntp_service_label:
-      ensure  => $enable,
+      ensure  => $ensure,
       enable  => true,
       require => File['ntp_conf'],
     }
