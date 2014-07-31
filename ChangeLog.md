@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.4.9
+- fix issue #23
+- implements com.apple.SoftwareUpdate control AllowPreReleaseInstallation
+
 ## 0.4.8
 - fixes for issues #21, #19, and 18
 - mainly adjusting for changes in Yosemite
