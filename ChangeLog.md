@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.4.8
+- fixes for issues #21, #19, and 18
+- mainly adjusting for changes in Yosemite
+
 ## 0.4.7
 - fixes issue #20
 - Mobileconfig can now handle any kind of profile (in theory)
