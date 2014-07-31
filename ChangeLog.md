@@ -1,5 +1,26 @@
 # Change Log
 
+## 0.5.0
+- release 0.5.0
+- update metadata.json and build
+
+## 0.4.9
+- fix issue #23
+- implements com.apple.SoftwareUpdate control AllowPreReleaseInstallation
+
+## 0.4.8
+- fixes for issues #21, #19, and 18
+- mainly adjusting for changes in Yosemite
+
+## 0.4.7
+- fixes issue #20
+- Mobileconfig can now handle any kind of profile (in theory)
+- mcx.pp now places custom MCX into a profile; no more local MCX
+- fix some edges in the #destringify method
+
+## 0.4.6
+- bug fixes: #16 and #17
+
 ## 0.4.5
 - release 0.4.5
 - update metadata.json and build

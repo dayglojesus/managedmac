@@ -39,12 +39,9 @@ describe 'managedmac', :type => 'class' do
     let :facts do
       {
         :osfamily => 'Darwin',
-        :macosx_productversion_major => '10.9',
+        :macosx_productversion_major => '10.10',
       }
     end
-
-    it { should contain_package('CFPropertyList') }
-    it { should contain_package('sqlite3') }
 
     it { should contain_class('managedmac::ntp') }
     it { should contain_class('managedmac::activedirectory') }

@@ -128,23 +128,13 @@ ${bluetooth}",
     default => present,
   }
 
-  computer { 'mcx_puppet':
-    ensure     => $ensure,
-    en_address => $::macaddress_en0,
-  }
-
-  mcx { '/Computers/mcx_puppet':
-    ensure  => $ensure,
-    content => $content,
-    require => Computer['mcx_puppet'],
-  }
-
-  $cmd_path = '/System/Library/CoreServices/ManagedClient.app/Contents/MacOS'
-
-  if $ensure == present {
-    exec { 'refresh_mcx':
-      command => "${cmd_path}/ManagedClient -f",
-    }
+  mobileconfig { 'managedmac.mcx.alacarte':
+    ensure            => $ensure,
+    content           => $content,
+    description       => 'Custom MCX Settings',
+    displayname       => 'Managed Mac: Custom MCX',
+    organization      => 'Simon Fraser University',
+    removaldisallowed => false,
   }
 
 }

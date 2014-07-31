@@ -14,6 +14,8 @@ module ManagedMacCommon
                              'PayloadScope',
                              'PayloadVersion',]
 
+  DO_NOT_DESTRING = ['LastSeenCloudProductVersion']
+
   # Generate a UUID using the supplied content
   def self.content_to_uuid(content)
     digest  = Digest::MD5.hexdigest content.to_s
@@ -34,12 +36,16 @@ module ManagedMacCommon
       false
     when NilClass
       data.to_s
-    when String, Fixnum, Float, TrueClass, FalseClass # Leave my elevator alone
+    when String, Fixnum, Float, TrueClass, FalseClass, Time, Date, DateTime
+      # Leave my elevator alone
       data
     when Array
       data.map { |e| destringify e }
     when Hash
-      Hash[ data.map { |k, v| [k.to_s, destringify(v)] } ]
+      array = data.map do |k, v|
+        DO_NOT_DESTRING.include?(k.to_s) ? [k, v] : [k, destringify(v)]
+      end
+      Hash[array]
     else
       raise Puppet::Error, "Cast Error: #destringify unknown type:
         #{data.class}, #{data}"

@@ -13,6 +13,12 @@
 #   Type: String
 #   e.g. "http://swscan.apple.com/content/catalogs/index-1.sucatalog"
 #
+# [*allow_pre_release_installation*]
+#   When false, Macs can no longer install pre-release versions of
+#   OS X Yosemite from the OS X Beta Program. Corresponds to
+#   AllowPreReleaseInstallation. Managed as a profile.
+#   Type: Boolean
+#
 # [*automatic_update_check*]
 #   Whether or not to automatically check for Apple Software Updates.
 #   Corresponds to AutomaticCheckEnabled. Managed in global preferences by
@@ -85,14 +91,19 @@
 #
 class managedmac::softwareupdate (
 
-  $catalog_url             = undef,
-  $automatic_update_check  = undef,
-  $auto_update_apps        = undef,
-  $automatic_download      = undef,
-  $config_data_install     = undef,
-  $critical_update_install = undef,
+  $catalog_url                    = undef,
+  $allow_pre_release_installation = undef,
+  $automatic_update_check         = undef,
+  $auto_update_apps               = undef,
+  $automatic_download             = undef,
+  $config_data_install            = undef,
+  $critical_update_install        = undef,
 
 ) {
+
+  unless $allow_pre_release_installation == undef {
+    validate_bool ($allow_pre_release_installation)
+  }
 
   unless $automatic_update_check == undef {
     validate_bool ($automatic_update_check)
@@ -161,7 +172,8 @@ class managedmac::softwareupdate (
 
   $params = {
     'com.apple.SoftwareUpdate' => {
-      'CatalogURL' => $catalog_url,
+      'CatalogURL'                  => $catalog_url,
+      'AllowPreReleaseInstallation' => $allow_pre_release_installation,
     }
   }
 

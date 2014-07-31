@@ -29,6 +29,33 @@ describe 'managedmac::softwareupdate', :type => 'class' do
     end
   end
 
+  context "when setting $allow_pre_release_installation" do
+    context "when undef" do
+      let(:params) do
+        { :allow_pre_release_installation  => '' }
+      end
+      it { should contain_mobileconfig('managedmac.softwareupdate.alacarte')\
+        .with_ensure('absent') }
+    end
+    context "when not Boolean" do
+      let(:params) do
+        { :allow_pre_release_installation => 'foo' }
+      end
+      specify do
+        expect {
+          should compile
+        }.to raise_error(Puppet::Error, /not a boolean/)
+      end
+    end
+    context "when a Boolean" do
+      let(:params) do
+        { :allow_pre_release_installation => false }
+      end
+      it { should contain_mobileconfig('managedmac.softwareupdate.alacarte')\
+        .with_ensure('present') }
+    end
+  end
+
   context "when setting $automatic_update_check" do
     context "when a undef" do
       let(:params) do

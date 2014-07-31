@@ -1,3 +1,4 @@
+require 'pry'
 require 'puppet/managedmac/common'
 
 Puppet::Type.newtype(:mobileconfig) do
@@ -78,11 +79,13 @@ Puppet::Type.newtype(:mobileconfig) do
     Corresponds to the PayloadContent key."
 
     def is_to_s(value)
-      value.hash
+      # value.hash
+      value.pretty_inspect
     end
 
     def should_to_s(value)
-      value.hash
+      # value.hash
+      value.pretty_inspect
     end
 
     # Make sure that each of the Hashes in the Array contains PayloadType key
@@ -102,23 +105,42 @@ Puppet::Type.newtype(:mobileconfig) do
     end
 
     # Override #insync?
-    # - We need to sort the Arrays before performing an equality test. We do
-    # this using the PayloadType key because it is guarnteed to be present.
+    #
+    # This method is used to compare the 'is' (current resource settings) with
+    # the 'should' values (desired resource settings).
+    #
+    # Doing this is tricky because `/usr/bin/profiles` does not always
+    # return complete information about the profiles we've installed. As a
+    # workaround, we...
+    #
+    #    1. calculate an MD5 sum of the content
+    #    2. convert that value to a UUID
+    #    3. inject it into the each of the Payload objects
+    #
+    # Then, rather than granularly comparing each resource attribute, we only
+    # compare the MD5 sums.
+    #
     def insync?(is)
-      # Dupe the is and should values
-      i, s = is.dup, should.dup
-      # Collect Arrays of sorted Hashes and compare those
-      [i, s].collect! do |a|
-        a.collect! do |hash|
-          # We insert a PayloadUUID/MD5 sum into each Hash if it's missing
-          unless hash['PayloadUUID']
-            hash['PayloadUUID'] = ::ManagedMacCommon::content_to_uuid hash.sort
-          end
-          hash.sort
-        end
-        a.sort!
+      key = 'PayloadUUID'
+
+      # Shoehorn the MD5 sums
+      should.collect! do |hash|
+        hash[key] = ::ManagedMacCommon::content_to_uuid hash.sort
+        hash
       end
-      i == s
+
+      # Sort the arrays
+      i, s = [is, should].each do |a|
+        a.sort! { |x, y| x[key] <=> y[key] }
+      end
+
+      # Compare the keys
+      result = i.collect.each_with_index do |a, i|
+        s[i][key] == a[key]
+      end
+
+      # Is each result true?
+      result.all?
     end
 
     # Normalize the :content array
@@ -173,6 +195,10 @@ Puppet::Type.newtype(:mobileconfig) do
       Corresponds to the PayloadRemovalDisallowed key."
     newvalues(:true, :false)
     defaultto :false
+    
+    def insync?(is)
+      is.to_sym == should.to_sym
+    end
   end
 
 end

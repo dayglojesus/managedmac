@@ -71,6 +71,18 @@ class Puppet::Provider::MobileConfig < Puppet::Provider
       # No profile, empty Hash
       return {} if profile.nil?
 
+      # Adjust for a key change in Yosemite as per
+      # https://github.com/dayglojesus/managedmac/issues/21
+      # They changed this key to match what it would be if it
+      # were in a Payload. Yay, parity?
+      removal_disallowed_key = if profile['ProfileUninstallPolicy']
+        # Mavericks
+        profile['ProfileUninstallPolicy'] == 'allowed' ? 'false' : 'true'
+      else
+        # Yosemite
+        profile['ProfileRemovalDisallowed']
+      end
+
       # Prepare the content array for insertion into the resource
       content = prepare_content(profile['ProfileItems'])
 
@@ -80,7 +92,7 @@ class Puppet::Provider::MobileConfig < Puppet::Provider
         :description       => profile['ProfileDescription'],
         :displayname       => profile['ProfileDisplayName'],
         :organization      => profile['ProfileOrganization'],
-        :removaldisallowed => profile['ProfileUninstallPolicy'] == 'allowed' ? 'false' : 'true', # Ridiculous
+        :removaldisallowed => removal_disallowed_key,
         :provider          => :mobileconfig,
         :ensure            => :present,
         :content           => content,
@@ -290,7 +302,7 @@ class Puppet::Provider::MobileConfig < Puppet::Provider
         'PayloadDisplayName'       => @resource[:displayname],
         'PayloadOrganization'      => @resource[:organization],
         'PayloadRemovalDisallowed' =>
-          @resource[:removaldisallowed] == false ? false : true,
+          @resource[:removaldisallowed] == :false ? false : true,
         'PayloadScope'             => 'System',
         'PayloadType'              => 'Configuration',
         'PayloadUUID'              => SecureRandom.uuid,
