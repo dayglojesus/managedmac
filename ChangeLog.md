@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.5.1
+- release 0.5.1
+- update metadata.json and build
+- fix issue #24
+
 ## 0.5.0
 - release 0.5.0
 - update metadata.json and build

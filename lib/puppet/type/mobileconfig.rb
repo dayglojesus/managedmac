@@ -1,4 +1,3 @@
-require 'pry'
 require 'puppet/managedmac/common'
 
 Puppet::Type.newtype(:mobileconfig) do
