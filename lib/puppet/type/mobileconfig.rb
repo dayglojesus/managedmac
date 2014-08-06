@@ -78,13 +78,11 @@ Puppet::Type.newtype(:mobileconfig) do
     Corresponds to the PayloadContent key."
 
     def is_to_s(value)
-      # value.hash
-      value.pretty_inspect
+      value.hash
     end
 
     def should_to_s(value)
-      # value.hash
-      value.pretty_inspect
+      value.hash
     end
 
     # Make sure that each of the Hashes in the Array contains PayloadType key
