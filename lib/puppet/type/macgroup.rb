@@ -204,12 +204,12 @@ Puppet::Type.newtype(:macgroup) do
       result = ::ManagedMacCommon::dscl_find_by(:groups, 'GeneratedUID', uuid)
       unless result.respond_to? :first
         raise Puppet::Error,
-           "An unknown error occured while searching: #{result}"
+           "An unknown error occurred while searching: #{result}"
       end
 
       if result.empty?
         Puppet::Util::Warnings.warnonce(
-          "Macgroup: Group not found: \'#{name}\'")
+          "Macgroup: Group not found: \'#{uuid}\'")
       end
 
       uuid
