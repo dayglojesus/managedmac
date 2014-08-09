@@ -640,6 +640,15 @@ managedmac::softwareupdate::catalog_url:
   'http://swscan.apple.com/content/catalogs/index-1.sucatalog'
 
 #####################################################################
+# Make sure that pre-release software is not offered to Macs using
+# OS X. As per: http://support.apple.com/kb/HT6311
+# Corresponds to AllowPreReleaseInstallation. Managed as a profile.
+# Type: Boolean
+#####################################################################
+
+managedmac::softwareupdate::allow_pre_release_installation: true
+
+#####################################################################
 # Whether or not to automatically check for Apple Software Updates.
 # Corresponds to AutomaticCheckEnabled. Managed in global preferences
 # by directly modifying the property list.
