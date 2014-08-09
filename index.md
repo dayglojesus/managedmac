@@ -2,9 +2,8 @@
 layout: default
 title: managedmac
 ---
-
 ## What is it?
-
+---
 Managedmac is a Puppet module designed to make OS X configuration simple.
 
 You don't need to understand Puppet to use it (though it helps).
@@ -13,10 +12,9 @@ Once you've installed the components, all you need to do is create a configurati
 
 It's that simple.
 
----
 <a id="quickstart"></a>
 ## Quick Start
-
+---
 ### 1. Install Packages
 
 You need to install the following packages:
@@ -41,17 +39,19 @@ Open your favorite text editor, copy in the YAML below and save it as (requires 
 
 ##### /var/lib/hiera/defaults.yaml
 
-    ---
-    # Configure the Dock using an OS X profile
-    managedmac::mobileconfigs::payloads:
-      'managedmac.dock.alacarte':
-        content:
-          largesize: 128
-          orientation: left
-          tilesize: 128
-          autohide: true
-          PayloadType: 'com.apple.dock'
-        displayname: 'Managed Mac: Dock Settings'
+{% highlight YAML %}
+---
+# Configure the Dock using an OS X profile
+managedmac::mobileconfigs::payloads:
+  'managedmac.dock.alacarte':
+    content:
+      largesize: 128
+      orientation: 'left'
+      tilesize: 128
+      autohide: true
+      PayloadType: 'com.apple.dock'
+    displayname: 'Managed Mac: Dock Settings'
+{% endhighlight %}
 
 ### 3. Apply a Puppet manifest
 
@@ -67,9 +67,10 @@ Now, try running this and inspecting the output...
 
     sudo puppet resource mobileconfig managedmac.dock.alacarte
 
----
-## More Documentation
+<br>
 
+## More Documentation
+---
 The demonstration above provides just one quick example of what can be accomplished. There are hundreds of configurations that can be made.
 
 To learn more about this module and how it works, read the [Overview]({{ site.baseurl }}/overview) and see the documentation on [Custom Types]({{ site.baseurl }}/types) and [Classes]({{ site.baseurl }}/classes).

@@ -13,7 +13,6 @@ These classes comprise the essential functionality of the module. Each class rep
 
 Some group configuration options together under a single heading, other activate services or specific features of the OS X platform.
 
----
 <a id="managedmac"></a>
 #### managedmac
 
@@ -21,7 +20,9 @@ Module initializer. Accepts no parameters.
 
 The parent class is simply here to `contain` the other classes. When you create a manifest that stipulates:
 
-    include managedmac
+{% highlight Puppet %}
+include managedmac
+{% endhighlight %}
 
 The classes contained by the parent class are essentially *dormant* until they receive configuration parameters from Hiera.
 
@@ -29,7 +30,9 @@ Example:
 
 The init.pp file contains the managedmac::security class.
 
-    contain managedmac::security
+{% highlight Puppet %}
+contain managedmac::security
+{% endhighlight %}
 
 But until a parameter is passed to the class (from Hiera or another source) the net effect of the class will be zero.
 
@@ -41,11 +44,13 @@ This class leverages the Mobileconfig type to bind of Macs to an Active Director
 
 Example:
 
-    ---
-    managedmac::activedirectory::enable: true
-    managedmac::activedirectory::hostname: ad.apple.com
-    managedmac::activedirectory::username: some_account
-    managedmac::activedirectory::password: some_password
+{% highlight YAML %}
+---
+managedmac::activedirectory::enable: true
+managedmac::activedirectory::hostname: ad.apple.com
+managedmac::activedirectory::username: some_account
+managedmac::activedirectory::password: some_password
+{% endhighlight %}
 
 For a complete list of parameters, see the [managedmac::activedirectory](https://github.com/dayglojesus/managedmac/blob/master/manifests/activedirectory.pp) documentation.
 
@@ -59,9 +64,11 @@ At present, this class only controls a few of the System Preferences panes.
 
 Example:
 
-    ---
-    # Allow 'everyone' access to the Energy Saver settings pane
-    managedmac::authorization::allow_energysaver: true
+{% highlight YAML %}
+---
+# Allow 'everyone' access to the Energy Saver settings pane
+managedmac::authorization::allow_energysaver: true
+{% endhighlight %}
 
 For a complete list of parameters, see the [managedmac::authorization](https://github.com/dayglojesus/managedmac/blob/master/manifests/authorization.pp) documentation.
 
@@ -75,37 +82,39 @@ This class can be a little confusing because the data you need to pass in is fai
 
 Example:
 
-     ---
-     managedmac::energysaver::desktop:
-        ACPower:
-          'Automatic Restart On Power Loss': true
-          'Disk Sleep Timer-boolean': true
-          'Display Sleep Timer': 15
-          'Sleep On Power Button': false
-          'Wake On LAN': true
-          'System Sleep Timer': 30
-        Schedule:
-          RepeatingPowerOff:
-            eventtype: sleep
-            time: 1410
-            weekdays: 127
-          RepeatingPowerOn:
-            eventtype: wakepoweron
-            time: 480
-            weekdays: 127
-     managedmac::energysaver::portable:
-        ACPower:
-          'Automatic Restart On Power Loss': true
-          'Disk Sleep Timer-boolean': true
-          'Display Sleep Timer': 15
-          'Wake On LAN': true
-          'System Sleep Timer': 30
-        BatteryPower:
-          'Automatic Restart On Power Loss': false
-          'Disk Sleep Timer-boolean': true
-          'Display Sleep Timer': 5
-          'System Sleep Timer': 10
-          'Wake On LAN': true
+{% highlight YAML %}
+---
+managedmac::energysaver::desktop:
+  ACPower:
+    'Automatic Restart On Power Loss': true
+    'Disk Sleep Timer-boolean': true
+    'Display Sleep Timer': 15
+    'Sleep On Power Button': false
+    'Wake On LAN': true
+    'System Sleep Timer': 30
+  Schedule:
+    RepeatingPowerOff:
+      eventtype: sleep
+      time: 1410
+      weekdays: 127
+    RepeatingPowerOn:
+      eventtype: wakepoweron
+      time: 480
+      weekdays: 127
+managedmac::energysaver::portable:
+  ACPower:
+    'Automatic Restart On Power Loss': true
+    'Disk Sleep Timer-boolean': true
+    'Display Sleep Timer': 15
+    'Wake On LAN': true
+    'System Sleep Timer': 30
+  BatteryPower:
+    'Automatic Restart On Power Loss': false
+    'Disk Sleep Timer-boolean': true
+    'Display Sleep Timer': 5
+    'System Sleep Timer': 10
+    'Wake On LAN': true
+{% endhighlight %}
 
 For a complete list of parameters, see the [managedmac::energysaver](https://github.com/dayglojesus/managedmac/blob/master/manifests/energysaver.pp) documentation.
 
@@ -118,11 +127,12 @@ Manages FDE using an OS X profile.
 As a bonus, this class exposes some features not available via the Profile Manger interface.
 
 Example:
-
-    ---
-    managedmac::filevault::enable: true
-    managedmac::filevault::use_recovery_key: true
-    managedmac::filevault::show_recovery_key: true
+{% highlight YAML %}
+---
+managedmac::filevault::enable: true
+managedmac::filevault::use_recovery_key: true
+managedmac::filevault::show_recovery_key: true
+{% endhighlight %}
 
 For a complete list of parameters, see the [managedmac::filevault](https://github.com/dayglojesus/managedmac/blob/master/manifests/filevault.pp) documentation.
 
@@ -135,10 +145,11 @@ Enables the installation of a master loginhook and allows configuration of a dir
 When you activate this class, Puppet installs a master loginhook. This script then looks for the directory you specified and executes any viable code in that directory.
 
 Example:
-
-    ---
-    managedmac::loginhook::enable: true
-    managedmac::loginhook::scripts: /path/to/your/scripts
+{% highlight YAML %}
+---
+managedmac::loginhook::enable: true
+managedmac::loginhook::scripts: /path/to/your/scripts
+{% endhighlight %}
 
 For a complete list of parameters, see the [managedmac::loginhook](https://github.com/dayglojesus/managedmac/blob/master/manifests/loginhook.pp) documentation.
 
@@ -152,28 +163,30 @@ This class combines group management and an OS X profile to create a comprehensi
 
 Example:
 
-    ---
-    # Controlling access via com.apple.access_loginwindow
-    managedmac::loginwindow::users:
-      - fry
-      - bender
-    managedmac::loginwindow::groups:
-      - robothouse
-      - 20EFB92F-4842-4218-8973-9F4738963660
-    # Controlling access via allow/deny lists
-    managedmac::loginwindow::allow_list:
-      - D2C2107F-CE19-4C9F-9235-688BEB01D8C0
-      - 779A91D0-885B-4066-97FC-BEECB737E6AF
-    managedmac::loginwindow::deny_list:
-      - C3F27BC2-8F89-4D56-9525-95B5133D8F25
-      - F1A496E4-86EB-4387-A4D6-5D6FAD9201E7
-    # Configuring options
-    managedmac::loginwindow::loginwindow_text: "Some message..."
-    managedmac::loginwindow::show_name_and_password_fields: true
-    managedmac::loginwindow::disable_console_access: true
-    managedmac::loginwindow::enable_external_accounts: false
-    managedmac::loginwindow::hide_admin_users: false
-    managedmac::loginwindow::hide_local_users: false
+{% highlight YAML %}
+---
+# Controlling access via com.apple.access_loginwindow
+managedmac::loginwindow::users:
+  - fry
+  - bender
+managedmac::loginwindow::groups:
+  - robothouse
+  - 20EFB92F-4842-4218-8973-9F4738963660
+# Controlling access via allow/deny lists
+managedmac::loginwindow::allow_list:
+  - D2C2107F-CE19-4C9F-9235-688BEB01D8C0
+  - 779A91D0-885B-4066-97FC-BEECB737E6AF
+managedmac::loginwindow::deny_list:
+  - C3F27BC2-8F89-4D56-9525-95B5133D8F25
+  - F1A496E4-86EB-4387-A4D6-5D6FAD9201E7
+# Configuring options
+managedmac::loginwindow::loginwindow_text: "Some message..."
+managedmac::loginwindow::show_name_and_password_fields: true
+managedmac::loginwindow::disable_console_access: true
+managedmac::loginwindow::enable_external_accounts: false
+managedmac::loginwindow::hide_admin_users: false
+managedmac::loginwindow::hide_local_users: false
+{% endhighlight %}
 
 For a complete list of parameters, see the [managedmac::loginwindow](https://github.com/dayglojesus/managedmac/blob/master/manifests/loginwindow.pp) documentation.
 
@@ -187,9 +200,11 @@ When you activate this class, Puppet installs a master logouthook. This script t
 
 Example:
 
-    ---
-    managedmac::logouthook::enable: true
-    managedmac::logouthook::scripts: /path/to/your/scripts
+{% highlight YAML %}
+---
+managedmac::logouthook::enable: true
+managedmac::logouthook::scripts: /path/to/your/scripts
+{% endhighlight %}
 
 For a complete list of parameters, see the [managedmac::logouthook](https://github.com/dayglojesus/managedmac/blob/master/manifests/logouthook.pp) documentation.
 
@@ -197,23 +212,22 @@ For a complete list of parameters, see the [managedmac::logouthook](https://gith
 <a id="managedmac::mcx"></a>
 #### managedmac::mcx
 
-Leverages the Puppet MCX type to deploy some options not available in Configuration Profiles. If any parameters for this class are defined...
+Embeds select MCX policy in an OS X profile using the Mobileconfig type.
 
-* Creates a new computer record in the DSLocal node, "mcx_puppet"
-* Applies the specified settings to the new computer record
-
-By itself this class will force a refresh of MCX policy on each Puppet run.
+Used to control policy fragments not directly supported by OS X profiles.
 
 Example:
 
-    ---
-    managedmac::mcx::bluetooth: on
-    managedmac::mcx::wifi: off
-    managedmac::mcx::loginitems:
-      - /Applications/Chess.app
-    managedmac::mcx::suppress_icloud_setup: true
-    managedmac::mcx::hidden_preference_panes:
-      - com.apple.preferences.icloud
+{% highlight YAML %}
+---
+managedmac::mcx::bluetooth: on
+managedmac::mcx::wifi: off
+managedmac::mcx::loginitems:
+  - /Applications/Chess.app
+managedmac::mcx::suppress_icloud_setup: true
+managedmac::mcx::hidden_preference_panes:
+  - com.apple.preferences.icloud
+{% endhighlight %}
 
 For a complete list of parameters, see the [managedmac::mcx](https://github.com/dayglojesus/managedmac/blob/master/manifests/mcx.pp) documentation.
 
@@ -229,11 +243,13 @@ NOTE: you should be able to use [Payload variables](https://help.apple.com/profi
 
 Example:
 
-    ---
-    managedmac::mounts::urls:
-     - 'https://some.dav.com/web/personal/%short_name%'
-     - 'smb://some.windows.com/%short_name%'
-     - 'afp://mac.server.com/some_share/%short_name%'
+{% highlight YAML %}
+---
+managedmac::mounts::urls:
+ - 'https://some.dav.com/web/personal/%short_name%'
+ - 'smb://some.windows.com/%short_name%'
+ - 'afp://mac.server.com/some_share/%short_name%'
+{% endhighlight %}
 
 For a complete list of parameters, see the [managedmac::mounts](https://github.com/dayglojesus/managedmac/blob/master/manifests/mounts.pp) documentation.
 
@@ -247,11 +263,13 @@ Allows you to set a list of network time servers and ensure the activation of th
 
 Example:
 
-    ---
-    managedmac::ntp::enable: true
-    managedmac::ntp::servers:
-     - time.apple.com
-     - time1.google.com
+{% highlight YAML %}
+---
+managedmac::ntp::enable: true
+managedmac::ntp::servers:
+ - time.apple.com
+ - time1.google.com
+{% endhighlight %}
 
 For a complete list of parameters, see the [managedmac::ntp](https://github.com/dayglojesus/managedmac/blob/master/manifests/ntp.pp) documentation.
 
@@ -269,13 +287,15 @@ Some special attention was given to the design of filters so that it they are ea
 
 Example:
 
-    ---
-    managedmac::portablehomes::enable: true
-    managedmac::portablehomes::menuextra: on
-    managedmac::portablehomes::backgroundConflictResolution: mobileHomeWins
-    managedmac::portablehomes::backgroundSuppressErrors: true
-    managedmac::portablehomes::periodicSyncOn: true
-    managedmac::portablehomes::syncPeriodSeconds: 720
+{% highlight YAML %}
+---
+managedmac::portablehomes::enable: true
+managedmac::portablehomes::menuextra: on
+managedmac::portablehomes::backgroundConflictResolution: mobileHomeWins
+managedmac::portablehomes::backgroundSuppressErrors: true
+managedmac::portablehomes::periodicSyncOn: true
+managedmac::portablehomes::syncPeriodSeconds: 720
+{% endhighlight %}
 
 For a complete list of parameters, see the [managedmac::portablehomes](https://github.com/dayglojesus/managedmac/blob/master/manifests/portablehomes.pp) documentation.
 
@@ -289,17 +309,19 @@ NOTE: User ACLs use a strange notation. See the class documentation for details.
 
 Example:
 
-    ---
-    managedmac::remotemanagement::enable: true
-    managedmac::remotemanagement::users:
-      user_a: -1073741569
-      user_b: -1073741569
-    managedmac::remotemanagement::enable_dir_logins: true
-    managedmac::remotemanagement::allowed_dir_groups:
-      - com.apple.local.ard_admin
-      - com.apple.local.ard_interact
-      - com.apple.local.ard_manage
-      - com.apple.local.ard_reports
+{% highlight YAML %}
+---
+managedmac::remotemanagement::enable: true
+managedmac::remotemanagement::users:
+  user_a: -1073741569
+  user_b: -1073741569
+managedmac::remotemanagement::enable_dir_logins: true
+managedmac::remotemanagement::allowed_dir_groups:
+  - com.apple.local.ard_admin
+  - com.apple.local.ard_interact
+  - com.apple.local.ard_manage
+  - com.apple.local.ard_reports
+{% endhighlight %}
 
 For a complete list of parameters, see the [managedmac::remotemanagement](https://github.com/dayglojesus/managedmac/blob/master/manifests/remotemanagement.pp) documentation.
 
@@ -315,13 +337,15 @@ NOTE: when both `managedmac::screensharing::enable` and `managedmac::remotemanag
 
 Example:
 
-    ---
-    managedmac::screensharing::enable: true
-    managedmac::screensharing::users:
-       - leela
-       - bender
-    managedmac::screensharing::groups:
-       - robotmafia
+{% highlight YAML %}
+---
+managedmac::screensharing::enable: true
+managedmac::screensharing::users:
+   - leela
+   - bender
+managedmac::screensharing::groups:
+   - robotmafia
+{% endhighlight %}
 
 For a complete list of parameters, see the [managedmac::screensharing](https://github.com/dayglojesus/managedmac/blob/master/manifests/screensharing.pp) documentation.
 
@@ -333,10 +357,12 @@ Collection of various OS X Security options, applied as an OS X profile.
 
 Example:
 
-    ---
-    managedmac::security::ask_for_password: true
-    managedmac::security::ask_for_password_delay: 300
-    managedmac::security::disable_autologin: true
+{% highlight YAML %}
+---
+managedmac::security::ask_for_password: true
+managedmac::security::ask_for_password_delay: 300
+managedmac::security::disable_autologin: true
+{% endhighlight %}
 
 For a complete list of parameters, see the [managedmac::security](https://github.com/dayglojesus/managedmac/blob/master/manifests/security.pp) documentation.
 
@@ -351,14 +377,15 @@ Abstracts com.apple.SoftwareUpdate PayloadType using Mobileconfig type and contr
 NOTE: Control of the preferences in com.apple.SoftwareUpdate and com.apple.storeagent are subject to change by Administrators. If you are managing these settings and another administrator makes a chnage on the localk workstation, Puppet will revert the change, but they cannot belocked out entirely.
 
 Example:
-
-    ---
-    managedmac::softwareupdate::catalog_url: http://my.reposado.com/reposado/html/content/catalogs/index.sucatalog
-    managedmac::softwareupdate::automatic_update_check: true
-    managedmac::softwareupdate::auto_update_apps: true
-    managedmac::softwareupdate::automatic_download: false
-    managedmac::softwareupdate::config_data_install: false
-    managedmac::softwareupdate::critical_update_install: false
+{% highlight YAML %}
+---
+managedmac::softwareupdate::catalog_url: http://my.reposado.com/reposado/html/content/catalogs/index.sucatalog
+managedmac::softwareupdate::automatic_update_check: true
+managedmac::softwareupdate::auto_update_apps: true
+managedmac::softwareupdate::automatic_download: false
+managedmac::softwareupdate::config_data_install: false
+managedmac::softwareupdate::critical_update_install: false
+{% endhighlight %}
 
 For a complete list of parameters, see the [managedmac::softwareupdate](https://github.com/dayglojesus/managedmac/blob/master/manifests/softwareupdate.pp) documentation.
 
@@ -372,15 +399,17 @@ If you need to augment the service with extra configuration files, you can local
 
 Example:
 
-    ---
-    managedmac::sshd::enable: true
-    managedmac::sshd::sshd_config: puppet:///modules/your_module/sshd_config
-    managedmac::sshd::sshd_banner: puppet:///modules/your_module/sshd_banner
-    managedmac::sshd::users:
-       - leela
-       - bender
-    managedmac::sshd::groups:
-       - robotmafia
+{% highlight YAML %}
+---
+managedmac::sshd::enable: true
+managedmac::sshd::sshd_config: puppet:///modules/your_module/sshd_config
+managedmac::sshd::sshd_banner: puppet:///modules/your_module/sshd_banner
+managedmac::sshd::users:
+   - leela
+   - bender
+managedmac::sshd::groups:
+   - robotmafia
+{% endhighlight %}
 
 For a complete list of parameters, see the [managedmac::sshd](https://github.com/dayglojesus/managedmac/blob/master/manifests/sshd.pp) documentation.
 
@@ -401,11 +430,14 @@ Create new Puppet Exec resources.
 
 Example:
 
-    managedmac::execs::commands:
-      who_dump:
-        command: '/usr/bin/who > /tmp/who.dump'
-      ps_dump:
-        command: '/bin/ps aux > /tmp/ps.dump'
+{% highlight YAML %}
+---
+managedmac::execs::commands:
+  who_dump:
+    command: '/usr/bin/who > /tmp/who.dump'
+  ps_dump:
+    command: '/bin/ps aux > /tmp/ps.dump'
+{% endhighlight %}
 
 For a complete list of parameters, see the [managedmac::execs](https://github.com/dayglojesus/managedmac/blob/master/manifests/execs.pp) documentation.
 
@@ -417,22 +449,24 @@ Create new Files.
 
 Example:
 
-    ---
-    managedmac::files::defaults:
-      ensure: file
-      owner: root
-      group: admin
-      mode: 0644
-    managedmac::files::objects:
-      /Users/Shared/example_file_a.txt:
-        content: "This is an example of how to create a file using the content parameter."
-      /Users/Shared/example_file_b.txt:
-        source: puppet:///modules/my_module/example_file_b.txt
-      /Users/Shared/example_directory:
-        ensure: directory
-        owner: root
-        group: admin
-        mode: 0755
+{% highlight YAML %}
+---
+managedmac::files::defaults:
+  ensure: file
+  owner: root
+  group: admin
+  mode: 0644
+managedmac::files::objects:
+  /Users/Shared/example_file_a.txt:
+    content: "This is an example of how to create a file using the content parameter."
+  /Users/Shared/example_file_b.txt:
+    source: puppet:///modules/my_module/example_file_b.txt
+  /Users/Shared/example_directory:
+    ensure: directory
+    owner: root
+    group: admin
+    mode: 0755
+{% endhighlight %}
 
 For a complete list of parameters, see the [managedmac::files](https://github.com/dayglojesus/managedmac/blob/master/manifests/files.pp) documentation.
 
@@ -444,19 +478,21 @@ Create new OS X user groups.
 
 Example:
 
-    ---
-    managedmac::groups::defaults:
-      ensure: present
-    managedmac::groups::accounts:
-      foo_group:
-        gid: 998
-        users:
-          - foo
-          - bar
-      bar_group:
-        gid: 999
-        nestedgroups:
-          - foo_group
+{% highlight YAML %}
+---
+managedmac::groups::defaults:
+  ensure: present
+managedmac::groups::accounts:
+  foo_group:
+    gid: 998
+    users:
+      - foo
+      - bar
+  bar_group:
+    gid: 999
+    nestedgroups:
+      - foo_group
+{% endhighlight %}
 
 For a complete list of parameters, see the [managedmac::groups](https://github.com/dayglojesus/managedmac/blob/master/manifests/groups.pp) documentation.
 
@@ -468,19 +504,21 @@ Create new OS X profiles.
 
 Example:
 
-    ---
-    managedmac::mobileconfigs::defaults:
-      description:  'Installed by Puppet.'
-      organization: 'Puppet Labs'
-    managedmac::mobileconfigs::payloads:
-      'managedmac.dock.alacarte':
-        content:
-          largesize: 128
-          orientation: left
-          tilesize: 128
-          autohide: true
-          PayloadType: 'com.apple.dock'
-        displayname: 'Managed Mac: Dock Settings'
+{% highlight YAML %}
+---
+managedmac::mobileconfigs::defaults:
+  description:  'Installed by Puppet.'
+  organization: 'Puppet Labs'
+managedmac::mobileconfigs::payloads:
+  'managedmac.dock.alacarte':
+    content:
+      largesize: 128
+      orientation: left
+      tilesize: 128
+      autohide: true
+      PayloadType: 'com.apple.dock'
+    displayname: 'Managed Mac: Dock Settings'
+{% endhighlight %}
 
 For a complete list of parameters, see the [managedmac::mobileconfigs](https://github.com/dayglojesus/managedmac/blob/master/manifests/mobileconfigs.pp) documentation.
 
@@ -492,24 +530,26 @@ Create new OS X Property Lists or Preference domains.
 
 Example:
 
-    ---
-    managedmac::propertylists::defaults:
-      owner: root
-      group: wheel
-      format: xml
-    managedmac::propertylists::files:
-      '/path/to/a/file.plist':
-        content:
-          - 'A string.'
-          - a_hash_key: 1
-          - 42
-      '/path/to/another/file.plist':
-        content:
-          0: 1
-          foo: bar
-          bar: baz
-          an_array:
-             - 99
+{% highlight YAML %}
+---
+managedmac::propertylists::defaults:
+  owner: root
+  group: wheel
+  format: xml
+managedmac::propertylists::files:
+  '/path/to/a/file.plist':
+    content:
+      - 'A string.'
+      - a_hash_key: 1
+      - 42
+  '/path/to/another/file.plist':
+    content:
+      0: 1
+      foo: bar
+      bar: baz
+      an_array:
+         - 99
+{% endhighlight %}
 
 For a complete list of parameters, see the [managedmac::propertylists](https://github.com/dayglojesus/managedmac/blob/master/manifests/propertylists.pp) documentation.
 
@@ -521,20 +561,23 @@ Create new OS X user accounts.
 
 Example:
 
-    managedmac::users::defaults:
-      ensure: present
-      gid: 20
-    managedmac::users::accounts:
-      foo:
-        uid: 505
-        iterations: 32786
-        password: 4f5942e989e7566955d42421dc4b80c0fa45f6fb2ecbc1026b2183060c8ecbec38582b1a8a6459574ebe1a2d7884d9e8d2a460e8ea3fcf179964a6325a688d7ee7cc60bbb8b8abf252c6a6a799760da0b0fe6e4562f506b2355b03f272580ed9bdbbae55152dfbac066d9c62a799ee184f9904da153a3c20d66657cf3b60d5c8
-        salt: 77586e8902d744f650758b402b44e174d7943b10b145c921b3b71affbaf9a32d
-      bar:
-        uid: 506
-        iterations: 32786
-        password: a85ea7ce2df74b13be298d6584edbb35558b74616a70e579252416a6b76d0a615c88b7d566280fa5e035e8db7b1a0c4e3ee4b8cd6204652dcb6c89e6e450a60ca7ed0cc9fa545326ca25211e6f600835f50642ab9d407fa30999c68c05b92d9281eff4a66c67f44ed2f8b8eaf8b62283db202bc98e21c0df9a95cf9abb359b69
-        salt: 9ab79307a7bfbb293b4f015ae748d227423481bcd4e5801f450697d15fb67144
+{% highlight YAML %}
+---
+managedmac::users::defaults:
+  ensure: present
+  gid: 20
+managedmac::users::accounts:
+  foo:
+    uid: 505
+    iterations: 32786
+    password: 4f5942e989e7566955d42421dc4b80c0fa45f6fb2ecbc1026b2183060c8ecbec38582b1a8a6459574ebe1a2d7884d9e8d2a460e8ea3fcf179964a6325a688d7ee7cc60bbb8b8abf252c6a6a799760da0b0fe6e4562f506b2355b03f272580ed9bdbbae55152dfbac066d9c62a799ee184f9904da153a3c20d66657cf3b60d5c8
+    salt: 77586e8902d744f650758b402b44e174d7943b10b145c921b3b71affbaf9a32d
+  bar:
+    uid: 506
+    iterations: 32786
+    password: a85ea7ce2df74b13be298d6584edbb35558b74616a70e579252416a6b76d0a615c88b7d566280fa5e035e8db7b1a0c4e3ee4b8cd6204652dcb6c89e6e450a60ca7ed0cc9fa545326ca25211e6f600835f50642ab9d407fa30999c68c05b92d9281eff4a66c67f44ed2f8b8eaf8b62283db202bc98e21c0df9a95cf9abb359b69
+    salt: 9ab79307a7bfbb293b4f015ae748d227423481bcd4e5801f450697d15fb67144
+{% endhighlight %}
 
 For a complete list of parameters, see the [managedmac::users](https://github.com/dayglojesus/managedmac/blob/master/manifests/users.pp) documentation.
 
