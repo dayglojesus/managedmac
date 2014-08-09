@@ -24,7 +24,7 @@ There aren't Raw Constructors for every Puppet type, just enough to cover the ba
 #### [The Basics]({{ site.baseurl }}/raw_constructor_fun/basics.html)
 #### [Creating Users]({{ site.baseurl }}/raw_constructor_fun/creating_users.html)
 #### [Creating Mobileconfigs]({{ site.baseurl }}/raw_constructor_fun/creating_mobileconfigs.html)
-#### [Creating Propertylists]({{ site.baseurl }}/raw_constructor_fun/creating_propertylists.html)
+<!-- #### [Creating Propertylists]({{ site.baseurl }}/raw_constructor_fun/creating_propertylists.html) -->
 
 
 
