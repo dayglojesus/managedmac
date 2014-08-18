@@ -591,9 +591,9 @@ ${syncBackgroundSetInBackground}")
       portablehomes_synced_folders($syncedFolders),
     'syncedPrefFolders-managed'            =>
       portablehomes_synced_folders($syncedPrefFolders),
-    'excludedItems'                        =>
+    'excludedItems-managed'                =>
       portablehomes_excluded_items($excludedItems),
-    'excludedPrefItems'                    =>
+    'excludedPrefItems-managed'            =>
       portablehomes_excluded_items($excludedPrefItems),
     'warnOnCreateAllowNever'               => $warnOnCreateAllowNever,
     'createAtLogin'                        => $createAtLogin,

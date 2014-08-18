@@ -1,0 +1,116 @@
+#!/usr/bin/env ruby
+
+require 'cfpropertylist'
+require 'yaml'
+require 'json'
+require 'ostruct'
+require 'optparse'
+
+FORMATS       = [:yaml, :json]
+DEFAULTS_KEY  = 'managedmac::mobileconfigs::defaults'
+PAYLOADS_KEY  = 'managedmac::mobileconfigs::payloads'
+FILTERED_KEYS = ['PayloadIdentifier',
+                 'PayloadDescription',
+                 'PayloadDisplayName',
+                 'PayloadOrganization',
+                 'PayloadRemovalDisallowed',
+                 'PayloadScope',
+                 'PayloadEnabled',
+                 'PayloadUUID',
+                 'PayloadVersion',]
+
+# Transform PayloadContent
+def transform_content(content)
+  content.collect do |hash|
+    hash.reject do |key, value|
+      FILTERED_KEYS.include? key
+    end
+  end
+end
+
+# Restructure the profile
+def transform_profile(profile)
+  payload = {
+    'organization' => profile['PayloadOrganization'],
+    'displayname'  => profile['PayloadDisplayName'],
+    'description'  => profile['PayloadDescription'],
+    'content'      => transform_content(profile['PayloadContent']),
+  }
+  payload.delete_if { |k,v| v.nil? or v.empty? }
+  { profile ['PayloadIdentifier'] => payload }
+end
+
+# Process the supplied profiels
+def process_profiles(profiles)
+  profiles.inject({}) do |memo,p|
+    memo.merge! transform_profile(p)
+    memo
+  end
+end
+
+# YAML output
+def print_yaml(doc)
+  puts doc.to_yaml
+end
+
+# JSON output
+def print_json(doc)
+  puts JSON.pretty_generate(doc)
+end
+
+# Dump the version and options
+def output_help
+  puts @optparse
+end
+
+# Validate the format argument
+def validate_format(format)
+  unless FORMATS.include? format
+    puts "Invalid Format! \'#{format.to_s}\'"
+    output_help
+    exit 1
+  end
+end
+
+###########################################
+# MAIN
+###########################################
+
+pgmargs = ARGV.dup
+options = OpenStruct.new
+options.format = :yaml
+
+@optparse = OptionParser.new do |opts|
+  opts.banner = "Usage: profile2hiera [options]"
+  opts.on("-f", "--format [FORMAT]", "Output format, json or yaml") do |f|
+    f = f.to_sym
+    validate_format(f)
+    options.format = f
+  end
+  opts.on_tail("-h", "--help", "Show this message") do
+    puts opts
+    exit
+  end
+end
+
+@optparse.parse!
+
+# Check the program args and run
+if pgmargs.empty?
+  output_help
+else
+  profiles = ARGV.collect do |file|
+    plist = CFPropertyList::List.new(:file => file)
+    CFPropertyList.native_types(plist.value)
+  end
+  payloads = process_profiles(profiles)
+  doc = { PAYLOADS_KEY => payloads }
+  case options.format
+  when :json
+    print_json(doc)
+  else
+    print_yaml(doc)
+  end
+end
+
+exit 0
