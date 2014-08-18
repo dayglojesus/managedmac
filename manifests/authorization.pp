@@ -149,13 +149,13 @@ Printing preference pane.",
 
     'system.device.dvd.setregion.initial' => {
       allow_root => false,
-      group      => 'admin',
-      auth_class => $allow_dvd_setregion_initial ? {
-        true    => 'allow',
-        default => 'user',
+      group      => $allow_dvd_setregion_initial ? {
+        true    => 'everyone',
+        default => 'admin',
       },
       comment => "Used by the DVD player to set the region code the first \
-time.  Note that changing the region code after it has been set requires a different right (system.device.dvd.setregion.change).",
+time.  Note that changing the region code after it has been set requires a \
+different right (system.device.dvd.setregion.change).",
     },
 
   }
