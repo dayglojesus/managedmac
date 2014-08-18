@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.5.3
+- release 0.5.3
+- bug fixes for issues #25, #26, #27, #30
+- added small utility to convert a profile into Hiera data
+
 ## 0.5.1
 - release 0.5.1
 - update metadata.json and build
