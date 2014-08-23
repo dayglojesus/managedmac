@@ -1,11 +1,14 @@
 Puppet::Type.newtype(:remotemanagement) do
   @doc = %q{Manage Mac OS X Apple Remote Desktop client settings.
-    x_remotemanagement { 'apple_remote_desktop':
+    remotemanagement { 'apple_remote_desktop':
       ensure            => 'running',
       allow_all_users   => false,
       enable_menu_extra => false,
-      users             => {'fred' => -1073741569, 
-        'daphne' => -2147483646, 'velma' => -1073741822 },
+      users             => {
+        'fred'   => -1073741569,
+        'daphne' => -2147483646,
+        'velma'  => -1073741822
+      },
     }
 
     === EXAMPLE USER PRIVILEGE SETTINGS ===
@@ -127,6 +130,18 @@ Puppet::Type.newtype(:remotemanagement) do
   newproperty(:vnc_password) do
     desc "The password used for VNC, stored as plain text!
     Thinking this is not a good idea? Yeah, me too. Don't use it."
+
+    def is_to_s(value)
+      value.hash
+    end
+
+    def should_to_s(value)
+      value.hash
+    end
+
+    munge do |value|
+      value.empty? ? nil : value
+    end
   end
 
   newproperty(:allow_vnc_requests) do
