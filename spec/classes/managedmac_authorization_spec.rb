@@ -145,7 +145,7 @@ describe "managedmac::authorization", :type => 'class' do
 
     it do
       should contain_macauthdb('system.device.dvd.setregion.initial').with(
-        'auth_class' => 'allow',)
+        'auth_class' => 'user',)
     end
   end
 
