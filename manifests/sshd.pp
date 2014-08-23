@@ -29,6 +29,12 @@
 #   Type: Array
 #   Default: ['admin']
 #
+# [*strict*]
+#   How to handle membership in the users and nestedgroups arrays. Informs the
+#   provider whether to merge the specified members into the record, or replace
+#   them outright. See the Macgroup documentation for details.
+#   Type: Boolean
+#
 # === Variables
 #
 # None
@@ -76,7 +82,8 @@ class managedmac::sshd (
   $sshd_config = undef,
   $sshd_banner = undef,
   $users       = [],
-  $groups      = ['ABCDEFAB-CDEF-ABCD-EFAB-CDEF00000050']
+  $groups      = ['ABCDEFAB-CDEF-ABCD-EFAB-CDEF00000050'],
+  $strict      = true,
 
 ) {
 
@@ -132,6 +139,7 @@ class managedmac::sshd (
       gid          => 399,
       users        => $users_attr,
       nestedgroups => $groups_attr,
+      strict       => $strict,
     }
 
     service { $service_label:

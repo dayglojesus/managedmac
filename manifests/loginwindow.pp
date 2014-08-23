@@ -22,6 +22,12 @@
 #   exist.
 #   Type: Array
 #
+# [*strict*]
+#   How to handle membership in the users and nestedgroups arrays. Informs the
+#   provider whether to merge the specified members into the record, or replace
+#   them outright. See the Macgroup documentation for details.
+#   Type: Boolean
+#
 # [*allow_list*]
 #   A list of GUIDs corresponding to allowed users or groups.
 #   Corresponds to the AllowList key.
@@ -196,6 +202,7 @@ class managedmac::loginwindow (
 
   $users                         = [],
   $groups                        = [],
+  $strict                        = true,
   $allow_list                    = [],
   $deny_list                     = [],
   $disable_console_access        = undef,
@@ -363,6 +370,7 @@ class managedmac::loginwindow (
     ensure       => $acl_ensure,
     users        => $users,
     nestedgroups => $groups,
+    strict       => $strict,
   }
 
   $organization = hiera('managedmac::organization', 'Simon Fraser University')
