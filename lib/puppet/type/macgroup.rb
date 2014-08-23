@@ -3,7 +3,7 @@ require 'puppet/managedmac/common'
 Puppet::Type.newtype(:macgroup) do
   @doc = %q{A drop-in replacement for the built-in Puppet Type: Group
 
-    A custom Puppet type for configuring amd managing OS X groups.
+    A custom Puppet type for configuring and managing OS X groups.
 
     Similar to the built-in Puppet type, Macgroup can manage user membership and
     other attributes of DSLocal group records.
@@ -50,7 +50,7 @@ Puppet::Type.newtype(:macgroup) do
 
       If you create a new group and do not specify a GID, one will be selected
       for you. However, this is not recommended as it cannot guarantee GID
-      specification across a colleciton of machines. For example, if the same
+      specification across a collection of machines. For example, if the same
       resource were applied to two different machines, the GID could not be
       guaranteed to be the same on both, unless you were to configure this
       parameter.
@@ -82,14 +82,14 @@ Puppet::Type.newtype(:macgroup) do
       Corresponds to the GroupMembership/users attribute.
 
       Membership is managed wholesale, that is, it's purged prior to
-      modifcation unless you set strict => false.
+      modification unless you set strict => false.
 
       Please see the documentation on :strict _before_ using this feature.
 
       To specify users, you pass an Array of user names. The provider will warn
       about an invalid user account, but it will apply the configuration
       anyway. This is to prevent temporary OpenDirectory or network outages
-      from wreaking havok with your Puppet config.
+      from wreaking havoc with your Puppet config.
 
       Note: an empty list is not the same as an absent one. An absent list
       implies that the attribute is unmanaged, while an empty list _is_ managed
@@ -145,7 +145,7 @@ Puppet::Type.newtype(:macgroup) do
       not the record's' name like the user list.
 
       Membership is managed wholesale, that is, it's purged prior to
-      modifcation unless you set strict => false.
+      modification unless you set strict => false.
 
       Please see the documentation on :strict _before_ using this feature.
 
@@ -249,7 +249,7 @@ Puppet::Type.newtype(:macgroup) do
       A Boolean value that informs the provider whether to merge the
       specified members into the record, or replace them outright.
 
-      This parameter controls the behaviour of BOTH the users and nestedgroups
+      This parameter controls the behavior of BOTH the users and nestedgroups
       arrays.
 
       By default, the users and nestedgroups arrays will be PURGED and replaced

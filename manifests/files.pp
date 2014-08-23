@@ -82,30 +82,26 @@
 #
 class managedmac::files (
 
-  $objects  = undef,
+  $objects  = {},
   $defaults = {},
 
 ) {
 
-  unless $objects == undef {
+  unless empty ($objects) {
 
     validate_hash ($objects)
     validate_hash ($defaults)
 
-    if empty ($objects) {
-      fail('Parameter Error: $objects is empty')
-    } else {
-      # Cheating: validate that the value for each key is itself a Hash
-      $check_hash = inline_template("<%= @objects.reject! {
-        |x| x.respond_to? :key } %>")
+    # Cheating: validate that the value for each key is itself a Hash
+    $check_hash = inline_template("<%= @objects.reject! {
+      |x| x.respond_to? :key } %>")
 
-      unless empty($check_hash) {
-        fail("Account Error: Failed to parse one or more account data objects:
-          ${check_hash}")
-      }
-
-      create_resources(file, $objects, $defaults)
+    unless empty($check_hash) {
+      fail("Account Error: Failed to parse one or more account data \
+objects: ${check_hash}")
     }
+
+    create_resources(file, $objects, $defaults)
 
   }
 

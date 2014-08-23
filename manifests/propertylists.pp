@@ -79,29 +79,26 @@
 #
 class managedmac::propertylists (
 
-  $files    = undef,
-  $defaults = {}
+  $files    = {},
+  $defaults = {},
 
 ) {
 
-  unless $files == undef {
+  unless empty ($files) {
 
     validate_hash ($files)
     validate_hash ($defaults)
 
-    if empty ($files) {
-      fail('Parameter Error: $files is empty')
-    } else {
-      # Cheating: validate that the key for each file is an absolute path
-      $check_hash = inline_template("<%= @files.select! {
-        |k,v| Pathname.new(k).absolute? } %>")
+    # Cheating: validate that the key for each file is an absolute path
+    $check_hash = inline_template("<%= @files.select! {
+      |k,v| Pathname.new(k).absolute? } %>")
 
-        unless empty($check_hash) {
-        fail("Propertylist Error: Failed to parse one or more file data objects:
-          ${check_hash}")
-      }
-      create_resources(propertylist, $files, $defaults)
+    unless empty($check_hash) {
+      fail("Propertylist Error: Failed to parse one or more file data \
+objects: ${check_hash}")
     }
+
+    create_resources(propertylist, $files, $defaults)
 
   }
 

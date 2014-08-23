@@ -875,7 +875,7 @@ managedmac::portablehomes::replaceUserPrefSyncList: false
 # Type: Array
 #####################################################################
 
-managedmac::portablehomes::syncedFolders_managed:
+managedmac::portablehomes::syncedFolders:
   - '~'
 
 #####################################################################
@@ -884,7 +884,7 @@ managedmac::portablehomes::syncedFolders_managed:
 # Type: Array
 #####################################################################
 
-managedmac::portablehomes::syncedPrefFolders_managed:
+managedmac::portablehomes::syncedPrefFolders:
   - '~/Documents/Microsoft User Data'
   - '~/Library/Fonts'
   - '~/Documents/Microsoft User Data'

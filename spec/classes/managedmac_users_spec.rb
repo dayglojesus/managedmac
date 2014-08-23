@@ -23,7 +23,7 @@ describe "managedmac::users", :type => 'class' do
     let(:params) do
       { :accounts => {} }
     end
-    specify { expect { should compile }.to raise_error(Puppet::Error) }
+    specify { should_not contain_user }
   end
 
   context "when $accounts contains invalid data" do

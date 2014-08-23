@@ -66,30 +66,26 @@
 #
 class managedmac::execs (
 
-  $commands = undef,
+  $commands = {},
   $defaults = {},
 
 ) {
 
-  unless $commands == undef {
+  unless empty ($commands) {
 
     validate_hash ($commands)
     validate_hash ($defaults)
 
-    if empty ($commands) {
-      fail('Parameter Error: $commands is empty')
-    } else {
-      # Cheating: validate that the value for each key is itself a Hash
-      $check_hash = inline_template("<%= @commands.reject! {
-        |x| x.respond_to? :key } %>")
+    # Cheating: validate that the value for each key is itself a Hash
+    $check_hash = inline_template("<%= @commands.reject! {
+      |x| x.respond_to? :key } %>")
 
-      unless empty($check_hash) {
-        fail("Account Error: Failed to parse one or more account data commands:
-          ${check_hash}")
-      }
-
-      create_resources(exec, $commands, $defaults)
+    unless empty($check_hash) {
+      fail("Account Error: Failed to parse one or more account data \
+commands: ${check_hash}")
     }
+
+    create_resources(exec, $commands, $defaults)
 
   }
 
