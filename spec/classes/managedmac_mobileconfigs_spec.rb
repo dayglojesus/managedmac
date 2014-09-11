@@ -23,7 +23,9 @@ describe "managedmac::mobileconfigs", :type => 'class' do
     let(:params) do
       { :payloads => {} }
     end
-    specify { expect { should compile }.to raise_error(Puppet::Error) }
+    specify do
+      should_not contain_mobileconfig
+    end
   end
 
   context "when $payloads contains invalid data" do

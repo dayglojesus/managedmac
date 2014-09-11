@@ -23,7 +23,7 @@ describe "managedmac::files", :type => 'class' do
     let(:params) do
       { :objects => {} }
     end
-    specify { expect { should compile }.to raise_error(Puppet::Error) }
+    specify { should_not contain_file }
   end
 
   context "when $objects contains invalid data" do

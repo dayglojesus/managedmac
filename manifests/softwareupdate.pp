@@ -110,7 +110,7 @@ class managedmac::softwareupdate (
   }
 
   unless empty($catalog_url) {
-    validate_re ($catalog_url, '\Ahttp:\/\/(\w+\.)+\w+\/')
+    validate_re ($catalog_url, '\Ahttps?:\/\/(-*\w+-*(\.|-))+-*\w+-*\/')
   }
 
   unless $automatic_download == undef {

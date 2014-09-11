@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.5.5
+- release 0.5.5
+
+## 0.5.4
+- bug fixes for issues #34, #33, #32, #8, #36
+
 ## 0.5.3
 - release 0.5.3
 - bug fixes for issues #25, #26, #27, #30

@@ -67,7 +67,7 @@
 #
 # [*users*]
 #   A Hash mapping user names to respective ARD privs. Keys are user names
-#   as String, values are proivs as String.
+#   as String, values are privs as String.
 #   Example:
 #   {'fred' => -1073741569, 'daphne' => -2147483646, 'velma' => -1073741822 },
 #   Type: Hash

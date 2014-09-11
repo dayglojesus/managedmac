@@ -23,7 +23,7 @@ describe "managedmac::execs", :type => 'class' do
     let(:params) do
       { :commands => {} }
     end
-    specify { expect { should compile }.to raise_error(Puppet::Error) }
+    specify { should_not contain_exec }
   end
 
   context "when $commands contains invalid data" do

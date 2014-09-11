@@ -23,7 +23,9 @@ describe "managedmac::propertylists", :type => 'class' do
     let(:params) do
       { :files => {} }
     end
-    specify { expect { should compile }.to raise_error(Puppet::Error) }
+    specify do
+      should_not contain_propertylist
+    end
   end
 
   context "when $payloads contains invalid data" do
