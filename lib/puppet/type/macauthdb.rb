@@ -1,3 +1,5 @@
+require 'puppet/property/boolean'
+
 Puppet::Type.newtype(:macauthdb) do
 
   @doc = %q{Manage the OS X authorization database. See the
@@ -71,17 +73,6 @@ Puppet::Type.newtype(:macauthdb) do
     fail("munge_integer only takes integers")
   end
 
-  def munge_boolean(value)
-    case value
-    when true, "true", :true
-      true
-    when false, "false", :false
-      false
-    else
-      fail("munge_boolean only takes booleans")
-    end
-  end
-
   newparam(:name) do
     desc "The name of the right or rule to be managed.
     Corresponds to `key` in Authorization Services. The key is the name
@@ -116,7 +107,6 @@ Puppet::Type.newtype(:macauthdb) do
     desc "A group which the user must authenticate as a member of. This
     must be a single group."
   end
-
 
   newproperty(:mechanisms, :array_matching => :all) do
     desc "A sequence of suitable mechanisms to be evaluated. (Array)"
@@ -168,19 +158,12 @@ Puppet::Type.newtype(:macauthdb) do
   # BOOL
   ##################
 
-  newproperty(:shared) do
+  newproperty(:shared, :parent => Puppet::Property::Boolean) do
     desc "Whether the Security Server should mark the credentials used to gain
     this right as shared. The Security Server may use any shared credentials
     to authorize this right. For maximum security, set sharing to false so
     credentials stored by the Security Server for one application may not be
     used by another application."
-
-    newvalue(true)
-    newvalue(false)
-
-    munge do |value|
-      @resource.munge_boolean(value)
-    end
   end
 
   newproperty(:allow_root) do
@@ -188,97 +171,41 @@ Puppet::Type.newtype(:macauthdb) do
     whether a right should be allowed automatically if the requesting process
     is running with `uid == 0`.  AuthorizationServices defaults this attribute
     to false if not specified."
-
-    newvalue(true)
-    newvalue(false)
-
-    munge do |value|
-      @resource.munge_boolean(value)
-    end
   end
 
   newproperty(:session_owner) do
     desc "Whether the session owner automatically matches this rule or right.
     Corresponds to `session-owner` in the authorization store."
-
-    newvalue(true)
-    newvalue(false)
-
-    munge do |value|
-      @resource.munge_boolean(value)
-    end
   end
 
   newproperty(:authenticate_user) do
     desc "Corresponds to `authenticate-user` in the authorization store."
-
-    newvalue(true)
-    newvalue(false)
-
-    munge do |value|
-      @resource.munge_boolean(value)
-    end
   end
 
   newproperty(:extract_password) do
     desc "Boolean that indicates that the password should be extracted to
     the context."
-
-    newvalue(true)
-    newvalue(false)
-
-    munge do |value|
-      @resource.munge_boolean(value)
-    end
   end
 
   newproperty(:entitled) do
     desc "Boolean that indicates whether to grant a right based on the
     entitlement."
-
-    newvalue(true)
-    newvalue(false)
-
-    munge do |value|
-      @resource.munge_boolean(value)
-    end
   end
 
   newproperty(:entitled_group) do
     desc "Boolean that indicates whether to grant a right based on the
     entitlement and if the user is a member of the Authorization
     Group (:group)."
-
-    newvalue(true)
-    newvalue(false)
-
-    munge do |value|
-      @resource.munge_boolean(value)
-    end
   end
 
   newproperty(:require_apple_signed) do
     desc "Boolean require the caller to be signed by apple."
-
-    newvalue(true)
-    newvalue(false)
-
-    munge do |value|
-      @resource.munge_boolean(value)
-    end
   end
 
   newproperty(:vpn_entitled_group) do
     desc "Boolean that indicates whether to grant a right base on the VPN
     entitlement and if the user is a member of the Authorization
     Group (:group)."
-
-    newvalue(true)
-    newvalue(false)
-
-    munge do |value|
-      @resource.munge_boolean(value)
-    end
   end
 
 end
