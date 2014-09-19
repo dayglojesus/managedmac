@@ -1,3 +1,4 @@
+require 'date'
 require 'sqlite3'
 require 'cfpropertylist'
 
@@ -248,79 +249,123 @@ Puppet::Type.type(:macauthdb).provide(:default) do
     end
   end
 
-  def sql_create_rule(data)
-    name = resource[:name]
-    formatted_rule = {
-      'name'     => name,
-      'type'     => 2,
-      'class'    => self.class.convert_class_to_int(data['class']) || 1,
-      'group'    => data['group'],
-      'timeout'  => data['timeout'] || 0,
-      'flags'    => self.class.pack_flags(data),
-      'tries'    => data['tries'],
-      'version'  => data['version'] || 0,
-      'created'  => 407288069.183469,
-      'modified' => 407288069.183469,
-      'comment'  => data['comment'],
+  # Timestamp in decimal
+  # Apple uses Jan 01, 2001 as the epoch
+  def timestamp
+    ((DateTime.now) << 12 * 31).to_time.to_f
+  end
+
+  # Prepares the data processing by #sql_create_rule
+  def prepare_rule_data(data)
+    data['type']  = 2
+    data['flags'] = self.class.pack_flags(data)
+    data['class'] = self.class.convert_class_to_int(data['class']) || 1
+
+    defaults = {
+      'flags'    => 0,
+      'version'  => 0,
+      'created'  => timestamp,
+      'modified' => timestamp,
     }
 
+    class_defaults = [
+      defaults.merge(Hash['timeout', 2147483647, 'flags', 9, 'tries', 10000]),
+      defaults,
+      defaults,
+      defaults.merge(Hash['flags', 1, 'tries', 10000]),
+      defaults.merge(Hash['kofn', 1, 'flags', 0 ]),
+    ]
+
+    data       = class_defaults[data['class']].merge(data)
+    rule       = data.delete('rule')
+    mechanisms = data.delete('mechanisms')
+
+    [data, rule, mechanisms]
+  end
+
+  # Fetches the appropriate rules row and converts results to a Hash
+  def sql_get_rule(dbconn, name)
+    name_query = %Q{SELECT * FROM rules WHERE name = '#{name}'}
+    result     = self.class.exec_sql_statement(@dbconn, name_query).first
+    result.nil? ? {} : Hash[SCHEMA.zip(result)] || {}
+  end
+
+  # Returns the updated rule as a Hash
+  def sql_insert_or_udpate_rules(dbconn, op, data)
+    statement = case op
+    when :insert
+      columns      = data.keys.collect { |x| "`#{x}`" }.join(',')
+      placeholders = (['?'] * data.values.size).join(',')
+      %Q{INSERT INTO rules (#{columns}) VALUES (#{placeholders})}
+    else
+      data.delete_if { |k| %w{name created}.member?(k) }
+      columns = data.keys.map { |k| "`#{k}` = ?" }
+      %Q{UPDATE rules SET #{columns.join(', ')} WHERE name = '#{name}'}
+    end
+    self.class.exec_sql_statement(dbconn, statement, data.values)
+    sql_get_rule dbconn, name
+  end
+
+  # Update the delegates_map table with the modified list of rules
+  def sql_update_delegates_map(dbconn, the_rule, delegates)
+    delete = "DELETE FROM delegates_map WHERE r_id = ?"
+    self.class.exec_sql_statement(dbconn, delete, the_rule['id'])
+
+    unless delegates.empty?
+      rules = delegates.map do |name|
+        query = %Q{SELECT * FROM rules WHERE name = ?}
+        self.class.exec_sql_statement(dbconn, query, the_rule['name']).first
+      end
+      mapping = "INSERT INTO delegates_map VALUES (?,?,?)"
+      rules.each_with_index do |rule, i|
+        row = [the_rule['id'], rule[0], i]
+        self.class.exec_sql_statement(dbconn, mapping, row)
+      end
+    end
+  end
+
+  # Update the mechanisms_map table with the modified list of mechanisms
+  def sql_update_mechanisms_map(dbconn, the_rule, mechanisms)
+    delete = "DELETE FROM mechanisms_map WHERE r_id = ?"
+    self.class.exec_sql_statement(dbconn, delete, the_rule['id'])
+
+    unless mechanisms.empty?
+      mechs = mechanisms.map do |value|
+        plugin, param = value.split(':')
+        query = %Q{SELECT * FROM mechanisms WHERE plugin = ? and param = ?}
+        self.class.exec_sql_statement(dbconn, query, [plugin, param]).last
+      end
+      mapping = "INSERT INTO mechanisms_map VALUES (?,?,?)"
+      mechs.each_with_index do |mech, i|
+        row = [the_rule['id'], mech[0], i]
+        self.class.exec_sql_statement(dbconn, mapping, row)
+      end
+    end
+  end
+
+  def sql_create_rule(data)
+    name = resource[:name]
+    data, delegates, mechanisms = prepare_rule_data data
+
     begin
-      @dbconn    = SQLite3::Database.new(AUTH_DB)
-      name_query = %Q{SELECT * FROM rules WHERE name = '#{name}'}
-      result     = self.class.exec_sql_statement(@dbconn, name_query).first
-      the_rule   = result.nil? ? {} : Hash[SCHEMA.zip(result)] || {}
+      @dbconn  = SQLite3::Database.new(AUTH_DB)
+      the_rule = sql_get_rule @dbconn, name
 
-      unless the_rule.merge(formatted_rule) == the_rule
-        statement = if the_rule.empty?
-          columns      = formatted_rule.keys.collect { |x| "`#{x}`" }.join(',')
-          placeholders = (['?'] * formatted_rule.values.size).join(',')
-          %Q{INSERT INTO rules (#{columns}) VALUES (#{placeholders})}
-        else
-          formatted_rule.delete('name')
-          columns = formatted_rule.keys.map { |k| "`#{k}` = ?" }
-          %Q{UPDATE rules SET #{columns.join(', ')}}
-        end
-
-        self.class.exec_sql_statement(@dbconn, statement, formatted_rule.values)
-        result     = self.class.exec_sql_statement(@dbconn, name_query).first
-        the_rule   = result.nil? ? {} : Hash[SCHEMA.zip(result)] || {}
+      # Create a composite of state for comparison, but ignore timestamps
+      composite = the_rule.merge(data) do |key, v1, v2|
+        %w{created modified}.member?(key) ? v1 : v2
       end
 
-      if data['mechanisms']
-        delete = "DELETE FROM mechanisms_map WHERE r_id = ?"
-        self.class.exec_sql_statement(@dbconn, delete, the_rule['id'])
-
-        unless data['mechanisms'].empty?
-          mechs = data['mechanisms'].map do |value|
-            plugin, param = value.split(':')
-            query = %Q{SELECT * FROM mechanisms WHERE plugin = ? and param = ?}
-            self.class.exec_sql_statement(@dbconn, query, [plugin, param]).last
-          end
-
-          mapping = "INSERT INTO mechanisms_map VALUES (?,?,?)"
-          mechs.each_with_index do |mech, i|
-            row = [the_rule['id'], mech[0], i]
-            self.class.exec_sql_statement(@dbconn, mapping, row)
-          end
-        end
+      # Update the main table 'rules' as required
+      unless composite == the_rule
+        op       = the_rule.empty? ? :insert : :update
+        the_rule = sql_insert_or_udpate_rules @dbconn, op, data
       end
 
-      if data['rule']
-        delete = "DELETE FROM delegates_map WHERE r_id = ?"
-        self.class.exec_sql_statement(@dbconn, delete, the_rule['id'])
+      # Update the map tables
+      sql_update_mechanisms_map(@dbconn, the_rule, mechanisms) if mechanisms
+      sql_update_delegates_map(@dbconn, the_rule, delegates)   if delegates
 
-        unless data['rule'].empty?
-          rules = data['rule'].map do |name|
-            query = %Q{SELECT * FROM rules WHERE name = ?}
-            self.class.exec_sql_statement(@dbconn, query, name).first
-          end
-          mapping = "INSERT INTO delegates_map VALUES (?,?,?)"
-          rules.each_with_index do |rule, i|
-            row = [the_rule['id'], rule[0], i]
-            self.class.exec_sql_statement(@dbconn, mapping, row)
-          end
-        end
-      end
     rescue Exception => e
       raise Puppet::Error, "Could not exec SQL: `#{e}`"
     end
@@ -355,7 +400,7 @@ Puppet::Type.type(:macauthdb).provide(:default) do
     end
 
     begin
-      query = %Q{SELECT * FROM rules WHERE name IS "#{resource[:name]}"}
+      query   = %Q{SELECT * FROM rules WHERE name IS "#{resource[:name]}"}
       @dbconn = SQLite3::Database.new(AUTH_DB)
       results = self.class.exec_sql_statement @dbconn, query
       @property_hash = self.class.get_resource_properties(@dbconn, results.first)
@@ -364,7 +409,6 @@ Puppet::Type.type(:macauthdb).provide(:default) do
     ensure
       @dbconn.close if @dbconn
     end
-
   end
 
 end
