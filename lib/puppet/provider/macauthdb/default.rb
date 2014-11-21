@@ -202,6 +202,10 @@ Puppet::Type.type(:macauthdb).provide(:default) do
   end
 
   def exists?
+    # Need to have a more thorough #exists?
+    # When @property_hash[:ensure] == :default, we need to check that.
+    # 1. load the defaults
+    # 2. return true/false based comparison of state with defaults
     @property_hash[:ensure] == :present
   end
 
