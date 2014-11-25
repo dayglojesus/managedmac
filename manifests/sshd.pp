@@ -89,9 +89,10 @@ class managedmac::sshd (
 
   unless $enable == undef {
 
-    $service_label = 'com.openssh.sshd'
-    $acl_group     = 'com.apple.access_ssh'
-    $admin_guid    = 'ABCDEFAB-CDEF-ABCD-EFAB-CDEF00000050'
+    $service_label      = 'com.openssh.sshd'
+    $acl_group          = 'com.apple.access_ssh'
+    $acl_group_disabled = 'com.apple.access_ssh-disabled'
+    $admin_guid         = 'ABCDEFAB-CDEF-ABCD-EFAB-CDEF00000050'
 
     validate_bool ($enable)
 
@@ -134,12 +135,20 @@ class managedmac::sshd (
       false => [$admin_guid],
     }
 
+    # Workaround for OS X SSHD ACL group resource conflict
+    # https://github.com/dayglojesus/managedmac/issues/41
+    macgroup { $acl_group_disabled:
+      ensure => absent,
+      gid    => 399,
+    }
+
     macgroup { $acl_group:
       ensure       => present,
       gid          => 399,
       users        => $users_attr,
       nestedgroups => $groups_attr,
       strict       => $strict,
+      require      => Macgroup[$acl_group_disabled],
     }
 
     service { $service_label:
