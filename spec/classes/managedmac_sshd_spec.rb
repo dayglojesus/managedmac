@@ -6,6 +6,7 @@ describe 'managedmac::sshd', :type => 'class' do
     let(:params) do
       { :enable => '', }
     end
+    it { should_not contain_macgroup('com.apple.access_ssh-disabled') }
     it { should_not contain_macgroup('com.apple.access_ssh') }
     it { should_not contain_service('com.openssh.sshd') }
     it { should_not contain_file('sshd_config') }
@@ -17,6 +18,10 @@ describe 'managedmac::sshd', :type => 'class' do
     context "when $enable == false" do
       let(:params) do
         { :enable => false, }
+      end
+      it do
+        should contain_macgroup(
+          'com.apple.access_ssh-disabled').with_ensure('absent')
       end
       it do
         should contain_macgroup(
@@ -32,6 +37,10 @@ describe 'managedmac::sshd', :type => 'class' do
     context "when $enable == true" do
       let(:params) do
         { :enable => true, }
+      end
+      it do
+        should contain_macgroup(
+          'com.apple.access_ssh-disabled').with_ensure('absent')
       end
       it do
         should contain_macgroup(

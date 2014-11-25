@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.5.6
+- overhauled macauthdb provider; still needs a bit of work, but is operating as designed
+- allow scoped PHD policy by expanding $enable param to accept version strings
+- fix an edge case with ssh service management
+- documentation fixes
+- bug fixes for issues #37, #38, #41, and #42
+
 ## 0.5.5
 - release 0.5.5
 
