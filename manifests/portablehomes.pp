@@ -423,11 +423,28 @@ class managedmac::portablehomes (
 
 ) {
 
-  validate_bool ($enable)
+  # Accepted values for the $enable parameter
+  $enable_re_values = ['^true$', '^false$', '^10\.\d{1,2}\.?\d{0,2}$',]
+
+  # Validate $enable as a string
+  validate_re ("${enable}", $enable_re_values)
+
+  # Evaluate $enable as an OS X major version string and deduce a state
+  $os_conditional = versioncmp("${enable}", $::macosx_productversion_major) ? {
+    0       => present,
+    default => absent,
+  }
+
+  # Set ensure according to defined logic
+  $ensure = $enable ? {
+    true                      => present,
+    /^10\.\d{1,2}\.?\d{0,2}$/ => $os_conditional,
+    default                   => absent,
+  }
 
   $compiled_options = []
 
-  if $enable == true {
+  if $ensure == present {
 
     #
     # VALIDATE INTEGERS
@@ -560,7 +577,7 @@ ${syncBackgroundSetInBackground}")
     validate_bool ($alertOnFailedMounts)
 
   } else {
-    unless $enable == false {
+    unless $ensure == absent {
       fail("Parameter Error: invalid value for :enable, ${enable}")
     }
   }
@@ -645,11 +662,6 @@ ${syncBackgroundSetInBackground}")
   }
 
   $organization = hiera('managedmac::organization', 'Simon Fraser University')
-
-  $ensure = $enable ? {
-    true     => present,
-    default  => absent,
-  }
 
   mobileconfig { 'managedmac.portablehomes.alacarte':
     ensure       => $ensure,
