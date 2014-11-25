@@ -15,7 +15,7 @@
 #   Default: false
 #   Type: Boolean
 #
-# [*menuextra*]
+# [*menuExtra*]
 #   Enable the PHD Menu Extra
 #   Default: on
 #   Type: String
@@ -59,14 +59,14 @@
 #   Default: false
 #   Type: Boolean
 #
-# [*syncedFolders-raw*]
+# [*syncedFolders*]
 #   Managed Home Sync Items
 #   Include managed items to sync in the background while the user is
 #   logged in.
 #   Default: ['~']
 #   Tyoe: String
 #
-# [*syncedPrefFolders-raw*]
+# [*syncedPrefFolders*]
 #   Managed Preference Sync Items
 #   Include managed items to sync when a user logs in or logs out.
 #   Default: ['~/Library', '~/Documents/Microsoft User Data']

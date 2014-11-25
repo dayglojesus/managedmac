@@ -813,7 +813,7 @@ managedmac::portablehomes::enable: true
 # Type: Boolean
 #####################################################################
 
-managedmac::portablehomes::menuextra: on
+managedmac::portablehomes::menuExtra: on
 
 #####################################################################
 # New Mobile Account
