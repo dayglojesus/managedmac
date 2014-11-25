@@ -9,79 +9,95 @@
 #
 # [*enable*]
 #   Enable Portable Home Directory Synchromization
-#   Default: true
+#   Accepts a String value of true, false or a Mac OS X major product revision
+#   number, like '10.9' or '10.10' which will scope the policy
+#   application to the version specified.
+#   Default: false
+#   Type: Boolean
 #
 # [*menuextra*]
 #   Enable the PHD Menu Extra
 #   Default: on
+#   Type: String
 #
 # [*isNewMobileAccount*]
 #   New Mobile Account
-#   --> Set to True if this is a new mobile account that should be synced
+#   Set to True if this is a new mobile account that should be synced
 #   initially.
 #   Default: false
+#   Type: Boolean
 #
 # [*periodicSyncOn*]
 #   Background Sync On
-#   --> Set to True to sync in the background.
+#   Set to True to sync in the background.
 #   Default: true
+#   Type: Boolean
 #
 # [*syncPeriodSeconds*]
 #   Background Sync Interval
-#   --> Background sync interval in seconds.
+#   Background sync interval in seconds.
 #   Default: 1200
+#   Type: Integer
 #
 # [*syncOnChange*]
 #   Sync On File Change
-#   --> Set to True to sync when a file changes.
+#   Set to True to sync when a file changes.
 #   Default: false
+#   Type: Boolean
 #
 # [*replaceUserSyncList*]
 #   Override Home Sync Prefs
-#   --> Set to True to replace the user's Home Sync preferences with managed
+#   Set to True to replace the user's Home Sync preferences with managed
 #   preferences. Set to False to combine with managed preferences.
 #   Default: true
+#   Type: Boolean
 #
 # [*replaceUserPrefSyncList*]
 #   Override Preference Sync Prefs
-#   --> Set to True to replace the user's Preference sync preferences with
+#   Set to True to replace the user's Preference sync preferences with
 #   managed preferences. Set to False to combine them with managed preferences.
 #   Default: false
+#   Type: Boolean
 #
 # [*syncedFolders-raw*]
 #   Managed Home Sync Items
-#   --> Include managed items to sync in the background while the user is
+#   Include managed items to sync in the background while the user is
 #   logged in.
 #   Default: ['~']
+#   Tyoe: String
 #
 # [*syncedPrefFolders-raw*]
 #   Managed Preference Sync Items
-#   --> Include managed items to sync when a user logs in or logs out.
+#   Include managed items to sync when a user logs in or logs out.
 #   Default: ['~/Library', '~/Documents/Microsoft User Data']
+#   Type: Array
 #
 # [*excludedItems*]
 #   Managed Home Sync Exclusions
-#   --> List managed items to exclude from Home Sync.
+#   List managed items to exclude from Home Sync.
 #   Default: (see class params)
+#   Type: Array
 #
 # [*excludedPrefItems*]
 #   Managed Preference Sync Exclusions
-#   --> List managed items to exclude from Preference Sync.
+#   List managed items to exclude from Preference Sync.
 #   Default: (see class params)
+#   Type: Array
 #
 # [*loginPrefSyncConflictResolution*]
 #   Login Preference Sync Conflict Resolution
-#   --> This setting affects syncing ~/Library at login. Set to
+#   This setting affects syncing ~/Library at login. Set to
 #   "mobileHomeWins" to merge homes and have the local (mobile) home win
 #   conflicts "mobileHomeCopy" to copy the local home to the network home
 #   "automatic" or "networkHomeWins" to merge homes and have the network home
 #   win conflicts or "networkHomeCopy" to copy the network home to the local
 #   home.
 #   Default: automatic
+#   Type: String
 #
 # [*loginNonprefSyncConflictResolution*]
 #   Login Non-preference Sync Conflict Resolution
-#   --> This setting affects syncing everything besides ~/Library at login. Set
+#   This setting affects syncing everything besides ~/Library at login. Set
 #   to "showConflictDialogs" to show dialogs when conflicts occur
 #   "mobileHomeWins" to merge homes and have the local (mobile) home win
 #   conflicts "mobileHomeCopy" to copy the local home to the network home
@@ -89,205 +105,238 @@
 #   win conflicts or "networkHomeCopy" to copy the network home to the local
 #   home.
 #   Default: automatic
+#   Type: String
 #
 # [*logoutPrefSyncConflictResolution*]
 #   Logout Preference Sync Conflict Resolution
-#   --> This setting affects syncing ~/Library at logout. Set to
+#   This setting affects syncing ~/Library at logout. Set to
 #   "mobileHomeWins" to merge homes and have the local (mobile) home win
 #   conflicts "mobileHomeCopy" to copy the local home to the network home
 #   "networkHomeWins" to merge homes and have the network home win conflicts or
 #   "networkHomeCopy" to copy the network home to the local home.
 #   Default: automatic
+#   Type: String
 #
 # [*logoutNonprefSyncConflictResolution*]
 #   Logout Non-preference Sync Conflict Resolution
-#   --> This setting affects syncing everything besides ~/Library at logout.
+#   This setting affects syncing everything besides ~/Library at logout.
 #   Set to "showConflictDialogs" to show dialogs when conflicts occur
 #   "automatic" or "mobileHomeWins" to merge homes and have the local (mobile)
 #   home win conflicts "mobileHomeCopy" to copy the local home to the network
 #   home "networkHomeWins" to merge homes and have the network home win
 #   conflicts or "networkHomeCopy" to copy the network home to the local home.
 #   Default: automatic
+#   Type: String
 #
 # [*backgroundConflictResolution*]
 #   Home Sync Conflict Resolution
-#   --> This setting affects syncing everything besides ~/Library in the
+#   This setting affects syncing everything besides ~/Library in the
 #   background. Set to "automatic" or "showConflictDialogs" to show dialogs
 #   when conflicts occur "mobileHomeWins" to merge homes and have the local
 #   (mobile) home win conflicts "mobileHomeCopy" to copy the local home to the
 #   network home "networkHomeWins" to merge homes and have the network home win
 #   conflicts or "networkHomeCopy" to copy the network home to the local home.
 #   Default: automatic
+#   Type: String
 #
 # [*syncPreferencesAtLogin*]
 #   Sync Preference Set During Login
-#   --> This setting allows you to sync Preference Sync items during login. Set
+#   This setting allows you to sync Preference Sync items during login. Set
 #   to "automatic" or "sync" to sync Preference Sync items at login\, or
 #   "dontSync" to not sync Preference Sync items at login.
 #   Default: automatic
+#   Type: String
 #
 # [*syncPreferencesAtLogout*]
 #   Sync Preference Set During Logout
-#   --> This setting allows you to sync Preference Sync items during logout.
+#   This setting allows you to sync Preference Sync items during logout.
 #   Set to "automatic" or "sync" to sync Preference Sync items at logout\, or
 #   "dontSync" to not sync Preference Sync items at logout.
 #   Default: automatic
+#   Type: String
 #
 # [*syncPreferencesAtSyncNow*]
 #   Sync Preferences During Manual Sync
-#   --> This setting allows you to sync preferences during a manual sync. Set
+#   This setting allows you to sync preferences during a manual sync. Set
 #   to "automatic" or "sync" to sync preferences during a manual sync\, or
 #   "dontSync" to not sync preferences during a manual sync.
 #   Default: automatic
+#   Type: String
 #
 # [*syncPreferencesInBackground*]
 #   Sync Preferences in the Background
-#   --> This setting allows you to sync preferences during a background sync.
+#   This setting allows you to sync preferences during a background sync.
 #   Set to "automatic" or "sync" to sync preferences in the background\, or
 #   "dontSync" to not synchronize preferences in the background.
 #   Default: automatic
+#   Type: String
 #
 # [*syncBackgroundSetAtLogin*]
 #   Sync Home Set During Login
-#   --> This setting allows you to sync Home Sync items during login. Set to
+#   This setting allows you to sync Home Sync items during login. Set to
 #   "automatic" or "sync" to sync Home Sync items at login\, or "dontSync" to
 #   not sync Home Sync items at login.
 #   Default: automatic
+#   Type: String
 #
 # [*syncBackgroundSetAtLogout*]
 #   Sync Home Set During Logout
-#   --> This setting allows you to sync Home Sync items during logout. Set to
+#   This setting allows you to sync Home Sync items during logout. Set to
 #   "automatic" or "sync" to sync Home Sync items at logout\, or "dontSync" to
 #   not sync Home Sync items at logout.
 #   Default: automatic
+#   Type: String
 #
 # [*syncBackgroundSetAtSyncNow*]
 #   Sync Preferences During Manual Sync
-#   --> This setting allows you to sync Home Sync items during a manual sync.
+#   This setting allows you to sync Home Sync items during a manual sync.
 #   Set to "automatic" or "sync" to sync Home Sync items during a manual sync\,
 #   or "dontSync" to not sync Home Sync items during a manual sync.
 #   Default: automatic
+#   Type: String
 #
 # [*syncBackgroundSetInBackground*]
 #   Sync Preferences in the Background
-#   --> This setting allows you to sync Home Sync items during a background
+#   This setting allows you to sync Home Sync items during a background
 #   sync. Set to "automatic" or "sync" to sync Home Sync items in the
 #   background\, or "dontSync" to not synchronize Home Sync items in the
 #   background.
 #   Default: automatic
+#   Type: String
 #
 # [*loginPrefSuppressErrors*]
 #   Suppress Login Preference Sync Errors
-#   --> Set to True to suppress error dialogs during login sync of ~/Library.
+#   Set to True to suppress error dialogs during login sync of ~/Library.
 #   Default: false
+#   Type: Boolean
 #
 # [*loginNonprefSuppressErrors*]
 #   Suppress Login Non-preference Sync Errors
-#   --> Set to True to suppress error dialogs during login sync of everything
+#   Set to True to suppress error dialogs during login sync of everything
 #   besides ~/Library.
 #   Default: false
+#   Type: Boolean
 #
 # [*logoutPrefSuppressErrors*]
 #   Suppress Logout Preference Sync Errors
-#   --> Set to True to suppress error dialogs during logout sync of ~/Library.
+#   Set to True to suppress error dialogs during logout sync of ~/Library.
 #   Default: false
+#   Type: Boolean
 #
 # [*logoutNonprefSuppressErrors*]
 #   Suppress Logout Non-preference Sync Errors
-#   --> Set to True to suppress error dialogs during logout sync of everything
+#   Set to True to suppress error dialogs during logout sync of everything
 #   besides ~/Library.
 #   Default: false
+#   Type: Boolean
 #
 # [*backgroundSuppressErrors*]
 #   Suppress Home Sync Errors
-#   --> Set to True to suppress error dialogs during home sync.
+#   Set to True to suppress error dialogs during home sync.
 #   Default: false
+#   Type: Boolean
 #
 # [*firstSyncSuppressErrors*]
 #   Suppress Initial Sync Errors
-#   --> Set to True to suppress error dialogs during initial sync.
+#   Set to True to suppress error dialogs during initial sync.
 #   Default: false
+#   Type: Boolean
 #
 # [*syncNowAllPrefsSuppressErrors*]
 #   Suppress Sync Now Sync Errors
-#   --> Set to True to suppress error dialogs during Sync Now.
+#   Set to True to suppress error dialogs during Sync Now.
 #   Default: false
+#   Type: Boolean
 #
 # [*loginPrefSuppressConflicts*]
 #   Suppress Login Preference Sync Conflicts
-#   --> Set to True to suppress conflict dialogs during login sync of ~/Library.
+#   Set to True to suppress conflict dialogs during login sync of ~/Library.
 #   Default: false
+#   Type: Boolean
 #
 # [*loginNonprefSuppressConflicts*]
 #   Suppress Login Non-preference Sync Conflicts
-#   --> Set to True to suppress conflict dialogs during login sync of
+#   Set to True to suppress conflict dialogs during login sync of
 #   everything besides ~/Library.
 #   Default: false
+#   Type: Boolean
 #
 # [*logoutPrefSuppressConflicts*]
 #   Suppress Logout Preference Sync Conflicts
-#   --> Set to True to suppress conflict dialogs during logout sync of
+#   Set to True to suppress conflict dialogs during logout sync of
 #   ~/Library.
 #   Default: false
+#   Type: Boolean
 #
 # [*logoutNonprefSuppressConflicts*]
 #   Suppress Logout Non-preference Sync Conflicts
-#   --> Set to True to suppress conflict dialogs during logout sync of
+#   Set to True to suppress conflict dialogs during logout sync of
 #   everything besides ~/Library.
 #   Default: false
+#   Type: Boolean
 #
 # [*backgroundSuppressConflicts*]
 #   Suppress Home Sync Conflicts
-#   --> Set to True to suppress conflict dialogs during home sync.
+#   Set to True to suppress conflict dialogs during home sync.
 #   Default: false
+#   Type: Boolean
 #
 # [*firstSyncSuppressConflicts*]
 #   Suppress Initial Sync Conflicts
-#   --> Set to True to suppress conflict dialogs during initial sync.
+#   Set to True to suppress conflict dialogs during initial sync.
 #   Default: false
+#   Type: Boolean
 #
 # [*syncNowAllPrefsSuppressConflicts*]
 #   Suppress Sync Now Conflicts
-#   --> Set to True to suppress conflict dialogs during Sync Now.
+#   Set to True to suppress conflict dialogs during Sync Now.
 #   Default: false
+#   Type: Boolean
 #
 # [*disableFirstSyncCancel*]
 #   Disable First Time Sync Cancel
-#   --> Set to True to disable canceling a first time sync.
+#   Set to True to disable canceling a first time sync.
 #   Default: false
+#   Type: Boolean
 #
 # [*disableLoginSyncCancel*]
 #   Disable Login Sync Cancel
-#   --> Set to True to disable canceling a login sync.
+#   Set to True to disable canceling a login sync.
 #   Default: false
+#   Type: Boolean
 #
 # [*disableLogoutSyncCancel*]
 #   Disable Logout Sync Cancel
-#   --> Set to True to disable canceling a logout sync.
+#   Set to True to disable canceling a logout sync.
 #   Default: false
+#   Type: Boolean
 #
 # [*loginSyncDialogTimeoutSeconds*]
 #   Login Dialog Timeout
-#   --> Maximum seconds to display login error or conflict dialogs. Set to 0
+#   Maximum seconds to display login error or conflict dialogs. Set to 0
 #   for no time limit.
 #   Default: 0
+#   Type: Integer
 #
 # [*logoutSyncDialogTimeoutSeconds*]
 #   Logout Dialog Timeout
-#   --> Maximum seconds to display logout error or conflict dialogs. Set to 0
+#   Maximum seconds to display logout error or conflict dialogs. Set to 0
 #   for no time limit.
 #   Default: 0
+#   Type: Integer
 #
 # [*progressDelaySeconds*]
 #   Time To Delay Progress Dialog
-#   --> The time in whole seconds that the progress dialog delays for various
+#   The time in whole seconds that the progress dialog delays for various
 #   reasons.  The default is set to 0.5 seconds if you do not set this key.
 #   Default: 2
+#   Type: Integer
 #
 # [*alertOnFailedMounts*]
 #   Alert On Failed Mounts
-#   --> Set to True if you want an alert if the network home mount fails.
+#   Set to True if you want an alert if the network home mount fails.
 #   Default: false
+#   Type: Boolean
 #
 # === Variables
 #
