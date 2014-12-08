@@ -170,4 +170,15 @@ module Helpers
       },
     }
   end
+
+  def cron_jobs
+    {
+      'who_dump' => {
+        'command' => '/usr/bin/who > /tmp/who.dump',
+      },
+      'ps_dump' => {
+        'command' => '/bin/ps aux > /tmp/ps.dump',
+      },
+    }
+  end
 end
