@@ -68,7 +68,6 @@ describe 'managedmac::ntp', :type => 'class' do
       should contain_service('org.ntp.ntpd').that_requires('File[ntp_conf]')\
         .with({ 'ensure' => 'running', 'enable' => true })
     end
-    it { should contain_exec('ntp_sync') }
   end
 
 end
