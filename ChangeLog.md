@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.5.7
+- add fact: macaddress_primary
+- add raw constructor: cron
+- make ntp class idemtpotent
+- fix documentation
+- bug fixes: #47, #48, #50, #51
+
 ## 0.5.6
 - overhauled macauthdb provider; still needs a bit of work, but is operating as designed
 - allow scoped PHD policy by expanding $enable param to accept version strings

@@ -4,8 +4,6 @@
 #
 # === Parameters
 #
-# There are 2 parameters.
-#
 # [*urls*]
 #   A list of network mount URIs you wish to open at login. OS X Finder will
 #   open these URIs in sequence. You can use afp, smb/cifs or http(s) type URLs.
