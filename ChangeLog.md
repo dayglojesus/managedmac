@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.5.8
+- quick bug fixes for #55 and #57
+- fix filevault\_active fact
+- fix init.pp
+
 ## 0.5.7
 - add fact: macaddress_primary
 - add raw constructor: cron
