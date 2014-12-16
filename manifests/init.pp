@@ -53,6 +53,7 @@ class managedmac {
   contain managedmac::authorization
   contain managedmac::energysaver
   contain managedmac::portablehomes
+  contain managedmac::mounts
   contain managedmac::loginhook
   contain managedmac::logouthook
   contain managedmac::sshd
@@ -64,5 +65,6 @@ class managedmac {
   contain managedmac::files
   contain managedmac::users
   contain managedmac::groups
+  contain managedmac::cron
 
 }
