@@ -53,6 +53,7 @@ describe 'managedmac', :type => 'class' do
     it { should contain_class('managedmac::authorization') }
     it { should contain_class('managedmac::energysaver') }
     it { should contain_class('managedmac::portablehomes') }
+    it { should contain_class('managedmac::mounts') }
     it { should contain_class('managedmac::loginhook') }
     it { should contain_class('managedmac::logouthook') }
     it { should contain_class('managedmac::sshd') }
@@ -64,6 +65,7 @@ describe 'managedmac', :type => 'class' do
     it { should contain_class('managedmac::files') }
     it { should contain_class('managedmac::users') }
     it { should contain_class('managedmac::groups') }
+    it { should contain_class('managedmac::cron') }
 
   end
 
