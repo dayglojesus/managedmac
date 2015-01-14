@@ -7,45 +7,57 @@ require 'puppet-lint/tasks/puppet-lint'
 PuppetLint.configuration.ignore_paths = ["spec/**/*.pp", "vendor/**/*.pp"]
 
 def div_line
-  "=" * 65
+  puts "=" * 65
 end
 
-def fail
-  puts div_line
-  puts "FAILED: puppet-lint style error(s)!!!"
+def empty_line
+  puts "\n"
+end
+
+def fail(util)
+  div_line
+  puts "FAILED: #{util} error(s)!!!"
   puts "You must repair these errors before you can commit."
-  puts div_line
-  result = false
+  div_line
+  exit 1
 end
 
 def succeed
   puts "PASSED: You are good looking and write stylish Puppet code!"
-  puts div_line
+  div_line
+  exit 0
 end
 
-puts div_line
+def exec_util(util, manifest)
+  puts "#{util}: #{manifest}"
+  div_line
+  puts %x{#{util} #{manifest}}
+  empty_line
+  fail(__method__) unless $?.success?
+end
+
+def puppet_lint(manifest)
+  exec_util 'puppet-lint', manifest
+end
+
+def puppet_parser(manifest)
+  exec_util 'puppet parser validate', manifest
+end
+
+def modified_manifests
+  %x{git diff --name-only --cached}.split.grep /\A.*\.pp/
+end
+
+###################################
+# MAIN
+###################################
+
+div_line
 puts "Running: pre-commit hook..."
-puts "puppet-lint: "
-puts div_line
-
-result = true
-
-modified_manifests = `git diff --name-only --cached`.split.grep /\A.*\.pp/
-
-if modified_manifests.empty?
-  puts "No change to manifests. Skipping lint check..."
-  puts div_line
-elsif modified_manifests.size == 1
-  `/usr/bin/puppet-lint #{modified_manifests.first.chomp}`
-  $?.success? ? succeed : fail
-else
-  begin
-    if Rake.application['lint'].invoke
-      succeed
-    end
-  rescue RuntimeError
-    fail
-  end
+empty_line
+modified_manifests.each do |file|
+  puppet_lint   file
+  puppet_parser file
 end
 
-exit result
+succeed
