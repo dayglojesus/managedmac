@@ -1,4 +1,6 @@
 require 'rake'
+require 'yaml'
+require 'fileutils'
 require 'rspec/core/rake_task'
 require 'puppetlabs_spec_helper/rake_tasks'
 
@@ -29,7 +31,13 @@ rescue Gem::LoadError
 end
 
 desc "Setup the repo's development and testing environment"
-task :setup => [:install_hooks, :spec_prep, :bundle_install_again]
+task :setup => [
+  :install_hooks,
+  :bundle_install,
+  :install_modules,
+  :prep_hiera,
+  :spec_prep,
+]
 
 # Installs the git-hooks for this repo
 task :install_hooks do
@@ -44,13 +52,41 @@ task :install_hooks do
   puts "Done."
 end
 
-# We need to run `bundle install` twice:
-# The first time, we do it manually and we get all the gems from RubyGems.
-# The second time, we need do it to get bundler to install the one gem we 
-# need from GitHub. It's a long stupid story...
-# https://github.com/bundler/bundler/issues/2492
-task :bundle_install_again do
+task :bundle_install do
   system "bundle", "install"
+end
+
+task :install_modules do
+  this_module = File.dirname(File.expand_path(__FILE__))
+  the_symlink = '/private/etc/puppet/modules/managedmac'
+  system "puppet", "module", "install", "puppetlabs-stdlib"
+  unless File.exists?(the_symlink) and File.symlink?(the_symlink)
+    Dir.chdir File.dirname(the_symlink)
+    FileUtils.ln_s this_module, File.basename(the_symlink)
+    Dir.chdir this_module
+  end
+end
+
+task :prep_hiera do
+  # Hiera config
+  hiera_config = {
+    :backends   =>  ["yaml"],
+    :logger     =>  "console",
+    :hierarchy  =>  ["defaults"],
+    :yaml       =>  { :datadir => "/var/lib/hiera" },
+  }
+  hiera_config_path = '/private/etc/hiera.yaml'
+  puts "Installing #{hiera_config_path}..."
+  unless File.exists? hiera_config_path
+    File.write(hiera_config_path, hiera_config.to_yaml)
+  end
+
+  # Hiera YAML hierarchy
+  hiera_lib_dir  = '/private/var/lib/hiera'
+  hiera_defaults = '/private/var/lib/hiera/defaults.yaml'
+  puts "Installing #{hiera_lib_dir}..."
+  FileUtils.mkdir_p hiera_lib_dir unless File.exists? hiera_lib_dir
+  FileUtils.touch hiera_defaults  unless File.exists? hiera_lib_dir
 end
 
 # Jim Weirich died today
