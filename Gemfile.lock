@@ -23,11 +23,10 @@ GEM
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
       slop (~> 3.4)
-    puppet (3.6.2)
+    puppet (3.7.3)
       facter (> 1.6, < 3)
       hiera (~> 1.0)
       json_pure
-      rgen (~> 0.6.5)
     puppet-lint (0.3.2)
     puppetlabs_spec_helper (0.7.0)
       mocha
@@ -36,7 +35,6 @@ GEM
       rspec
       rspec-puppet
     rake (10.3.2)
-    rgen (0.6.6)
     rspec (2.9.0)
       rspec-core (~> 2.9.0)
       rspec-expectations (~> 2.9.0)
@@ -55,11 +53,13 @@ PLATFORMS
 
 DEPENDENCIES
   CFPropertyList (>= 2.2.7)
+  facter (~> 2.1)
+  hiera (~> 1.3)
   hiera-puppet-helper!
   pry (>= 0.9.12.6)
-  puppet (~> 3.6)
+  puppet (~> 3.7)
   puppet-lint (~> 0.3)
   puppetlabs_spec_helper (~> 0.4)
-  rspec (<= 2.9)
+  rspec (= 2.9)
   rspec-puppet (~> 1.0)
   sqlite3 (>= 1.3.7)
