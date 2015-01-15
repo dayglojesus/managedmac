@@ -42,7 +42,7 @@ rescue LoadError
 end
 
 desc "Install managedmac and dependencies (requires root): demo or development"
-task :setup, :env do |t, args|  
+task :setup, :env do |t, args|
   # Check UID (must be root)
   unless Process.euid == 0
     raise "You must be root to execute this script."
