@@ -135,6 +135,14 @@ task :finish do
   puts "Setup Complete"
 end
 
+desc "Package managedmac module for PuppetForge"
+task :forge do
+  if Rake::Task[:spec_clean].invoke
+    puts %x{puppet module build}
+    puts %x{open https://forge.puppetlabs.com/login}
+  end
+end
+
 # Jim Weirich died today
 task :thanks_Jim do
   puts "I \u{1F496}  Rake. Thanks, Jim."
