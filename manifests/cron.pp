@@ -77,7 +77,7 @@ class managedmac::cron (
     validate_hash ($defaults)
 
     # Cheating: validate that the value for each key is itself a Hash
-    $check_hash = inline_template("<%= @jobss.reject! {
+    $check_hash = inline_template("<%= @jobs.reject! {
       |x| x.respond_to? :key } %>")
 
     unless empty($check_hash) {

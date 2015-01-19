@@ -10,6 +10,16 @@
 #   Type: Boolean
 #   Default: undef
 #
+# [*evaluate*]
+#   A seatbelt intended to prevent the managedmac.activedirectory.alacarte
+#   profile from being removed or modified. Any administrator defined condition
+#   can serve as the basis for comparison.
+#   Pass: 'yes', 'no', 'true' or 'false'
+#   If 'no' or 'false', the mobileconfig resource is not evaluated and a
+#   warning is produced. Useful in conjunction with a custom Facter fact.
+#   Type: String
+#   Default: undef
+#
 # [*hostname*]
 #   The Active Directory domain to join. This parameter is required when
 #   :enabled is true.
@@ -137,6 +147,7 @@
 #  managedmac::activedirectory::hostname: ad.apple.com
 #  managedmac::activedirectory::username: some_account
 #  managedmac::activedirectory::password: some_password
+#  managedmac::activedirectory::evaluate: "%{::domain_available?}"
 #  managedmac::activedirectory::mount_style: afp
 #  managedmac::activedirectory::create_mobile_account_at_login: true
 #  managedmac::activedirectory::warn_user_before_creating_ma: false
@@ -173,6 +184,7 @@
 class managedmac::activedirectory (
 
   $enable                          = undef,
+  $evaluate                        = undef,
   $hostname                        = undef,
   $username                        = undef,
   $password                        = undef,
@@ -205,6 +217,13 @@ class managedmac::activedirectory (
   unless $enable == undef {
 
     validate_bool ($enable)
+
+    unless $evaluate == undef {
+      unless $evaluate =~ /\Ayes\z|\Ano\z|\Atrue\z|\Afalse\z/ {
+        fail("Parameter :evaluate must be \'yes\', \'no\', \'true\' or \
+\'false\' [${evaluate}]")
+      }
+    }
 
     unless $enable == false {
 
@@ -344,12 +363,30 @@ ${trust_change_pass_interval_days}")
       false => absent,
     }
 
-    mobileconfig { 'managedmac.activedirectory.alacarte':
-      ensure       => $ensure,
-      displayname  => 'Managed Mac: Active Directory',
-      description  => 'Active Directory configuration. Installed by Puppet.',
-      organization => $organization,
-      content      => $options,
+    $safe = $evaluate ? {
+      /yes|true/ => true,
+      /no|false/ => false,
+      default    => true,
+    }
+
+    # If it's safe to evaluate the state of the mobileconfig resource, or
+    # if we are only interested in removing the profile, do so. Otherwise,
+    # just produce a warning.
+    if $safe {
+
+      mobileconfig { 'managedmac.activedirectory.alacarte':
+        ensure       => $ensure,
+        displayname  => 'Managed Mac: Active Directory',
+        description  => 'Active Directory configuration. Installed by Puppet.',
+        organization => $organization,
+        content      => $options,
+      }
+
+    } else {
+
+      warning("Active Directory configuration will not be evaluated during \
+this run.")
+
     }
 
   }

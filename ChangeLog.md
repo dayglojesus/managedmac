@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.5.9
+- bug fixes for: #3, #54, #58, #59, 60
+- fix #59 and #60 are important; you should update
+- gem maintenance
+- rake task overhauls
+- fix failing spec
+
 ## 0.5.8
 - quick bug fixes for #55 and #57
 - fix filevault\_active fact

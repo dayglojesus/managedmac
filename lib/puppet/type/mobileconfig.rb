@@ -120,6 +120,9 @@ Puppet::Type.newtype(:mobileconfig) do
     def insync?(is)
       key = 'PayloadUUID'
 
+      # Return false if the two arrays are not of equal length
+      return false unless is.length == should.length
+
       # Shoehorn the MD5 sums
       should.collect! do |hash|
         hash[key] = ::ManagedMacCommon::content_to_uuid hash.sort
@@ -131,9 +134,9 @@ Puppet::Type.newtype(:mobileconfig) do
         a.sort! { |x, y| x[key] <=> y[key] }
       end
 
-      # Compare the keys
-      result = i.collect.each_with_index do |a, i|
-        s[i][key] == a[key]
+      # Compare ONLY the PayloadUUIDs
+      result = i.collect.each_with_index do |a, index|
+        s[index][key] == a[key]
       end
 
       # Is each result true?
@@ -192,7 +195,7 @@ Puppet::Type.newtype(:mobileconfig) do
       Corresponds to the PayloadRemovalDisallowed key."
     newvalues(:true, :false)
     defaultto :false
-    
+
     def insync?(is)
       is.to_sym == should.to_sym
     end
