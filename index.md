@@ -90,9 +90,9 @@ managedmac::mobileconfigs::payloads:
 
 ### 3. Apply a Puppet manifest
 
-Here's a simple Puppet manifest piped into `puppet apply`
+Here's a simple Puppet manifest expressed in `puppet apply`
 
-    echo "include managedmac" | sudo puppet apply
+    sudo puppet apply -t -e 'include managedmac'
 
 In addition to changes in the Dock's appearance you should see a new profile named Managed Mac: Dock Settings' appear in System Preferences.
 
