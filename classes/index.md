@@ -239,16 +239,16 @@ Simple class for configuring a list of shares you want mounted at login.
 
 Dynamically creates an OS X profile containg the list of mounts. Uses OS X Finder, so prompts for authentication as required.
 
-NOTE: you should be able to use [Payload variables](https://help.apple.com/profilemanager/mac/3.0/#apd073333AA-30C6-4FD2-B2E0-E0C95658A2C4) in these strings.
+NOTE: [Payload variables](https://help.apple.com/profilemanager/mac/3.0/#apd073333AA-30C6-4FD2-B2E0-E0C95658A2C4) do not work. What Apple's documentation fails to distinguish is that Payload variables are not a feature of the client, but the Profile Manager service. This means that the variable substitution is performed at download time, not when the policy is being parsed.
 
 Example:
 
 {% highlight YAML %}
 ---
 managedmac::mounts::urls:
- - 'https://some.dav.com/web/personal/%short_name%'
- - 'smb://some.windows.com/%short_name%'
- - 'afp://mac.server.com/some_share/%short_name%'
+ - 'https://some.dav.com/web/personal'
+ - 'smb://some.windows.com/some_share'
+ - 'afp://mac.server.com/some_share'
 {% endhighlight %}
 
 For a complete list of parameters, see the [managedmac::mounts](https://github.com/dayglojesus/managedmac/blob/master/manifests/mounts.pp) documentation.
