@@ -4,10 +4,11 @@ html {
   position: relative;
   min-height: 100%;
 }
+
 body {
-  /* Margin bottom by footer height */
   margin-bottom: 60px;
 }
+
 .footer {
   position: fixed;
   bottom: 0;
@@ -15,7 +16,7 @@ body {
   /* Set the fixed height of the footer here */
   height: 30px;
   background-color: #333333;
-/*  background-color: #a8a8a8;*/
+  /*  background-color: #a8a8a8;*/
 }
 
 /* Custom page CSS
