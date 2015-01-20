@@ -2,3 +2,5 @@ name: managedmac
 markdown: redcarpet
 highlighter: pygments
 baseurl: /managedmac
+gems:
+  - jemoji
