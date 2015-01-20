@@ -16,60 +16,79 @@ It's that simple.
 ## Quick Start
 ---
 ### 1. Choose Your Setup
+<br>
+<div>
+  <table>
+    <tr>
+      <td>
+        <button type="button" class="btn btn-success btn-custom" data-toggle="collapse" data-target="#super-quick">
+          Automated Setup
+        </button>
+      </td>
+      <td>
+        <div class="setup-btn-info">
+          Suitable for testing and development, not <em>masterless</em> Puppet installations.
+        </div>
+      </td>
+    </tr>
+  </table>
+</div>
 
-This setup is suitable for testing and development, not _masterless_ Puppet installations.
-
-<button type="button" class="btn btn-success btn-custom" data-toggle="collapse" data-target="#super-quick">
-  Automated Setup
-</button>
-<div id="super-quick" class="collapse">
+<br>
+<div id="super-quick" class="collapse setup-detail">
   <div class="alert  alert-danger" role="alert">
     <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
   This methodology uses bundler and RubyGems to install and configure the system.
 
-  * If _Puppet_, _Facter_ and _Hiera_ are installed using OS X packages, you may get conflicts using this method.
-  * If it doesn't work at all, you may need to install rake first : `sudo gem install rake`
+  * If Puppet, Facter or Hiera were installed using OS X packages, you may get conflicts using this method.
   * Using RVM? I am about as sure what will happen as you are. :wink:
 </div>
 
-  1. Clone the repo
+#####Clone the repo
 
-        git clone https://github.com/dayglojesus/managedmac.git && cd managedmac
+If you don't have git, then you'll need to install the Xcode commandline tools: `sudo xcode-select --install`
 
-  2. Run Setup
+    git clone https://github.com/dayglojesus/managedmac.git && cd managedmac
 
-        sudo rake setup
-OR
+#####Run Setup
 
-        sudo rake setup[development]
-
+    sudo rake setup
 </div>
 
-A good demonstration of what a _masterless_ Puppet setup might look like.
+<table>
+  <tr>
+    <td>
+      <button type="button" class="btn btn-info btn-custom" data-toggle="collapse" data-target="#manual-install">
+        Manual
+      </button>
+    </td>
+    <td>
+      <div class="setup-btn-info">
+        Demonstration of what a <em>masterless</em> Puppet setup might look like.
+      </div>
+    </td>
+  </tr>
+</table>
 
-<button type="button" class="btn btn-info btn-custom" data-toggle="collapse" data-target="#manual-install">
-  Manual
-</button>
-<div id="manual-install" class="collapse">
-
-  You need to install the following packages:
+<br>
+<div id="manual-install" class="collapse setup-detail">
+#####You need to install the following packages:
 
   * [Facter](https://downloads.puppetlabs.com/mac/)
   * [Hiera](https://downloads.puppetlabs.com/mac/)
   * [Puppet](https://downloads.puppetlabs.com/mac/)
 
-Install these gems:
+#####Install these gems:
 
       sudo gem install CFPropertyList sqlite3
       sudo puppet module install sfu-managedmac
 
-And create this symlink:
+#####And create this symlink:
 
       cd /etc/puppet
       sudo ln -s /etc/hiera.yaml hiera.yaml
-
 </div>
-
+<br>
 
 ### 2. Create a Configuration
 
@@ -90,6 +109,7 @@ managedmac::mobileconfigs::payloads:
       PayloadType: 'com.apple.dock'
     displayname: 'Managed Mac: Dock Settings'
 {% endhighlight %}
+<br>
 
 ### 3. Apply a Puppet manifest
 
