@@ -29,7 +29,7 @@ The classes contained by the parent class are essentially *dormant* until they r
 Example:
 
 The init.pp file contains the managedmac::security class.
-
+1
 {% highlight Puppet %}
 contain managedmac::security
 {% endhighlight %}
@@ -374,7 +374,7 @@ Manages Software Update options using an OS X profile and global preference doma
 
 Abstracts com.apple.SoftwareUpdate PayloadType using Mobileconfig type and controls keys in global com.apple.SoftwareUpdate and com.apple.storeagent prefs domain.
 
-NOTE: Control of the preferences in com.apple.SoftwareUpdate and com.apple.storeagent are subject to change by Administrators. If you are managing these settings and another administrator makes a chnage on the localk workstation, Puppet will revert the change, but they cannot belocked out entirely.
+NOTE: Control of the preferences in com.apple.SoftwareUpdate and com.apple.storeagent are subject to change by Administrators. If you are managing these settings and another administrator makes a change on the local workstation, Puppet will revert the change, but they cannot blocked out entirely.
 
 Example:
 {% highlight YAML %}
