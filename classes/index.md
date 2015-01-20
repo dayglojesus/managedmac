@@ -11,7 +11,7 @@ A basic overview of the classes and their purpose.
 
 These classes comprise the essential functionality of the module. Each class represents an aspect of configuration.
 
-Some group configuration options together under a single heading, other activate services or specific features of the OS X platform.
+Some group configuration options together under a single heading, others activate services or specific features of the OS X platform.
 
 <a id="managedmac"></a>
 #### managedmac
