@@ -15,19 +15,22 @@ It's that simple.
 <a id="quickstart"></a>
 ## Quick Start
 ---
-### 1. Install Packages
+### 1. Choose Your Setup
 
 This setup is suitable for testing and development, not _masterless_ Puppet installations.
 
-<button type="button" class="btn btn-info btn-custom" data-toggle="collapse" data-target="#super-quick">
-  Automated Install
+<button type="button" class="btn btn-success btn-custom" data-toggle="collapse" data-target="#super-quick">
+  Automated Setup
 </button>
 <div id="super-quick" class="collapse">
   <div class="alert  alert-danger" role="alert">
     <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-    This methodology uses bundler and RubyGems to install and configure the system.<br>
-    If you have _Puppet_, _Facter_ and _Hiera_ already installed, you may get conflicts using this method.
-  </div>
+  This methodology uses bundler and RubyGems to install and configure the system.
+
+  * If _Puppet_, _Facter_ and _Hiera_ are installed using OS X packages, you may get conflicts using this method.
+  * If it doesn't work at all, you may need to install rake first : `sudo gem install rake`
+  * Using RVM? I am about as sure what will happen as you are. :wink:
+</div>
 
   1. Clone the repo
 
@@ -44,8 +47,8 @@ OR
 
 A good demonstration of what a _masterless_ Puppet setup might look like.
 
-<button type="button" class="btn btn-success btn-custom" data-toggle="collapse" data-target="#manual-install">
-  Manual Install
+<button type="button" class="btn btn-info btn-custom" data-toggle="collapse" data-target="#manual-install">
+  Manual
 </button>
 <div id="manual-install" class="collapse">
 
