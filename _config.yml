@@ -4,3 +4,5 @@ highlighter: pygments
 baseurl: /managedmac
 gems:
   - jemoji
+exclude:
+  - Rakefile
