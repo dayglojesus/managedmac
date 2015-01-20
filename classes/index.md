@@ -423,6 +423,25 @@ To create new resources, you simply pass in data as per the Core Classes.
 The provides a simple way to extend the managedmac module without resorting to forking, editing or modifying the existing code.
 
 ---
+<a id="managedmac::cron"></a>
+#### managedmac::cron
+
+Create new Puppet Cron resources.
+
+Example:
+
+{% highlight YAML %}
+---
+ managedmac::cron::jobs:
+  logrotate:
+    command: '/usr/sbin/logrotate'
+    user:    'root'
+    hour:    2
+    minute:  0{% endhighlight %}
+
+For a complete list of parameters, see the [managedmac::cron](https://github.com/dayglojesus/managedmac/blob/master/manifests/cron.pp) documentation.
+
+---
 <a id="managedmac::execs"></a>
 #### managedmac::execs
 
