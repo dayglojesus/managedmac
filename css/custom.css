@@ -51,3 +51,8 @@ a[id] {
   margin-top: -40px;
   display: inline-block; /* required for webkit browsers */
 }
+
+.btn-custom {
+    width:135px;
+    height:30px;
+}
