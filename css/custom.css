@@ -54,6 +54,16 @@ a[id] {
 }
 
 .btn-custom {
-    width:135px;
-    height:30px;
+  width:135px;
+  height:30px;
+}
+
+.setup-btn-info {
+  padding-left:15px;
+  font-weight:bold;
+}
+
+.setup-detail {
+/*  padding-top:10px;*/
+/*  padding-bottom:30px;*/
 }
