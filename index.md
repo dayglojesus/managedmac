@@ -34,7 +34,7 @@ This setup is suitable for testing and development, not _masterless_ Puppet inst
 
   1. Clone the repo
 
-        git clone https://github.com/dayglojesus/managedmac.git && cd manaagedmac
+        git clone https://github.com/dayglojesus/managedmac.git && cd managedmac
 
   2. Run Setup
 
