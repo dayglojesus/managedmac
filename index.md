@@ -17,21 +17,56 @@ It's that simple.
 ---
 ### 1. Install Packages
 
-You need to install the following packages:
+This setup is suitable for testing and development, not _masterless_ Puppet installations.
 
-* [Facter](https://downloads.puppetlabs.com/mac/)
-* [Hiera](https://downloads.puppetlabs.com/mac/)
-* [Puppet](https://downloads.puppetlabs.com/mac/)
+<button type="button" class="btn btn-info btn-custom" data-toggle="collapse" data-target="#super-quick">
+  Automated Install
+</button>
+<div id="super-quick" class="collapse">
+  <div class="alert  alert-danger" role="alert">
+    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+    This methodology uses bundler and RubyGems to install and configure the system.<br>
+    If you have _Puppet_, _Facter_ and _Hiera_ already installed, you may get conflicts using this method.
+  </div>
+
+  1. Clone the repo
+
+        git clone https://github.com/dayglojesus/managedmac.git && cd manaagedmac
+
+  2. Run Setup
+
+        sudo rake setup
+OR
+
+        sudo rake setup[development]
+
+</div>
+
+A good demonstration of what a _masterless_ Puppet setup might look like.
+
+<button type="button" class="btn btn-success btn-custom" data-toggle="collapse" data-target="#manual-install">
+  Manual Install
+</button>
+<div id="manual-install" class="collapse">
+
+  You need to install the following packages:
+
+  * [Facter](https://downloads.puppetlabs.com/mac/)
+  * [Hiera](https://downloads.puppetlabs.com/mac/)
+  * [Puppet](https://downloads.puppetlabs.com/mac/)
 
 Install these gems:
 
-    sudo gem install CFPropertyList sqlite3
-    sudo puppet module install sfu-managedmac
+      sudo gem install CFPropertyList sqlite3
+      sudo puppet module install sfu-managedmac
 
 And create this symlink:
 
-    cd /etc/puppet
-    sudo ln -s /etc/hiera.yaml hiera.yaml
+      cd /etc/puppet
+      sudo ln -s /etc/hiera.yaml hiera.yaml
+
+</div>
+
 
 ### 2. Create a Configuration
 
