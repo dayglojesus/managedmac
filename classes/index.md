@@ -474,7 +474,7 @@ managedmac::files::defaults:
   ensure: file
   owner: root
   group: admin
-  mode: 0644
+  mode: '0644'
 managedmac::files::objects:
   /Users/Shared/example_file_a.txt:
     content: "This is an example of how to create a file using the content parameter."
@@ -484,7 +484,7 @@ managedmac::files::objects:
     ensure: directory
     owner: root
     group: admin
-    mode: 0755
+    mode: '0755'
 {% endhighlight %}
 
 For a complete list of parameters, see the [managedmac::files](https://github.com/dayglojesus/managedmac/blob/master/manifests/files.pp) documentation.
