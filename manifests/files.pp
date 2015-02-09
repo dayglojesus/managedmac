@@ -37,20 +37,20 @@
 #     ensure: file
 #     owner: root
 #     group: admin
-#     mode: 0644
+#     mode: '0644'
 #     content: "This is an example of how to create a file using the \
 # content parameter."
 #   /Users/Shared/example_file_b.txt:
 #     ensure: file
 #     owner: root
 #     group: admin
-#     mode: 0644
+#     mode: '0644'
 #     source: puppet:///modules/my_module/example_file_b.txt
 #   /Users/Shared/example_directory:
 #     ensure: directory
 #     owner: root
 #     group: admin
-#     mode: 0755
+#     mode: '0755'
 #
 # Then simply, create a manifest and include the class...
 #
