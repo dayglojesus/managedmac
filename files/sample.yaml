@@ -743,6 +743,27 @@ managedmac::authorization::allow_dvd_setregion_initial: true
 
 #####################################################################
 #
+# CLASS: MANAGEDMAC::DESKTOPPICTURE
+#
+#####################################################################
+
+#####################################################################
+# Set the path of the default desktop picture on OS X.
+# Type: String
+#####################################################################
+
+managedmac::desktoppicture::desktop_pic_path: "/Library/Desktop Pictures/Abstract.jpg"
+
+#####################################################################
+# This locks the value of the desktop picture so that users can
+#     select their own picture or not
+# Type: Boolean
+#####################################################################
+
+managedmac::desktoppicture::desktop_pic_locked: true
+
+#####################################################################
+#
 # MANAGEDMAC::ENERGYSAVER
 #
 #####################################################################
