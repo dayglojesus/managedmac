@@ -476,10 +476,10 @@ class managedmac::portablehomes (
   $enable_re_values = ['^true$', '^false$', '^10\.\d{1,2}\.?\d{0,2}$',]
 
   # Validate $enable as a string
-  validate_re ("${enable}", $enable_re_values)
+  validate_re ($enable, $enable_re_values)
 
   # Evaluate $enable as an OS X major version string and deduce a state
-  $os_conditional = versioncmp("${enable}", $::macosx_productversion_major) ? {
+  $os_conditional = versioncmp($enable, $::macosx_productversion_major) ? {
     0       => present,
     default => absent,
   }

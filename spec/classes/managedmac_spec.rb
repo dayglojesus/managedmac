@@ -46,6 +46,7 @@ describe 'managedmac', :type => 'class' do
     it { should contain_class('managedmac::ntp') }
     it { should contain_class('managedmac::activedirectory') }
     it { should contain_class('managedmac::security') }
+    it { should contain_class('managedmac::desktop') }
     it { should contain_class('managedmac::mcx') }
     it { should contain_class('managedmac::filevault') }
     it { should contain_class('managedmac::loginwindow') }

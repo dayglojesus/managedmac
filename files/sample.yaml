@@ -743,6 +743,28 @@ managedmac::authorization::allow_dvd_setregion_initial: true
 
 #####################################################################
 #
+# CLASS: MANAGEDMAC::DESKTOP
+#
+#####################################################################
+
+#####################################################################
+# Set the path of the default desktop picture on OS X.
+# Type: String
+#####################################################################
+
+managedmac::desktop::override_picture_path:
+  "/Library/Desktop Pictures/Abstract.jpg"
+
+#####################################################################
+# This locks the value of the desktop picture so that users can
+# select their own picture or not
+# Type: Boolean
+#####################################################################
+
+managedmac::desktop::locked: true
+
+#####################################################################
+#
 # MANAGEDMAC::ENERGYSAVER
 #
 #####################################################################
@@ -1759,3 +1781,15 @@ managedmac::groups::accounts:
     nestedgroups:
       - robothouse
 
+#####################################################################
+#
+# MANAGEDMAC::CRON
+#
+#####################################################################
+
+managedmac::cron::jobs:
+ logrotate:
+   command: '/usr/sbin/logrotate'
+   user:    'root'
+   hour:    2
+   minute:  0

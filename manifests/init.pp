@@ -46,6 +46,7 @@ class managedmac {
   contain managedmac::ntp
   contain managedmac::activedirectory
   contain managedmac::security
+  contain managedmac::desktop
   contain managedmac::mcx
   contain managedmac::filevault
   contain managedmac::loginwindow
