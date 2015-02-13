@@ -1,4 +1,4 @@
-# == Class: managedmac::desktoppicture
+# == Class: managedmac::desktop
 #
 # Leverages the Mobileconfig type to deploy a Desktop Picture profile.
 #
@@ -8,18 +8,18 @@
 #
 # Note: Currently there is a bug with this profile setting that does
 # not allow users to change the desktop picture regardless of the
-# 'desktop_pic_locked' setting.
+# 'locked' setting.
 #
 # === Parameters
 #
-# [*desktop_pic_path*]
-#   --> Set the path of the default desktop picture on OS X.
+# [*override_picture_path*]
+#   Set the path of the default desktop picture on OS X.
 #   Type: String
 #   Default: undef
 #
-# [*desktop_pic_locked*]
-#   --> This locks the value of the desktop picture so that users can
-#     select their own picture or not (read Note above).
+# [*locked*]
+#   This locks the value of the desktop picture so that users can
+#   select their own picture or not (read Note above).
 #   Type: Integer
 #   Default: undef
 #
@@ -34,21 +34,21 @@
 #
 #  # Example: defaults.yaml
 #  ---
-#  managedmac::desktoppicture::desktop_pic_path:
+#  managedmac::desktop::override_picture_path:
 #    "/Library/Desktop Pictures/Abstract.jpg"
-#  managedmac::desktoppicture::desktop_pic_locked: true
+#  managedmac::desktop::locked: true
 #
 # Then simply, create a manifest and include the class...
 #
 #  # Example: my_manifest.pp
-#  include managedmac::desktoppicture
+#  include managedmac::desktop
 #
 # If you just wish to test the functionality of this class, you could also do
 # something along these lines:
 #
-#  class { 'managedmac::desktoppicture':
-#    desktop_pic_path        => '/Library/Desktop Pictures/Abstract.jpg',
-#    desktop_pic_locked      => true,
+#  class { 'managedmac::desktop':
+#    override_picture_path  => '/Library/Desktop Pictures/Abstract.jpg',
+#    locked                 => true,
 #  }
 #
 # === Authors
@@ -60,25 +60,25 @@
 #
 # Copyright 2014 Simon Fraser University, unless otherwise noted.
 #
-class managedmac::desktoppicture (
+class managedmac::desktop (
 
-  $desktop_pic_path    = undef,
-  $desktop_pic_locked  = undef,
+  $override_picture_path    = undef,
+  $locked  = undef,
 
 ) {
 
-  unless $desktop_pic_path == undef {
-    validate_absolute_path ($desktop_pic_path)
+  unless $override_picture_path == undef {
+    validate_absolute_path ($override_picture_path)
   }
 
-  unless $desktop_pic_locked == undef {
-    validate_bool ($desktop_pic_locked)
+  unless $locked == undef {
+    validate_bool ($locked)
   }
 
   $params = {
     'com.apple.desktop' => {
-      'locked'                => $desktop_pic_locked,
-      'override-picture-path' => $desktop_pic_path
+      'locked'                => $locked,
+      'override-picture-path' => $override_picture_path
     },
   }
 
@@ -92,7 +92,7 @@ class managedmac::desktoppicture (
 
   $organization = hiera('managedmac::organization', 'Simon Fraser University')
 
-  mobileconfig { 'managedmac.desktoppicture.alacarte':
+  mobileconfig { 'managedmac.desktop.alacarte':
     ensure       => $mobileconfig_ensure,
     content      => $content,
     displayname  => 'Managed Mac: Desktop Picture',
