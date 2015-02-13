@@ -743,7 +743,7 @@ managedmac::authorization::allow_dvd_setregion_initial: true
 
 #####################################################################
 #
-# CLASS: MANAGEDMAC::DESKTOPPICTURE
+# CLASS: MANAGEDMAC::DESKTOP
 #
 #####################################################################
 
@@ -752,15 +752,16 @@ managedmac::authorization::allow_dvd_setregion_initial: true
 # Type: String
 #####################################################################
 
-managedmac::desktoppicture::desktop_pic_path: "/Library/Desktop Pictures/Abstract.jpg"
+managedmac::desktop::override_picture_path:
+  "/Library/Desktop Pictures/Abstract.jpg"
 
 #####################################################################
 # This locks the value of the desktop picture so that users can
-#     select their own picture or not
+# select their own picture or not
 # Type: Boolean
 #####################################################################
 
-managedmac::desktoppicture::desktop_pic_locked: true
+managedmac::desktop::locked: true
 
 #####################################################################
 #
