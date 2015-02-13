@@ -6,8 +6,8 @@
 # is not sufficient for confguration. You must activate the params by giving
 # them a value.
 #
-# Note: Currently there is a bug with this profile setting that does 
-# not allow users to change the desktop picture regardless of the 
+# Note: Currently there is a bug with this profile setting that does
+# not allow users to change the desktop picture regardless of the
 # 'desktop_pic_locked' setting.
 #
 # === Parameters
@@ -34,7 +34,8 @@
 #
 #  # Example: defaults.yaml
 #  ---
-#  managedmac::desktoppicture::desktop_pic_path: "/Library/Desktop Pictures/Abstract.jpg"
+#  managedmac::desktoppicture::desktop_pic_path:
+#    "/Library/Desktop Pictures/Abstract.jpg"
 #  managedmac::desktoppicture::desktop_pic_locked: true
 #
 # Then simply, create a manifest and include the class...
@@ -69,7 +70,7 @@ class managedmac::desktoppicture (
   unless $desktop_pic_path == undef {
     validate_absolute_path ($desktop_pic_path)
   }
-  
+
   unless $desktop_pic_locked == undef {
     validate_bool ($desktop_pic_locked)
   }
