@@ -62,8 +62,8 @@
 #
 class managedmac::desktop (
 
-  $override_picture_path    = undef,
-  $locked  = undef,
+  $override_picture_path  = undef,
+  $locked                 = undef,
 
 ) {
 
