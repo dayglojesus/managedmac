@@ -20,7 +20,7 @@
 # [*locked*]
 #   This locks the value of the desktop picture so that users can
 #   select their own picture or not (read Note above).
-#   Type: Integer
+#   Type: Boolean
 #   Default: undef
 #
 # === Variables
