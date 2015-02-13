@@ -1781,3 +1781,15 @@ managedmac::groups::accounts:
     nestedgroups:
       - robothouse
 
+#####################################################################
+#
+# MANAGEDMAC::CRON
+#
+#####################################################################
+
+managedmac::cron::jobs:
+ logrotate:
+   command: '/usr/sbin/logrotate'
+   user:    'root'
+   hour:    2
+   minute:  0
