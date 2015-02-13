@@ -77,8 +77,8 @@ class managedmac::desktop (
 
   $params = {
     'com.apple.desktop' => {
+      'override-picture-path' => $override_picture_path,
       'locked'                => $locked,
-      'override-picture-path' => $override_picture_path
     },
   }
 
