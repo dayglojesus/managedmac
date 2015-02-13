@@ -127,7 +127,7 @@ ${bluetooth}",
     true    => absent,
     default => present,
   }
-  
+
   $organization = hiera('managedmac::organization', 'Simon Fraser University')
 
   mobileconfig { 'managedmac.mcx.alacarte':
