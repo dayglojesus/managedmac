@@ -26,7 +26,19 @@
 #   Type: Bool
 #
 # [*allow_dvd_setregion_initial*]
-#   Allow 'everyone' to set the inital DVD region code, true or false.
+#   Allow 'everyone' to set the initial DVD region code, true or false.
+#   Default: false
+#   Type: Bool
+#
+# [*allow_restart*]
+#   Allow 'everyone' to restart the system while other users are logged
+#   onto the system, true or false.
+#   Default: false
+#   Type: Bool
+#
+# [*allow_shutdown*]
+#   Allow 'everyone' to shutdown the system while other users are logged
+#   onto the system, true or false.
 #   Default: false
 #   Type: Bool
 #
@@ -74,6 +86,8 @@ class managedmac::authorization (
   $allow_timemachine            = false,
   $allow_printers               = false,
   $allow_dvd_setregion_initial  = false,
+  $allow_restart                = false,
+  $allow_shutdown               = false,
 
 ) {
 
@@ -85,6 +99,8 @@ class managedmac::authorization (
 
   # Other options
   validate_bool ($allow_dvd_setregion_initial)
+  validate_bool ($allow_restart)
+  validate_bool ($allow_shutdown)
 
   # Getting System Preference panes unlocked for non-admins requires us to
   # first change the parent right 'system.preferences'. To know whether or not
@@ -92,7 +108,7 @@ class managedmac::authorization (
   # into Integers, add them up, and if the $sum is greater than zero, the
   # 'system.preferences' right is changed to 'everyone' to match the others.
   #
-  # If you are adding new controls fro System Preferences panes, be sure and
+  # If you are adding new controls from System Preferences panes, be sure and
   # include the new bool value in this calculation.
   #
   $sum = (bool2num($allow_energysaver) + bool2num($allow_datetime) +
@@ -157,6 +173,24 @@ Printing preference pane.",
 time.  Note that changing the region code after it has been set requires a \
 different right (system.device.dvd.setregion.change).",
     },
+    
+    'system.restart' => {
+      group      => $allow_restart ? {
+        true    => 'everyone',
+        default => 'admin',
+      },
+      comment => "Checked by the Admin framework when attempting to \
+restart a system.",
+    },    
+    
+    'system.shutdown' => {
+      group      => $allow_shutdown ? {
+        true    => 'everyone',
+        default => 'admin',
+      },
+      comment => "Checked by the Admin framework when attempting to \
+shutdown a system.",
+    },    
 
   }
 
