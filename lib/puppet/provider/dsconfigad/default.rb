@@ -216,6 +216,7 @@ Puppet::Type.type(:dsconfigad).provide(:default) do
     args = normalize_bind_args(build_args(required)).flatten
     args << '-force' if force_bind?
     dsconfigad args
+    update_property_hash
   end
 
   def unbind
@@ -229,12 +230,14 @@ Puppet::Type.type(:dsconfigad).provide(:default) do
       args
     end
     dsconfigad args
+    update_property_hash
   end
 
   def configure
     notice("Configuring plugin...")
     binding.pry
     dsconfigad (@configuration_flags || build_configuration_options).flatten!
+    update_property_hash
   end
 
   def build_configuration_options
@@ -248,15 +251,18 @@ Puppet::Type.type(:dsconfigad).provide(:default) do
     !computer == :absent
   end
 
+  def update_property_hash
+    @property_hash = self.class.get_resource_properties
+  end
+
   def flush
     if @property_flush[:ensure] == :absent
       unbind
     else
+      binding.pry
       bind unless already_bound?
-      # configure if already_bound?
+      configure if already_bound?
     end
-    binding.pry
-    @property_hash = self.class.get_resource_properties
   end
 
 end
