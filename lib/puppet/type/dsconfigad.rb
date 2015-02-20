@@ -289,6 +289,7 @@ Puppet::Type.newtype(:dsconfigad) do
       end
       i.eql? s
     end
+    defaultto []
   end
 
 end
