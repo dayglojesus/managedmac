@@ -240,11 +240,14 @@ Puppet::Type.type(:dsconfigad).provide(:default) do
     update_property_hash
   end
 
+  # When this method invoked, it calls back to each of the provider's
+  # property setters thereby populating @configuration_flags
   def build_configuration_options
     properties = Puppet::Type::Dsconfigad.properties.map(&:name)
     resource.to_hash.each do |k,v|
       self.send("#{k}=", v) if properties.member? k
     end
+    @configuration_flags
   end
 
   def already_bound?
