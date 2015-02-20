@@ -22,7 +22,7 @@ Puppet::Type.newtype(:dsconfigad) do
         useuncpath    => 'enable',
         protocol      => 'afp',
         shell         => '/bin/false',
-        groups        => 'SOME_DOMAIN\some_group,SOME_DOMAIN\another_group',
+        groups        => ['SOME_DOMAIN\some_group','SOME_DOMAIN\another_group'],
         passinterval  => '0',
       }
   }
