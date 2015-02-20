@@ -45,6 +45,7 @@ Puppet::Type.type(:dsconfigad).provide(:default) do
     :alldomains=,
     :packetsign=,
     :packetencrypt=,
+    :passinterval=,
   ]
 
   NO_FLAG_PROPERTIES = [
@@ -157,7 +158,7 @@ Puppet::Type.type(:dsconfigad).provide(:default) do
   # setters that build CLI arguments
   def flag_setter(setter, value, accepts_no_flag=false)
     flag = setter.to_s.chop
-    args = if self.class.nil_or_empty?(value) and accepts_no_flag
+    args = if (value.to_s.empty? or value == :absent) and accepts_no_flag
       ["-no#{flag}"]
     else
       ["-#{flag}", value]
@@ -235,7 +236,6 @@ Puppet::Type.type(:dsconfigad).provide(:default) do
 
   def configure
     notice("Configuring plugin...")
-    binding.pry
     dsconfigad (@configuration_flags || build_configuration_options).flatten!
     update_property_hash
   end
@@ -259,7 +259,6 @@ Puppet::Type.type(:dsconfigad).provide(:default) do
     if @property_flush[:ensure] == :absent
       unbind
     else
-      binding.pry
       bind unless already_bound?
       configure if already_bound?
     end
