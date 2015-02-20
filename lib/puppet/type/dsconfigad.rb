@@ -155,10 +155,11 @@ Puppet::Type.newtype(:dsconfigad) do
     desc %q{This specifies the attribute to be used for the UID of the user. By
       default, a UID is generated from the Active Directory GUID.}
     validate do |value|
-      unless value.is_a? String
+      unless value.is_a? String or value == :absent
         raise ArgumentError, "Expected String, got #{value.class}"
       end
     end
+    defaultto :absent
   end
 
   newproperty(:gid) do
@@ -166,10 +167,11 @@ Puppet::Type.newtype(:dsconfigad) do
       default, a GID is derived from the primaryGroupID of the user (typically
       Domain Users).}
     validate do |value|
-      unless value.is_a? String
+      unless value.is_a? String or value == :absent
         raise ArgumentError, "Expected String, got #{value.class}"
       end
     end
+    defaultto :absent
   end
 
   newproperty(:ggid) do
@@ -177,10 +179,11 @@ Puppet::Type.newtype(:dsconfigad) do
       By default, a group GID is generated from the Active Directory GUID of
       the group.}
     validate do |value|
-      unless value.is_a? String
+      unless value.is_a? String or value == :absent
         raise ArgumentError, "Expected String, got #{value.class}"
       end
     end
+    defaultto :absent
   end
 
   newproperty(:authority) do
@@ -196,10 +199,11 @@ Puppet::Type.newtype(:dsconfigad) do
       authentications. If the server is no longer available, it will fail-over
       to other servers.}
     validate do |value|
-      unless value.is_a? String
+      unless value.is_a? String or value == :absent
         raise ArgumentError, "Expected String, got #{value.class}"
       end
     end
+    defaultto :absent
   end
 
   newproperty(:groups, :array_matching => :all) do
