@@ -127,8 +127,11 @@ Puppet::Type.type(:dsconfigad).provide(:default) do
     end
 
     def read_plist_from_string(string)
-      return {} unless plist = CFPropertyList::List.new(:data => string)
-      CFPropertyList.native_types(plist.value)
+      unless nil_or_empty? string
+        plist = CFPropertyList::List.new(:data => string)
+        return CFPropertyList.native_types(plist.value)
+      end
+      return {}
     end
 
   end
@@ -170,16 +173,12 @@ Puppet::Type.type(:dsconfigad).provide(:default) do
     flag_setter(:restrictDDNS=, value.join(','))
   end
 
-  def specify_ou_path(params_hash)
-    unless resource[:ou].nil? or resource[:ou].empty?
-      params_hash[:ou] = resource[:ou]
-    end
-    params_hash
+  def specify_ou_path?
+    !(resource[:ou].nil? || resource[:ou].empty?)
   end
 
-  def build_bind_args
-    required = [:name, :computer, :username, :password]
-    specify_ou_path Hash[required.map { |k| [k, resource[k]] }]
+  def build_args(required)
+    Hash[required.map { |k| [k, resource[k]] }]
   end
 
   def validate_bind_value(key, value)
@@ -204,23 +203,43 @@ Puppet::Type.type(:dsconfigad).provide(:default) do
   def force_bind?
     resource[:force] == :enable
   end
+  alias_method :force_unbind?, :force_bind?
+
+  def leave_domain?
+    resource[:leave] == :enable
+  end
+
+  def check_credentials(credentials)
+    Hash[*credentials].each { |k,v| validate_bind_value k, v }
+    credentials
+  end
 
   def bind
     notice("Binding to domain...")
-    args = normalize_bind_args(build_bind_args).flatten
+    required = [:name, :computer, :username, :password]
+    required << :ou if specify_ou_path?
+    args = normalize_bind_args(build_args(required)).flatten
     args << '-force' if force_bind?
     dsconfigad args
   end
 
   def unbind
     notice("Unbinding from domain...")
-    binding.pry
+    args = if leave_domain?
+      ['-leave']
+    else
+      args = build_args([:username, :password])
+      args = ['-remove'] + normalize_bind_args(args).flatten
+      args << '-force' if force_unbind?
+      args
+    end
+    dsconfigad args
   end
 
   def configure
     notice("Configuring plugin...")
-    dsconfigad (@configuration_flags || build_configuration_options).flatten!
     binding.pry
+    dsconfigad (@configuration_flags || build_configuration_options).flatten!
   end
 
   def build_configuration_options
@@ -235,11 +254,12 @@ Puppet::Type.type(:dsconfigad).provide(:default) do
   end
 
   def flush
-    unbind if @property_flush[:ensure] == :absent
-
-    bind unless already_bound?
-    # configure if already_bound?
-
+    if @property_flush[:ensure] == :absent
+      unbind
+    else
+      bind unless already_bound?
+      # configure if already_bound?
+    end
     binding.pry
     @property_hash = self.class.get_resource_properties
   end
