@@ -74,9 +74,8 @@ Puppet::Type.type(:dsconfigad).provide(:default) do
 
     def instances
       config = new(get_resource_properties)
-      instances = []
-      unless config.ensure == :absent
-        instances << config
+      if config.ensure == :present
+        (instances ||= []) << config
       end
       instances
     end
