@@ -80,6 +80,23 @@ Puppet::Type.newtype(:dsconfigad) do
     end
   end
 
+  ######## Bind/Unbind Param modifiers ########
+  # - these control the temperment of a bind or unbind operation
+
+  newparam(:force) do
+    desc %q{Force the process (i.e., join the existing account or remove the
+      binding)}
+    newvalues(:enable, :disable)
+    defaultto(:disable)
+  end
+
+  newparam(:leave) do
+    desc %q{Leaves the current domain (preserving the computer record in the
+      directory).}
+    newvalues(:enable, :disable)
+    defaultto(:disable)
+  end
+
   ######## AD Plugin Options: User Experience ########
 
   newproperty(:mobile) do
