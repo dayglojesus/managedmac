@@ -160,7 +160,7 @@ Puppet::Type.type(:dsconfigad).provide(:default) do
     args = if self.class.nil_or_empty?(value) and accepts_no_flag
       ["-no#{flag}"]
     else
-      ["-#{flag}", %Q{"#{value}"}]
+      ["-#{flag}", value]
     end
     (@configuration_flags ||= []) << args
   end
