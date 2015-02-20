@@ -83,4 +83,8 @@ module ManagedMacCommon
     dscl_result.scan /#{Regexp.quote(value)}/i
   end
 
+  def nil_or_empty?(value)
+    value.nil? || value.empty?
+  end
+
 end
