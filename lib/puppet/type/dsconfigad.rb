@@ -87,7 +87,7 @@ Puppet::Type.newtype(:dsconfigad) do
     desc %q{Force the process (i.e., join the existing account or remove the
       binding)}
     newvalues(:enable, :disable)
-    defaultto(:disable)
+    defaultto(:enable)
   end
 
   newparam(:leave) do
