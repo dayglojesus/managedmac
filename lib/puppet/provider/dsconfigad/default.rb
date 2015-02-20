@@ -209,11 +209,6 @@ Puppet::Type.type(:dsconfigad).provide(:default) do
     resource[:leave] == :enable
   end
 
-  def check_credentials(credentials)
-    Hash[*credentials].each { |k,v| validate_bind_value k, v }
-    credentials
-  end
-
   def bind
     notice("Binding to domain...")
     required = [:name, :computer, :username, :password]
