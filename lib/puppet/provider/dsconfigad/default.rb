@@ -248,7 +248,7 @@ Puppet::Type.type(:dsconfigad).provide(:default) do
   end
 
   def already_bound?
-    !computer == :absent
+    !(computer == :absent)
   end
 
   def update_property_hash
