@@ -119,10 +119,6 @@ Puppet::Type.type(:dsconfigad).provide(:default) do
 
     def get_active_directory_configuration
       dict = dsconfigad('-show', '-xml')
-      # dict = %x{/usr/sbin/dsconfigad -  show -xml}
-      # file = '/Users/itsvan/Desktop/dsconfigad_show.plist'
-      # file = ''
-      # flatten_config read_plist(file)
       flatten_config read_plist_from_string(dict)
     end
 
@@ -131,22 +127,7 @@ Puppet::Type.type(:dsconfigad).provide(:default) do
     end
 
     def read_plist_from_string(string)
-      begin
-        plist = CFPropertyList::List.new(:data => string)
-      rescue Exception
-        warn("Warning: #{string} is not a Property List.")
-      end
-      return {} unless plist
-      CFPropertyList.native_types(plist.value)
-    end
-
-    def read_plist(path)
-      begin
-        plist = CFPropertyList::List.new(:file => path)
-      rescue Exception
-        warn("Warning: #{path} is not a Property List.")
-      end
-      return {} unless plist
+      return {} unless plist = CFPropertyList::List.new(:data => string)
       CFPropertyList.native_types(plist.value)
     end
 
@@ -220,9 +201,15 @@ Puppet::Type.type(:dsconfigad).provide(:default) do
     end
   end
 
+  def force_bind?
+    resource[:force] == :enable
+  end
+
   def bind
     notice("Binding to domain...")
-    dsconfigad normalize_bind_args(build_bind_args).flatten
+    args = normalize_bind_args(build_bind_args).flatten
+    args << '-force' if force_bind?
+    dsconfigad args
   end
 
   def unbind
