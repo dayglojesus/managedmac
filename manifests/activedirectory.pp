@@ -184,6 +184,7 @@
 class managedmac::activedirectory (
 
   $enable                          = undef,
+  $provider                        = mobileconfig,
   $evaluate                        = undef,
   $hostname                        = undef,
   $username                        = undef,
@@ -215,6 +216,11 @@ class managedmac::activedirectory (
   }
 
   unless $enable == undef {
+
+    unless $provider =~ /\Amobileconfig\z|\Adsconfigad\z/ {
+      fail("Parameter :provider must be \'mobileconfig\' or \'dsconfigad\', \
+[${provider}]")
+    }
 
     validate_bool ($enable)
 
@@ -295,7 +301,7 @@ class managedmac::activedirectory (
       unless $packet_encrypt == undef {
         unless $packet_encrypt =~ /\Aallow\z|\Adisable\z|\Arequire\z|\Assl\z/ {
           fail("Parameter :packet_encrypt must must be \'allow\', \'disable\',\
- \'require\' or \'ssl\', ${packet_encrypt}")
+\'require\' or \'ssl\', ${packet_encrypt}")
         }
       }
 
@@ -327,67 +333,104 @@ ${trust_change_pass_interval_days}")
       }
     }
 
-    $params = {
-      'com.apple.DirectoryService.managed' => {
-        'HostName'                       => $hostname,
-        'UserName'                       => $username,
-        'Password'                       => $password,
-        'ADOrganizationalUnit'           => $organizational_unit,
-        'ADMountStyle'                   => $mount_style,
-        'ADDefaultUserShell'             => $default_user_shell,
-        'ADMapUIDAttribute'              => $map_uid_attribute,
-        'ADMapGIDAttribute'              => $map_gid_attribute,
-        'ADMapGGIDAttribute'             => $map_ggid_attribute,
-        'ADPreferredDCServer'            => $preferred_dc_server,
-        'ADNamespace'                    => $namespace,
-        'ADDomainAdminGroupList'         => $domain_admin_group_list,
-        'ADRestrictDDNS'                 => $restrict_ddns,
-        'ADPacketSign'                   => $packet_sign,
-        'ADPacketEncrypt'                => $packet_encrypt,
-        'ADCreateMobileAccountAtLogin'   => $create_mobile_account_at_login,
-        'ADWarnUserBeforeCreatingMA'     => $warn_user_before_creating_ma,
-        'ADForceHomeLocal'               => $force_home_local,
-        'ADUseWindowsUNCPath'            => $use_windows_unc_path,
-        'ADAllowMultiDomainAuth'         => $allow_multi_domain_auth,
-        'ADTrustChangePassIntervalDays'  => $trust_change_pass_interval_days,
-      },
-    }
-
-    $options = process_mobileconfig_params($params)
-
-    $organization = hiera('managedmac::organization',
-      'Simon Fraser University')
-
     $ensure = $enable ? {
       true  => present,
       false => absent,
     }
 
+    # If it's safe to evaluate the state of the mobileconfig resource, or
+    # if we are only interested in removing the profile, do so. Otherwise,
+    # just produce a warning.
     $safe = $evaluate ? {
       /yes|true/ => true,
       /no|false/ => false,
       default    => true,
     }
 
-    # If it's safe to evaluate the state of the mobileconfig resource, or
-    # if we are only interested in removing the profile, do so. Otherwise,
-    # just produce a warning.
-    if $safe {
+    if $provider == mobileconfig {
 
-      mobileconfig { 'managedmac.activedirectory.alacarte':
-        ensure       => $ensure,
-        displayname  => 'Managed Mac: Active Directory',
-        description  => 'Active Directory configuration. Installed by Puppet.',
-        organization => $organization,
-        content      => $options,
+      $params = {
+        'com.apple.DirectoryService.managed' => {
+          'HostName'                       => $hostname,
+          'UserName'                       => $username,
+          'Password'                       => $password,
+          'ADOrganizationalUnit'           => $organizational_unit,
+          'ADMountStyle'                   => $mount_style,
+          'ADDefaultUserShell'             => $default_user_shell,
+          'ADMapUIDAttribute'              => $map_uid_attribute,
+          'ADMapGIDAttribute'              => $map_gid_attribute,
+          'ADMapGGIDAttribute'             => $map_ggid_attribute,
+          'ADPreferredDCServer'            => $preferred_dc_server,
+          'ADNamespace'                    => $namespace,
+          'ADDomainAdminGroupList'         => $domain_admin_group_list,
+          'ADRestrictDDNS'                 => $restrict_ddns,
+          'ADPacketSign'                   => $packet_sign,
+          'ADPacketEncrypt'                => $packet_encrypt,
+          'ADCreateMobileAccountAtLogin'   => $create_mobile_account_at_login,
+          'ADWarnUserBeforeCreatingMA'     => $warn_user_before_creating_ma,
+          'ADForceHomeLocal'               => $force_home_local,
+          'ADUseWindowsUNCPath'            => $use_windows_unc_path,
+          'ADAllowMultiDomainAuth'         => $allow_multi_domain_auth,
+          'ADTrustChangePassIntervalDays'  => $trust_change_pass_interval_days,
+        },
+      }
+
+      $options = process_mobileconfig_params($params)
+
+      $organization = hiera('managedmac::organization',
+        'Simon Fraser University')
+
+      if $safe {
+
+        mobileconfig { 'managedmac.activedirectory.alacarte':
+          ensure       => $ensure,
+          displayname  => 'Managed Mac: Active Directory',
+          description  => 'Active Directory configuration. Installed by Puppet.',
+          organization => $organization,
+          content      => $options,
+        }
+
       }
 
     } else {
 
-      warning("Active Directory configuration will not be evaluated during \
-this run.")
+      if $safe {
+
+        dsconfigad { "${hostname}":
+          ensure        => $ensure,
+          username      => $username,
+          password      => $password,
+          computer      => $computer,
+          ou            => $organizational_unit,
+          alldomains    => $allow_multi_domain_auth,
+          authority     => $authority,
+          uid           => $map_uid_attribute,
+          gid           => $map_gid_attribute,
+          ggid          => $map_ggid_attribute,
+          groups        => $domain_admin_group_list,
+          localhome     => $force_home_local,
+          mobile        => $create_mobile_account_at_login,
+          mobileconfirm => $warn_user_before_creating_ma,
+          namespace     => $namespace,
+          packetencrypt => $packet_encrypt,
+          packetsign    => $packet_sign,
+          passinterval  => $trust_change_pass_interval_days,
+          preferred     => $preferred_dc_server,
+          protocol      => $mount_style,
+          restrictddns  => $restrict_ddns,
+          shell         => $default_user_shell,
+          useuncpath    => $use_windows_unc_path,
+        }
+
+      }
 
     }
 
+    unless $safe {
+      warning("Active Directory configuration will not be evaluated during \
+this run.")
+    }
+
   }
+
 }
