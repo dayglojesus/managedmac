@@ -49,6 +49,38 @@ describe 'managedmac::activedirectory', :type => 'class' do
       end
 
     end
+
+    context 'when $provider == :dsconfigad' do
+
+      context 'when $evaluate is false' do
+        let(:params) do
+          ad_params_base({ :evaluate => false }, false, true)
+        end
+        specify do
+          should_not contain_dsconfigad
+        end
+      end
+
+      context "when $evaluate == 'no'" do
+        let(:params) do
+          ad_params_base({ :evaluate => 'no' }, false, true)
+        end
+        specify do
+          should_not contain_dsconfigad
+        end
+      end
+
+      context "when $evaluate == true" do
+        let(:params) do
+          ad_params_base({ :evaluate => true, :hostname => 'foo.ad.com' }, false, true)
+        end
+        specify do
+          should contain_dsconfigad('foo.ad.com').with_ensure('absent')
+        end
+      end
+
+    end
+
   end
 
   context 'when $enable == true' do
@@ -145,6 +177,64 @@ describe 'managedmac::activedirectory', :type => 'class' do
         end
         specify do
           should_not contain_mobileconfig('managedmac.activedirectory.alacarte')
+        end
+      end
+
+    end
+
+    context 'when $provider == :dsconfigad' do
+
+      context "when REQUIRED params are set" do
+        let(:params) do
+          ad_params_base(required_params, true, true)
+        end
+        specify do
+          should contain_dsconfigad('foo.ad.com').with_ensure('present')
+        end
+      end
+
+      context "when $evaluate == undef" do
+        let(:params) do
+          ad_params_base(required_params.merge({:evaluate  => ''}), true, true)
+        end
+        specify do
+          should contain_dsconfigad('foo.ad.com').with_ensure('present')
+        end
+      end
+
+      context "when $evaluate == 'true'" do
+        let(:params) do
+          ad_params_base(required_params.merge({:evaluate  => 'true'}), true, true)
+        end
+        specify do
+          should contain_dsconfigad('foo.ad.com').with_ensure('present')
+        end
+      end
+
+      context "when $evaluate == 'yes'" do
+        let(:params) do
+          ad_params_base(required_params.merge({:evaluate  => 'yes'}), true, true)
+        end
+        specify do
+          should contain_dsconfigad('foo.ad.com').with_ensure('present')
+        end
+      end
+
+      context "when $evaluate == 'no'" do
+        let(:params) do
+          ad_params_base(required_params.merge({:evaluate  => 'no'}), true, true)
+        end
+        specify do
+          should_not contain_dsconfigad('foo.ad.com')
+        end
+      end
+
+      context "when $evaluate == 'false'" do
+        let(:params) do
+          ad_params_base(required_params.merge({:evaluate  => 'false'}), true, true)
+        end
+        specify do
+          should_not contain_dsconfigad('foo.ad.com')
         end
       end
 
