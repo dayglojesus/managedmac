@@ -187,7 +187,7 @@ Puppet::Type.newtype(:dsconfigad) do
   end
 
   newproperty(:authority) do
-    desc %q{This feture is not described in the man page. Enable or disable
+    desc %q{This feature is not described in the man page. Enable or disable
       generation of Kerberos authority}
     newvalues(:enable, :disable)
   end
