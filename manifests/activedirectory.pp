@@ -26,7 +26,7 @@
 # destoyed and recreated. This can be disastrous if the bind is never
 # re-established successfully.
 #
-# Use caution when configuring your Active Direcory bind with this provider.
+# Use caution when configuring your Active Directory bind with this provider.
 #
 # Note: this binding method will eventually be deprecated and removed from
 # this class. It is strongly recommended that anybody using such a profile
