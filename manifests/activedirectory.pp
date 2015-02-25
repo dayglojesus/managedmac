@@ -414,7 +414,8 @@ ${trust_change_pass_interval_days}")
         mobileconfig { 'managedmac.activedirectory.alacarte':
           ensure       => $ensure,
           displayname  => 'Managed Mac: Active Directory',
-          description  => 'Active Directory configuration. Installed by Puppet.',
+          description  => "Active Directory configuration. Installed by \
+Puppet.",
           organization => $organization,
           content      => $options,
         }
@@ -425,7 +426,7 @@ ${trust_change_pass_interval_days}")
 
       if $safe {
 
-        dsconfigad { "${hostname}":
+        dsconfigad { $hostname:
           ensure          => $ensure,
           force           => $force,
           leave           => $leave,
