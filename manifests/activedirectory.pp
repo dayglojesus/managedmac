@@ -183,30 +183,35 @@
 #
 class managedmac::activedirectory (
 
-  $enable                          = undef,
-  $provider                        = mobileconfig,
-  $evaluate                        = undef,
-  $hostname                        = undef,
-  $username                        = undef,
-  $password                        = undef,
-  $organizational_unit             = undef,
-  $mount_style                     = undef,
-  $default_user_shell              = undef,
-  $map_uid_attribute               = undef,
-  $map_gid_attribute               = undef,
-  $map_ggid_attribute              = undef,
-  $preferred_dc_server             = undef,
-  $namespace                       = undef,
-  $domain_admin_group_list         = [],
-  $restrict_ddns                   = undef,
-  $packet_sign                     = undef,
-  $packet_encrypt                  = undef,
-  $create_mobile_account_at_login  = undef,
-  $warn_user_before_creating_ma    = undef,
-  $force_home_local                = undef,
-  $use_windows_unc_path            = undef,
-  $allow_multi_domain_auth         = undef,
-  $trust_change_pass_interval_days = undef,
+  $enable                           = undef,
+  $evaluate                         = undef,
+  $provider                         = mobileconfig,
+  $force                            = 'enable',
+  $leave                            = 'disable',
+  $hostname                         = undef,
+  $username                         = undef,
+  $password                         = undef,
+  $computer                         = undef,
+  $organizational_unit              = undef,
+  $mount_style                      = undef,
+  $sharepoint                       = 'enable',
+  $default_user_shell               = undef,
+  $map_uid_attribute                = undef,
+  $map_gid_attribute                = undef,
+  $map_ggid_attribute               = undef,
+  $authority                        = 'enable',
+  $preferred_dc_server              = undef,
+  $namespace                        = undef,
+  $domain_admin_group_list          = [],
+  $restrict_ddns                    = undef,
+  $packet_sign                      = undef,
+  $packet_encrypt                   = undef,
+  $create_mobile_account_at_login   = undef,
+  $warn_user_before_creating_ma     = undef,
+  $force_home_local                 = undef,
+  $use_windows_unc_path             = undef,
+  $allow_multi_domain_auth          = undef,
+  $trust_change_pass_interval_days  = undef,
 
 ) {
 
@@ -233,6 +238,16 @@ class managedmac::activedirectory (
 
     unless $enable == false {
 
+      unless $force =~ /\Aenable\z|\Adisable\z/ {
+        fail("Parameter :force must be \'enable\' or \'disable\', \
+[${force}]")
+      }
+
+      unless $leave =~ /\Aenable\z|\Adisable\z/ {
+        fail("Parameter :leave must be \'enable\' or \'disable\', \
+[${leave}]")
+      }
+
       if $hostname == undef {
         fail('You must specify a :hostname param!')
       }
@@ -245,6 +260,10 @@ class managedmac::activedirectory (
         fail('You must specify a :password param!')
       }
 
+      unless $computer == undef {
+        validate_string ($computer)
+      }
+
       unless $organizational_unit == undef {
         validate_string ($organizational_unit)
       }
@@ -254,6 +273,11 @@ class managedmac::activedirectory (
           fail("Parameter :mount_style must be \'afp\' or \'smb\', \
 [${mount_style}]")
         }
+      }
+
+      unless $sharepoint =~ /\Aenable\z|\Adisable\z/ {
+        fail("Parameter :sharepoint must be \'enable\' or \'disable\', \
+[${sharepoint}]")
       }
 
       unless $default_user_shell == undef {
@@ -270,6 +294,11 @@ class managedmac::activedirectory (
 
       unless $map_ggid_attribute == undef {
         validate_string ($map_ggid_attribute)
+      }
+
+      unless $authority =~ /\Aenable\z|\Adisable\z/ {
+        fail("Parameter :authority must be \'enable\' or \'disable\', \
+[${authority}]")
       }
 
       unless $preferred_dc_server == undef {
@@ -397,29 +426,32 @@ ${trust_change_pass_interval_days}")
       if $safe {
 
         dsconfigad { "${hostname}":
-          ensure        => $ensure,
-          username      => $username,
-          password      => $password,
-          computer      => $computer,
-          ou            => $organizational_unit,
-          alldomains    => $allow_multi_domain_auth,
-          authority     => $authority,
-          uid           => $map_uid_attribute,
-          gid           => $map_gid_attribute,
-          ggid          => $map_ggid_attribute,
-          groups        => $domain_admin_group_list,
-          localhome     => $force_home_local,
-          mobile        => $create_mobile_account_at_login,
-          mobileconfirm => $warn_user_before_creating_ma,
-          namespace     => $namespace,
-          packetencrypt => $packet_encrypt,
-          packetsign    => $packet_sign,
-          passinterval  => $trust_change_pass_interval_days,
-          preferred     => $preferred_dc_server,
-          protocol      => $mount_style,
-          restrictddns  => $restrict_ddns,
-          shell         => $default_user_shell,
-          useuncpath    => $use_windows_unc_path,
+          ensure          => $ensure,
+          force           => $force,
+          leave           => $leave,
+          username        => $username,
+          password        => $password,
+          computer        => $computer,
+          ou              => $organizational_unit,
+          mobile          => $create_mobile_account_at_login,
+          mobileconfirm   => $warn_user_before_creating_ma,
+          localhome       => $force_home_local,
+          useuncpath      => $use_windows_unc_path,
+          protocol        => $mount_style,
+          sharepoint      => $sharepoint,
+          shell           => $default_user_shell,
+          uid             => $map_uid_attribute,
+          gid             => $map_gid_attribute,
+          ggid            => $map_ggid_attribute,
+          authority       => $authority,
+          preferred       => $preferred_dc_server,
+          groups          => $domain_admin_group_list,
+          alldomains      => $allow_multi_domain_auth,
+          packetsign      => $packet_sign,
+          packetencrypt   => $packet_encrypt,
+          namespace       => $namespace,
+          passinterval    => $trust_change_pass_interval_days,
+          restrictddns    => $restrict_ddns,
         }
 
       }
