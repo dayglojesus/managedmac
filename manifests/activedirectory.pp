@@ -1,9 +1,68 @@
 # == Class: managedmac::activedirectory
 #
-# Leverages the Mobileconfig type and Activedirectory provider to configure and
-# bind a Mac to Active Directory.
+# Binds an OS X machine to Active Directory and manages that configuration.
+#
+# ********* IMPORTANT: USING PROVIDERS *********
+#
+# This class can leverage TWO different providers to configure Active
+# Directory binding:
+#
+# ************************************
+# 1. Mobileconfig (default)
+# ************************************
+#
+# This is the simplest provider, but it is also the dumbest. All we do is
+# install a 'com.apple.DirectoryService.managed' profile that will bind to
+# the specified Active Directory.
+#
+# Binding in this manner has the benefit of being very easy to troubleshoot.
+# For instance, if a client is experiencing Active Directory problems, you
+# could direct them to remove the profile and then trigger a Puppet run to
+# re-apply it. However, this methodology has one critical flaw...
+#
+# If you change ANY setting while using this provider, the entire profile
+# will be removed and reinstalled. This is simply the way profiles behave.
+# Unfortunately, it also implies that the Active Directory bind will be
+# destoyed and recreated. This can be disastrous if the bind is never
+# re-established successfully.
+#
+# Use caution when configuring your Active Direcory bind with this provider.
+#
+# Note: this binding method will eventually be deprecated and removed from
+# this class. It is strongly recommended that anybody using such a profile
+# for binding migrate to the Dsconfigad provider ASAP.
+#
+# ************************************
+# 2. Dsconfigad (recommended)
+# ************************************
+#
+# Rather than using a static profile to configure binding, this
+# provider abstracts Apple's '/usr/sbin/dsconfigad' utility and passes
+# the specified parameters to it.
+#
+# As such, the Dsconfigad provider WILL NOT destroy an Active Directory
+# binding when changing simple AD plugin configuration values.
+#
+# It also provides better control and more advanced options.
+#
+# All persons currently leveraging this Puppet class for binding to Active
+# Directory are strongly encouraged to switch to this provider.
 #
 # === Parameters
+#
+# *********** IMPORTANT *************
+#
+# The following parameters are ONLY used by the Dsconfigad provider:
+#
+#   * force
+#   * leave (broken -- see below)
+#   * computer
+#   * sharepoint
+#   * authority
+#
+# The Mobileconfig provider will ignore them.
+#
+# ************************************
 #
 # [*enable*]
 #   Whether to apply the resource or remove it. Pass a Symbol or a String.
@@ -11,14 +70,38 @@
 #   Default: undef
 #
 # [*evaluate*]
-#   A seatbelt intended to prevent the managedmac.activedirectory.alacarte
-#   profile from being removed or modified. Any administrator defined condition
+#   A seatbelt intended to prevent the Active Directory configuration
+#   from being removed or modified. Any administrator defined condition
 #   can serve as the basis for comparison.
 #   Pass: 'yes', 'no', 'true' or 'false'
 #   If 'no' or 'false', the mobileconfig resource is not evaluated and a
 #   warning is produced. Useful in conjunction with a custom Facter fact.
 #   Type: String
 #   Default: undef
+#
+# [*provider*]
+#   String representation of the provider type. Accepts: mobileconfig and
+#   dsconfigad.
+#   Type: String
+#   Default: mobileconfig
+#
+# [*force*]
+#   *** DSCONFIGAD ONLY! ***
+#   Force the process (i.e., join the existing account or remove the
+#   binding. Accepts: enable or disable
+#   Type: String
+#   Default: enable
+#
+# [*leave*]
+#   *** BROKEN! (DSCONFIGAD ONLY!) ***
+#   * Using this feature will procude a Segmentation Fault error in the
+#   * dsconfigad utility. This is an Apple bug. If it were to work it would
+#   * perform the following function...
+#   **************************************
+#   Leaves the current domain (preserving the computer record in the
+#   directory). Accepts: enable or disable
+#   Type: String
+#   Default: disable
 #
 # [*hostname*]
 #   The Active Directory domain to join. This parameter is required when
@@ -48,6 +131,13 @@
 #   Type: String
 #   Default: undef
 #
+# [*sharepoint*]
+#   *** DSCONFIGAD ONLY! ***
+#   Enable or disable mounting of the network home as a sharepoint.
+#   Accepts: enable or disable
+#   Type: String
+#   Default: enable
+#
 # [*default_user_shell*]
 #   Default user shell; e.g. /bin/bash
 #   Type: String
@@ -67,6 +157,14 @@
 #   Map group GID to attribute
 #   Type: String
 #   Default: undef
+#
+# [*authority*]
+#   *** DSCONFIGAD ONLY! ***
+#   This feature is not described in the man page. Enable or disable
+#   generation of Kerberos authority
+#   Accepts: enable or disable
+#   Type: String
+#   Default: enable
 #
 # [*preferred_dc_server*]
 #   Prefer this domain server
