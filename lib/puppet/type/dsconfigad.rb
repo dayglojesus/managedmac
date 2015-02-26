@@ -1,4 +1,5 @@
 Puppet::Type.newtype(:dsconfigad) do
+
   desc %q{Manage OS X Active Directory binding and configuration options.
 
     A custom Puppet type for scripted binding and AD plugin configuration
@@ -26,6 +27,36 @@ Puppet::Type.newtype(:dsconfigad) do
         passinterval  => '0',
       }
   }
+
+
+
+  class << self
+
+    # Method for testing Array type attribute equality
+    define_method(:array_insync?) do |is, should|
+      if should == :absent or should.join == ""
+        is == :absent
+      else
+        i, s = [is, should].collect do |a|
+          if a == :absent
+            []
+          else
+            a = Array(a)
+            a.compact!
+            a.sort!
+          end
+        end
+        i.eql? s
+      end
+    end
+
+    # Method for testing no_flag String type attribute equality
+    define_method(:no_flag_insync?) do |is, should|
+      return (is == :absent) if (should == :absent or should == "")
+      is == should
+    end
+
+  end
 
   ensurable
 
@@ -160,8 +191,7 @@ Puppet::Type.newtype(:dsconfigad) do
       end
     end
     def insync?(is)
-      return (is == :absent) if (should == :absent or should == "")
-      is == should
+      Puppet::Type::Dsconfigad.no_flag_insync? is, should
     end
   end
 
@@ -175,8 +205,7 @@ Puppet::Type.newtype(:dsconfigad) do
       end
     end
     def insync?(is)
-      return (is == :absent) if (should == :absent or should == "")
-      is == should
+      Puppet::Type::Dsconfigad.no_flag_insync? is, should
     end
   end
 
@@ -190,8 +219,7 @@ Puppet::Type.newtype(:dsconfigad) do
       end
     end
     def insync?(is)
-      return (is == :absent) if (should == :absent or should == "")
-      is == should
+      Puppet::Type::Dsconfigad.no_flag_insync? is, should
     end
   end
 
@@ -213,8 +241,7 @@ Puppet::Type.newtype(:dsconfigad) do
       end
     end
     def insync?(is)
-      return (is == :absent) if (should == :absent or should == "")
-      is == should
+      Puppet::Type::Dsconfigad.no_flag_insync? is, should
     end
   end
 
@@ -224,20 +251,7 @@ Puppet::Type.newtype(:dsconfigad) do
     # Override #insync?
     # - We need to sort the Arrays before performing an equality test.
     def insync?(is)
-      if should == :absent or should.join == ""
-        is == :absent
-      else
-        i, s = [is, should].collect do |a|
-          if a == :absent
-            []
-          else
-            a = Array(a)
-            a.compact!
-            a.sort!
-          end
-        end
-        i.eql? s
-      end
+      Puppet::Type::Dsconfigad.array_insync? is, should
     end
   end
 
@@ -294,20 +308,7 @@ Puppet::Type.newtype(:dsconfigad) do
     # Override #insync?
     # - We need to sort the Arrays before performing an equality test.
     def insync?(is)
-      if should == :absent or should.join == ""
-        is == :absent
-      else
-        i, s = [is, should].collect do |a|
-          if a == :absent
-            []
-          else
-            a = Array(a)
-            a.compact!
-            a.sort!
-          end
-        end
-        i.eql? s
-      end
+      Puppet::Type::Dsconfigad.array_insync? is, should
     end
   end
 
