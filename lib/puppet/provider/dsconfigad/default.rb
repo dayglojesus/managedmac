@@ -40,7 +40,6 @@ Puppet::Type.type(:dsconfigad).provide(:default) do
     :protocol=,
     :sharepoint=,
     :shell=,
-    :shell=,
     :preferred=,
     :alldomains=,
     :packetsign=,
