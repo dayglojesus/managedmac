@@ -28,8 +28,6 @@ Puppet::Type.newtype(:dsconfigad) do
       }
   }
 
-
-
   class << self
 
     # Method for testing Array type attribute equality
