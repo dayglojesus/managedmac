@@ -159,7 +159,10 @@ Puppet::Type.newtype(:dsconfigad) do
         raise ArgumentError, "Expected String, got #{value.class}"
       end
     end
-    defaultto :absent
+    def insync?(is)
+      return (is == :absent) if (should == :absent or should == "")
+      is == should
+    end
   end
 
   newproperty(:gid) do
@@ -171,7 +174,10 @@ Puppet::Type.newtype(:dsconfigad) do
         raise ArgumentError, "Expected String, got #{value.class}"
       end
     end
-    defaultto :absent
+    def insync?(is)
+      return (is == :absent) if (should == :absent or should == "")
+      is == should
+    end
   end
 
   newproperty(:ggid) do
@@ -183,7 +189,10 @@ Puppet::Type.newtype(:dsconfigad) do
         raise ArgumentError, "Expected String, got #{value.class}"
       end
     end
-    defaultto :absent
+    def insync?(is)
+      return (is == :absent) if (should == :absent or should == "")
+      is == should
+    end
   end
 
   newproperty(:authority) do
@@ -203,7 +212,10 @@ Puppet::Type.newtype(:dsconfigad) do
         raise ArgumentError, "Expected String, got #{value.class}"
       end
     end
-    defaultto :absent
+    def insync?(is)
+      return (is == :absent) if (should == :absent or should == "")
+      is == should
+    end
   end
 
   newproperty(:groups, :array_matching => :all) do
@@ -212,16 +224,20 @@ Puppet::Type.newtype(:dsconfigad) do
     # Override #insync?
     # - We need to sort the Arrays before performing an equality test.
     def insync?(is)
-      i, s = [is, should].collect do |a|
-        if a == :absent
-          []
-        else
-          a = Array(a)
-          a.compact!
-          a.sort!
+      if should == :absent or should.join == ""
+        is == :absent
+      else
+        i, s = [is, should].collect do |a|
+          if a == :absent
+            []
+          else
+            a = Array(a)
+            a.compact!
+            a.sort!
+          end
         end
+        i.eql? s
       end
-      i.eql? s
     end
   end
 
@@ -278,18 +294,21 @@ Puppet::Type.newtype(:dsconfigad) do
     # Override #insync?
     # - We need to sort the Arrays before performing an equality test.
     def insync?(is)
-      i, s = [is, should].collect do |a|
-        if a == :absent
-          []
-        else
-          a = Array(a)
-          a.compact!
-          a.sort!
+      if should == :absent or should.join == ""
+        is == :absent
+      else
+        i, s = [is, should].collect do |a|
+          if a == :absent
+            []
+          else
+            a = Array(a)
+            a.compact!
+            a.sort!
+          end
         end
+        i.eql? s
       end
-      i.eql? s
     end
-    defaultto []
   end
 
 end
