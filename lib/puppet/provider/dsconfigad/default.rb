@@ -17,6 +17,7 @@ Puppet::Type.type(:dsconfigad).provide(:default) do
     :localhome      =>  'Force home to startup disk',
     :useuncpath     =>  'Use Windows UNC path for home',
     :protocol       =>  'Network protocol',
+    :sharepoint     =>  'Mount home as sharepoint',
     :shell          =>  'Shell',
     :uid            =>  'UID Mapping',
     :gid            =>  'User GID Mapping',
