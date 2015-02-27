@@ -136,7 +136,7 @@
 #   Enable or disable mounting of the network home as a sharepoint.
 #   Accepts: enable or disable
 #   Type: String
-#   Default: enable
+#   Default: undef
 #
 # [*default_user_shell*]
 #   Default user shell; e.g. /bin/bash
@@ -292,7 +292,7 @@ class managedmac::activedirectory (
   $computer                         = undef,
   $organizational_unit              = undef,
   $mount_style                      = undef,
-  $sharepoint                       = 'enable',
+  $sharepoint                       = undef,
   $default_user_shell               = undef,
   $map_uid_attribute                = undef,
   $map_gid_attribute                = undef,
@@ -373,9 +373,11 @@ class managedmac::activedirectory (
         }
       }
 
-      unless $sharepoint =~ /\Aenable\z|\Adisable\z/ {
-        fail("Parameter :sharepoint must be \'enable\' or \'disable\', \
+      unless $sharepoint == undef {
+        unless $sharepoint =~ /\Aenable\z|\Adisable\z/ {
+          fail("Parameter :sharepoint must be \'enable\' or \'disable\', \
 [${sharepoint}]")
+        }
       }
 
       unless $default_user_shell == undef {
