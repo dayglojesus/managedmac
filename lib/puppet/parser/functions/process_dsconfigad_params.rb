@@ -31,7 +31,9 @@ instead of Hash)"
       else
         value
       end
-      memo[key] = value unless value.nil?
+      unless value.nil? or (value.respond_to? :empty? and value.empty?)
+        memo[key] = value
+      end
       memo
     end
 
