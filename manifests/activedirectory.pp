@@ -164,7 +164,7 @@
 #   generation of Kerberos authority
 #   Accepts: enable or disable
 #   Type: String
-#   Default: enable
+#   Default: undef
 #
 # [*preferred_dc_server*]
 #   Prefer this domain server
@@ -297,7 +297,7 @@ class managedmac::activedirectory (
   $map_uid_attribute                = undef,
   $map_gid_attribute                = undef,
   $map_ggid_attribute               = undef,
-  $authority                        = 'enable',
+  $authority                        = undef,
   $preferred_dc_server              = undef,
   $namespace                        = undef,
   $domain_admin_group_list          = [],
@@ -394,9 +394,11 @@ class managedmac::activedirectory (
         validate_string ($map_ggid_attribute)
       }
 
-      unless $authority =~ /\Aenable\z|\Adisable\z/ {
-        fail("Parameter :authority must be \'enable\' or \'disable\', \
+      unless $authority == undef {
+        unless $authority =~ /\Aenable\z|\Adisable\z/ {
+          fail("Parameter :authority must be \'enable\' or \'disable\', \
 [${authority}]")
+        }
       }
 
       unless $preferred_dc_server == undef {
