@@ -524,7 +524,7 @@ Puppet.",
 
       if $safe {
 
-        dsconfigad { $hostname:
+        $dsconfigad_params = {
           ensure          => $ensure,
           force           => $force,
           leave           => $leave,
@@ -552,6 +552,9 @@ Puppet.",
           passinterval    => $trust_change_pass_interval_days,
           restrictddns    => $restrict_ddns,
         }
+
+        $dsconfigad_hash = process_dsconfigad_params($dsconfigad_params)
+        create_resources(dsconfigad, { "${hostname}" => $dsconfigad_hash })
 
       }
 
