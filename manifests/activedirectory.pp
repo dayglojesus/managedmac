@@ -186,7 +186,7 @@
 # [*domain_admin_group_list*]
 #   Allow administration by specified Active Directory groups
 #   Type: Array
-#   Default: []
+#   Default: undef
 #
 # [*packet_sign*]
 #   Packet signing: "allow", "disable" or "require"; "allow" is default
@@ -300,7 +300,7 @@ class managedmac::activedirectory (
   $authority                        = undef,
   $preferred_dc_server              = undef,
   $namespace                        = undef,
-  $domain_admin_group_list          = [],
+  $domain_admin_group_list          = undef,
   $restrict_ddns                    = undef,
   $packet_sign                      = undef,
   $packet_encrypt                   = undef,
@@ -412,8 +412,10 @@ class managedmac::activedirectory (
         }
       }
 
-      unless empty($domain_admin_group_list) {
-        validate_array ($domain_admin_group_list)
+      unless $domain_admin_group_list == undef {
+        unless empty($domain_admin_group_list) {
+          validate_array ($domain_admin_group_list)
+        }
       }
 
       unless $restrict_ddns == undef {
