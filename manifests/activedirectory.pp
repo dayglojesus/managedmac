@@ -174,7 +174,7 @@
 # [*restrict_ddns*]
 #   Restrict Dynamic DNS updates to the specified interfaces (e.g. en0,
 #   en1, etc)
-#   Type: String
+#   Type: Array
 #   Default: undef
 #
 # [*namespace*]
@@ -415,7 +415,7 @@ class managedmac::activedirectory (
       }
 
       unless $restrict_ddns == undef {
-        validate_string ($restrict_ddns)
+        validate_array ($restrict_ddns)
       }
 
       unless $packet_sign == undef {
