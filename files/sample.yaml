@@ -734,12 +734,30 @@ managedmac::authorization::allow_timemachine: true
 managedmac::authorization::allow_printers: true
 
 #####################################################################
-# Allow 'everyone' to set the inital DVD region code.
+# Allow 'everyone' to set the initial DVD region code.
 # Default: false
 # Type: Boolean
 #####################################################################
 
 managedmac::authorization::allow_dvd_setregion_initial: true
+
+#####################################################################
+# Allow 'everyone' to restart the system while other users are 
+# logged onto the system.
+# Default: false
+# Type: Boolean
+#####################################################################
+
+managedmac::authorization::allow_restart: true
+
+#####################################################################
+# Allow 'everyone' to shutdown the system while other users are 
+# logged onto the system.
+# Default: false
+# Type: Boolean
+#####################################################################
+
+managedmac::authorization::allow_shutdown: true
 
 #####################################################################
 #
