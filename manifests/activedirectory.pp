@@ -48,6 +48,9 @@
 # All persons currently leveraging this Puppet class for binding to Active
 # Directory are strongly encouraged to switch to this provider.
 #
+# NOTE: You *must* specify a $computer parameter when using the Dscinfigad
+# provider. See https://github.com/dayglojesus/managedmac/issues/72
+#
 # === Parameters
 #
 # *********** IMPORTANT *************
@@ -56,7 +59,7 @@
 #
 #   * force
 #   * leave (broken -- see below)
-#   * computer
+#   * computer (required)
 #   * sharepoint
 #   * authority
 #
@@ -118,6 +121,12 @@
 # [*password*]
 #   Password of the account used to join the domain. This parameter is
 #   required when :enabled is true.
+#   Type: String
+#   Default: undef
+#
+# [*computer*]
+#   *** DSCONFIGAD ONLY! ***
+#   The "computerid" to add the specified Domain. Required parameter.
 #   Type: String
 #   Default: undef
 #
