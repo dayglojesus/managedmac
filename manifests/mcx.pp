@@ -128,12 +128,14 @@ ${bluetooth}",
     default => present,
   }
 
+  $organization = hiera('managedmac::organization', 'Simon Fraser University')
+
   mobileconfig { 'managedmac.mcx.alacarte':
     ensure            => $ensure,
     content           => $content,
     description       => 'Custom MCX Settings',
     displayname       => 'Managed Mac: Custom MCX',
-    organization      => 'Simon Fraser University',
+    organization      => $organization,
     removaldisallowed => false,
   }
 

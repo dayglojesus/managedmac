@@ -246,6 +246,59 @@ class Puppet::Provider::MobileConfig < Puppet::Provider
     payload
   end
 
+  # Validates a String as a com.apple.security.pkcs1 Certificate Payload
+  # - will decode Base64 if it can
+  def parse_cert_data_from_string(string)
+    begin
+      OpenSSL::X509::Certificate.new string
+    rescue OpenSSL::X509::CertificateError
+      begin
+        string = Base64.decode64(string)
+        OpenSSL::X509::Certificate.new string
+      rescue OpenSSL::X509::CertificateError => e
+        raise Puppet::Error, "##{__method__}:
+          Could not parse certificate data! [#{e.message}]"
+      end
+    end
+    string
+  end
+
+  # Validates a Blob as a com.apple.security.pkcs1 Certificate Payload
+  def parse_cert_data_from_blob(blob)
+    begin
+      blob = Base64.decode64(blob)
+      OpenSSL::X509::Certificate.new blob
+    rescue OpenSSL::X509::CertificateError => e
+      raise Puppet::Error, "##{__method__}:
+        Could not parse certificate data! [#{e.message}]"
+    end
+    blob
+  end
+
+  # Processes the com.apple.security.pkcs1 PayloadContent as required
+  #
+  # This provider allows PayloadContent for com.apple.security.pkcs1
+  # to be expressed as PEM (ASCII), Base64 Encoded binary, or a Base64
+  # encoded CFPropertyList::Blob.
+  #
+  # Parsable data is validated using OpenSSL.
+  #
+  # It should be able to determine what you are passing in, but if it
+  # can't, an Exception is raised.
+  #
+  def process_certificate_payload(payload)
+    data = case payload['PayloadContent']
+    when CFPropertyList::Blob
+      parse_cert_data_from_blob(payload['PayloadContent'])
+    when String
+      parse_cert_data_from_string(payload['PayloadContent'])
+    else
+      raise Puppet::Error, "Invalid Certificate Data!"
+    end
+    payload['PayloadContent'] = CFPropertyList::Blob.new data
+    payload
+  end
+
   # Formats and fortifies the PayloadContent array
   # - ensures required keys to each Hash
   def transform_content(content)
@@ -268,8 +321,11 @@ class Puppet::Provider::MobileConfig < Puppet::Provider
         'PayloadVersion'    => 1,
       })
 
-      if payload['PayloadType'].eql? 'com.apple.DirectoryService.managed'
+      case payload['PayloadType']
+      when 'com.apple.DirectoryService.managed'
         add_activedirectory_keys(payload)
+      when 'com.apple.security.pkcs1'
+        process_certificate_payload(payload)
       else
         payload
       end
