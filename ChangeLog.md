@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.6.0
+- closed: #56, #63, #64, #66, #67, #68, #71, #73
+- new type: Dsconfigad
+- new feature: managedmac::activedirectory class has new provider option
+- enhancement: manage mobileconfigs that contain embedded certs
+- new feature: control the Desktop picture (clburlison)
+- several bug fixes and improvements (much credit: clburlison) thanks!
+
 ## 0.5.9
 - bug fixes for: #3, #54, #58, #59, 60
 - fix #59 and #60 are important; you should update
