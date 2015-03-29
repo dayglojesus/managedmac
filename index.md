@@ -41,7 +41,7 @@ It's that simple.
   This methodology uses bundler and RubyGems to install and configure the system.
 
   * If Puppet, Facter or Hiera were installed using OS X packages, you may get conflicts using this method.
-  * Using RVM? I am about as sure what will happen as you are. :wink:
+  * Using RVM? I am about as sure what will happen as you are.
 </div>
 
 #####Clone the repo
