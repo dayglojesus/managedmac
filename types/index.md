@@ -7,6 +7,87 @@ title: Custom Types
 There are a few custom types used in this module. Naturally, once you've installed the module, these types will be available to use in your own Puppet code if you don't fancy using any of the builtin classes.
 
 ---
+<a id="Dsconfigad"></a>
+### Dsconfigad
+
+The _Dsconfigad_ type abstracts Apple's `/usr/sbin/dsconfigad` utility.
+
+It enables you to bind to an Active Directory domain and manage Apple's builtin Active Directory plugin using Puppet. You will find a nearly identical mapping between`dsconfigad`'s utility's CLI options and the type's attributes -- there are quite a few.
+
+{% highlight Puppet %}
+dsconfigad { 'some.domain':
+  ensure          => present,
+  username        => 'some_user',
+  password        => 'a_password',
+  computer        => 'some_machine',
+  ou              => 'CN=Computers',
+  force           => 'enable',
+  leave           => 'disable',
+  mobile          => 'enable',
+  mobileconfirm   => 'disable',
+  localhome       => 'enable',
+  useuncpath      => 'enable',
+  protocol        => 'smb',
+  sharepoint      => 'enable',
+  shell           => '/bin/zsh',
+  uid             => 'uidNumber',
+  gid             => 'gidNumber',
+  ggid            => 'ggidNumber',
+  authority       => 'disable',
+  preferred       => 'dc.some.domain',
+  groups          => ['SOME_DOMAIN\some_group','SOME_DOMAIN\another_group'],
+  alldomains      => 'enable',
+  packetsign      => 'disable',
+  packetencrypt   => 'allow',
+  namespace       => 'require',
+  passinterval    => '0',
+  restrictddns    => ['en0','en1'],
+}
+{% endhighlight %}
+
+In cases where the CLI options do not present an opportunity to create an exact mapping, there are some simple conventions to follow...
+
+#### "-no" Flags
+
+Rather than using Boolean-like values, some of the CLI flags use the awkward `-no` modifier flag (ie. '-gid' vs. '-nogid'). The [man page](https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man8/dsconfigad.8.html) has plenty of details about their use.
+
+In these cases, if you wish to _negate_, _remove_, or _un-do_ a setting, passing the attribute's value as an empty String or Array will do the trick.
+
+##### Strings
+
+Quite a few of the "-no" CLI flags accept Strings.
+
+* uid
+* gid
+* ggid
+* preferred
+
+To remove this kind of configuration you need to pass them an empty String.
+
+Example:
+
+{% highlight Puppet %}
+dsconfigad { 'ad.sfu.ca':
+  preferred => '',
+}
+{% endhighlight %}
+
+##### Arrays
+
+There are also a couple of CLI flags that accept comma separated lists. In these cases, you should pass the attribute an empty Array.
+
+* groups
+* restrictddns
+
+Example:
+
+{% highlight Puppet %}
+dsconfigad { 'some.domain':
+  groups => [],
+}
+{% endhighlight %}
+
+---
 <a id="Macauthdb"></a>
 ### Macuthdb
 
