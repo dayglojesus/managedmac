@@ -52,7 +52,14 @@ If you don't have git, then you'll need to install the Xcode commandline tools: 
 
 #####Run Setup
 
+There are two setups: one for demonstration, one for development.
+
     sudo rake setup
+
+Running the development setup installs the gems required for running tests, etc.
+
+    sudo rake setup[development]
+
 </div>
 
 <table>
