@@ -40,13 +40,25 @@ But until a parameter is passed to the class (from Hiera or another source) the 
 <a id="managedmac::activedirectory"></a>
 #### managedmac::activedirectory
 
-This class leverages the Mobileconfig type to bind of Macs to an Active Directory using an [advanced Active Directory OS X configuration profile](http://support.apple.com/kb/HT5981?viewlocale=en_US&locale=en_US).
+This class can leverage two providers:
+
+#####Mobileconfig (default)
+
+By default, the `managedmac::activedirectory` class leverages the `Mobileconfig` type to bind of Macs to an Active Directory using an [advanced Active Directory OS X configuration profile](http://support.apple.com/kb/HT5981?viewlocale=en_US&locale=en_US).
+
+NOTE: This provider is deprecated in favor of the new `Dsconfigad` provider.
+
+#####Dsconfigad
+
+The new `Dsconfigad` provider is more flexible and will become the default in future versions of this module. It is _strongly_ recommended that you configure the class to use this provider.
 
 Example:
 
 {% highlight YAML %}
 ---
 managedmac::activedirectory::enable: true
+managedmac::activedirectory::provider: dsconfigad
+managedmac::activedirectory::computer: some_computer
 managedmac::activedirectory::hostname: ad.apple.com
 managedmac::activedirectory::username: some_account
 managedmac::activedirectory::password: some_password
