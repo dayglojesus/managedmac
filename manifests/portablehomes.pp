@@ -13,7 +13,7 @@
 #   number, like '10.9' or '10.10' which will scope the policy
 #   application to the version specified.
 #   Default: false
-#   Type: Boolean
+#   Type: String
 #
 # [*menuExtra*]
 #   Enable the PHD Menu Extra
