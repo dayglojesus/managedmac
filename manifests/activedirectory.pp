@@ -242,9 +242,11 @@
 #  # Example: defaults.yaml
 #  ---
 #  managedmac::activedirectory::enable: true
+#  managedmac::activedirectory::provider: dsconfigad
 #  managedmac::activedirectory::hostname: ad.apple.com
 #  managedmac::activedirectory::username: some_account
 #  managedmac::activedirectory::password: some_password
+#  managedmac::activedirectory::computer: some_computer
 #  managedmac::activedirectory::evaluate: "%{::domain_available?}"
 #  managedmac::activedirectory::mount_style: afp
 #  managedmac::activedirectory::create_mobile_account_at_login: true
@@ -264,9 +266,12 @@
 # something along these lines:
 #
 #  class { 'managedmac::activedirectory':
+#     provider                        => 'dsconfigad',
+#     evaluate                        => $::domain_available?,
 #     hostname                        => 'foo.ad.com',
 #     username                        => 'some_account',
 #     password                        => 'some_password',
+#     computer                        => 'some_computer',
 #     mount_style                     => 'afp',
 #     trust_change_pass_interval_days => 0,
 #  }
