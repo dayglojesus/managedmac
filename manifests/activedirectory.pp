@@ -8,8 +8,24 @@
 # Directory binding:
 #
 # ************************************
-# 1. Mobileconfig (default)
+# 1. Dsconfigad (default)
 # ************************************
+#
+# This provider abstracts Apple's '/usr/sbin/dsconfigad' utility and passes
+# the specified parameters to it.
+#
+# As such, the Dsconfigad provider WILL NOT destroy an Active Directory
+# binding when changing simple AD plugin configuration values.
+#
+# NOTE: You *must* specify a $computer parameter when using the Dsconfigad
+# provider. See https://github.com/dayglojesus/managedmac/issues/72
+#
+# ************************************
+# 2. Mobileconfig (DEPRECATED)
+# ************************************
+#
+# This provider is deprecated. DO NOT use it, it is slated for removal...
+# YOU HAVE BEEN WARNED.
 #
 # This is the simplest provider, but it is also the dumbest. All we do is
 # install a 'com.apple.DirectoryService.managed' profile that will bind to
@@ -25,31 +41,6 @@
 # Unfortunately, it also implies that the Active Directory bind will be
 # destoyed and recreated. This can be disastrous if the bind is never
 # re-established successfully.
-#
-# Use caution when configuring your Active Directory bind with this provider.
-#
-# Note: this binding method will eventually be deprecated and removed from
-# this class. It is strongly recommended that anybody using such a profile
-# for binding migrate to the Dsconfigad provider ASAP.
-#
-# ************************************
-# 2. Dsconfigad (recommended)
-# ************************************
-#
-# Rather than using a static profile to configure binding, this
-# provider abstracts Apple's '/usr/sbin/dsconfigad' utility and passes
-# the specified parameters to it.
-#
-# As such, the Dsconfigad provider WILL NOT destroy an Active Directory
-# binding when changing simple AD plugin configuration values.
-#
-# It also provides better control and more advanced options.
-#
-# All persons currently leveraging this Puppet class for binding to Active
-# Directory are strongly encouraged to switch to this provider.
-#
-# NOTE: You *must* specify a $computer parameter when using the Dscinfigad
-# provider. See https://github.com/dayglojesus/managedmac/issues/72
 #
 # === Parameters
 #
@@ -83,10 +74,10 @@
 #   Default: undef
 #
 # [*provider*]
-#   String representation of the provider type. Accepts: mobileconfig and
-#   dsconfigad.
+#   String representation of the provider type. Accepts: dsconfigad and
+#   mobileconfig.
 #   Type: String
-#   Default: mobileconfig
+#   Default: dsconfigad
 #
 # [*force*]
 #   *** DSCONFIGAD ONLY! ***
