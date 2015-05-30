@@ -288,7 +288,7 @@ class managedmac::activedirectory (
 
   $enable                           = undef,
   $evaluate                         = undef,
-  $provider                         = mobileconfig,
+  $provider                         = dsconfigad,
   $force                            = 'enable',
   $leave                            = 'disable',
   $hostname                         = undef,
