@@ -480,9 +480,8 @@ ${trust_change_pass_interval_days}")
       false => absent,
     }
 
-    # If it's safe to evaluate the state of the mobileconfig resource, or
-    # if we are only interested in removing the profile, do so. Otherwise,
-    # just produce a warning.
+    # If it's safe to evaluate the state of the resource, or if we are only
+    # interested in unbinding, do so. Otherwise, just produce a warning.
     $safe = $evaluate ? {
       /yes|true/ => true,
       /no|false/ => false,
