@@ -1,6 +1,6 @@
 # managedmac
 
-Copyright 2014, Simon Fraser University.
+Copyright 2015, Simon Fraser University.
 
 ## Overview
 

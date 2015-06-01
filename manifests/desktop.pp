@@ -58,7 +58,7 @@
 #
 # === Copyright
 #
-# Copyright 2014 Simon Fraser University, unless otherwise noted.
+# Copyright 2015 Simon Fraser University, unless otherwise noted.
 #
 class managedmac::desktop (
 
