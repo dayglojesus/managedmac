@@ -182,13 +182,4 @@ module Helpers
     }
   end
 
-  def ad_params_base(params, enable=false, dsconfigad=false)
-    base = if dsconfigad
-      { :enable => enable, :provider => 'dsconfigad' }
-    else
-      { :enable => enable }
-    end
-    params.merge(base)
-  end
-
 end
