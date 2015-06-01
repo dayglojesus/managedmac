@@ -1,6 +1,6 @@
 {
   "name": "sfu-managedmac",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "author": "Brian Warsing <bcw@sfu.ca>",
   "summary": "Comprehensive OS X Configuration and Management",
   "license": "Apache License, Version 2.0",
