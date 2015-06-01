@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.7.0
+- closed: #81, #79, #76, #75, #72, #69
+- Dsconfigad is now the default provider for the `managedmac::activedirectory` class
+- fixes a bug in Macgroup type that was purging members when `strict` was `false`
+- updates docs and comments
+
 ## 0.6.0
 - closed: #56, #63, #64, #66, #67, #68, #71, #73
 - new type: Dsconfigad

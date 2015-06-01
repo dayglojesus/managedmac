@@ -13,7 +13,7 @@
 #   number, like '10.9' or '10.10' which will scope the policy
 #   application to the version specified.
 #   Default: false
-#   Type: Boolean
+#   Type: String
 #
 # [*menuExtra*]
 #   Enable the PHD Menu Extra
@@ -382,7 +382,7 @@
 #
 # === Copyright
 #
-# Copyright 2014 Simon Fraser University, unless otherwise noted.
+# Copyright 2015 Simon Fraser University, unless otherwise noted.
 #
 class managedmac::portablehomes (
 

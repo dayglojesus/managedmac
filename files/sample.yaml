@@ -57,11 +57,46 @@ managedmac::ntp::servers:
 #####################################################################
 
 #####################################################################
-# Whether to apply the resource or remove it.
+# Whether to apply the resource or remove it
 # Type: Boolean
 #####################################################################
 
 managedmac::activedirectory::enable: true
+
+#####################################################################
+# Whether to apply to evaluate the resource (see class docs)
+# Type: String
+#####################################################################
+
+managedmac::activedirectory::evaluate: 'true'
+
+#####################################################################
+# The provider to use: mobileconfig or dsconfigad
+# Type: String
+#####################################################################
+
+managedmac::activedirectory::evaluate: dsconfigad
+
+#####################################################################
+# Force the process (DSCONFIGAD ONLY)
+# Type: String
+#####################################################################
+
+managedmac::activedirectory::force: enable
+
+#####################################################################
+# BROKEN! Leave the current domain (DSCONFIGAD ONLY)
+# Type: String
+#####################################################################
+
+managedmac::activedirectory::leave: enable
+
+#####################################################################
+# BROKEN! Leave the current domain (DSCONFIGAD ONLY)
+# Type: String
+#####################################################################
+
+managedmac::activedirectory::leave: enable
 
 #####################################################################
 # The Active Directory domain to join
@@ -83,6 +118,13 @@ managedmac::activedirectory::username: some_account
 #####################################################################
 
 managedmac::activedirectory::password: some_password
+
+#####################################################################
+# The "computerid" to add (Required -- DSCONFIGAD ONLY)
+# Type: String
+#####################################################################
+
+managedmac::activedirectory::computer: some_computer
 
 #####################################################################
 # The organizational unit (OU) in which to place the computer object

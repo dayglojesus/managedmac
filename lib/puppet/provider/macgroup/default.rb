@@ -91,7 +91,7 @@ Puppet::Type.type(:macgroup).provide(:default) do
     desired_state = @resource.should(type).compact
 
     if @resource[:strict] == :false
-      current_state = Array(@property_hash[type])
+      current_state = Array(@original_properties[type])
       desired_state = current_state | desired_state
     end
 
