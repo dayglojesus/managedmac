@@ -185,9 +185,6 @@ describe 'managedmac::activedirectory', :type => 'class' do
 
       context "when $evaluate == 'false'" do
         let(:params) do
-          require 'pry'
-          binding.pry
-
           required_params.merge({ :evaluate  => 'false' })
         end
         specify do
@@ -256,8 +253,6 @@ describe 'managedmac::activedirectory', :type => 'class' do
 
       context "when $evaluate == 'false'" do
         let(:params) do
-          require 'pry'
-          binding.pry
           required_params.merge({:evaluate  => 'false'})
         end
         specify do
