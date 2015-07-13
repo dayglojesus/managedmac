@@ -15,10 +15,10 @@
     }
   ],
   "operatingsystem_support": [
-       {
-           "operatingsystem": "Darwin",
-           "operatingsystemrelease": ["10.9", "10.10"]
-       }
+    {
+       "operatingsystem": "Darwin",
+       "operatingsystemrelease": ["10.9", "10.10"]
+    }
   ]
   "requirements": [
     {
