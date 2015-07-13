@@ -1,6 +1,6 @@
 {
   "name": "sfu-managedmac",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "author": "Brian Warsing <bcw@sfu.ca>",
   "summary": "Comprehensive OS X Configuration and Management",
   "license": "Apache License, Version 2.0",
@@ -15,9 +15,19 @@
     }
   ],
   "operatingsystem_support": [
-       {
-           "operatingsystem": "Darwin",
-           "operatingsystemrelease": ["10.9", "10.10"]
-       }
-   ]
+    {
+       "operatingsystem": "Darwin",
+       "operatingsystemrelease": ["10.9", "10.10"]
+    }
+  ],
+  "requirements": [
+    {
+      "name": "pe",
+      "version_requirement": ">=3.7.0 <4.0.0"
+    },
+    {
+      "name": "puppet",
+      "version_requirement": ">=3.7.0 <4.0.0"
+    }
+  ]
 }
