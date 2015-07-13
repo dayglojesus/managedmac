@@ -1,5 +1,8 @@
 # Change Log
 
+## 0.7.2
+- no changes; just need to bump the version so I can submit to the Forge
+
 ## 0.7.1
 - properly scope the module to Puppet Version 3 only
 - reference issues: #80, #81 and #84
