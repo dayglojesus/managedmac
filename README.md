@@ -6,6 +6,11 @@ Copyright 2015, Simon Fraser University.
 
 A comprehensive collection of Puppet classes and types for managing OS X.
 
+---
+#### Puppet Version 4.x is not currently supported
+
+---
+
 ## Description
 
 This is a giant Puppet module. It abstracts all the things. It won't win any awards for being small and portable and pretty, because it does A LOT OF STUFF.
@@ -26,7 +31,7 @@ Some of this stuff is very useful, a lot of it is new, all of it is IN ONE PLACE
 ## Requirements
 
 * OS X 10.9 or greater
-* Puppet 3.x
+* Puppet 3.x (No Puppet Version 4 support at this time)
 * puppetlabs-stdlib module
 * CFPropertyList gem
 * sqlite3 gem
