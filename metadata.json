@@ -19,7 +19,7 @@
        "operatingsystem": "Darwin",
        "operatingsystemrelease": ["10.9", "10.10"]
     }
-  ]
+  ],
   "requirements": [
     {
       "name": "pe",
@@ -29,5 +29,5 @@
       "name": "puppet",
       "version_requirement": ">=3.7 <4.0.0"
     }
-  ],
+  ]
 }
