@@ -1,5 +1,8 @@
 # Change Log
 
+## 0.7.1
+- properly scope the module to Puppet Version 3 only
+
 ## 0.7.0
 - closed: #81, #79, #76, #75, #72, #69
 - Dsconfigad is now the default provider for the `managedmac::activedirectory` class
