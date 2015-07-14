@@ -12,11 +12,7 @@ describe 'managedmac::security', :type => 'class' do
     let(:params) do
       { :ask_for_password => 'a string', }
     end
-    specify do
-      expect {
-        should compile
-      }.to raise_error(Puppet::Error, /not a boolean/)
-    end
+    it { should raise_error(Puppet::Error, /not a boolean/) }
   end
 
   context "when one of the params is set" do
