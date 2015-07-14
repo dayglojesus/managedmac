@@ -10,8 +10,7 @@ describe "managedmac::authorization", :type => 'class' do
     let(:params) do
       { :allow_timemachine => 'This is not a Bool.' }
     end
-
-    specify { expect { should compile }.to raise_error(Puppet::Error) }
+    it { should raise_error(Puppet::Error)  }
   end
 
   context "when at least one parameter == true" do
