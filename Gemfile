@@ -13,5 +13,4 @@ group :development, :test do
   gem 'rspec-puppet', '2.2.0'
   gem 'puppet-lint', '1.1.0'
   gem 'puppetlabs_spec_helper', '0.10.3'
-  gem 'hiera-puppet-helper', :git => 'git://github.com/mmz-srf/hiera-puppet-helper.git'
 end
