@@ -14,11 +14,7 @@ describe 'managedmac::softwareupdate', :type => 'class' do
       let(:params) do
         { :catalog_url => 'foo' }
       end
-      specify do
-        expect {
-          should compile
-        }.to raise_error(Puppet::Error, /does not match/)
-      end
+      it { should raise_error(Puppet::Error, /does not match/) }
     end
     context "when a URL" do
       let(:params) do
@@ -41,11 +37,7 @@ describe 'managedmac::softwareupdate', :type => 'class' do
       let(:params) do
         { :allow_pre_release_installation => 'foo' }
       end
-      specify do
-        expect {
-          should compile
-        }.to raise_error(Puppet::Error, /not a boolean/)
-      end
+      it { should raise_error(Puppet::Error, /not a boolean/) }
     end
     context "when a Boolean" do
       let(:params) do
@@ -67,11 +59,7 @@ describe 'managedmac::softwareupdate', :type => 'class' do
       let(:params) do
         { :automatic_update_check => 'foo' }
       end
-      specify do
-        expect {
-          should compile
-        }.to raise_error(Puppet::Error, /not a boolean/)
-      end
+      it { should raise_error(Puppet::Error, /not a boolean/) }
     end
     context "when a boolean" do
       let(:params) do
@@ -93,11 +81,7 @@ describe 'managedmac::softwareupdate', :type => 'class' do
       let(:params) do
         { :automatic_download => 'foo' }
       end
-      specify do
-        expect {
-          should compile
-        }.to raise_error(Puppet::Error, /not a boolean/)
-      end
+      it { should raise_error(Puppet::Error, /not a boolean/) }
     end
     context "when a boolean" do
       let(:params) do
@@ -119,11 +103,7 @@ describe 'managedmac::softwareupdate', :type => 'class' do
       let(:params) do
         { :config_data_install => 'foo' }
       end
-      specify do
-        expect {
-          should compile
-        }.to raise_error(Puppet::Error, /not a boolean/)
-      end
+      it { should raise_error(Puppet::Error, /not a boolean/) }
     end
     context "when a boolean" do
       let(:params) do
@@ -145,11 +125,7 @@ describe 'managedmac::softwareupdate', :type => 'class' do
       let(:params) do
         { :critical_update_install => 'foo' }
       end
-      specify do
-        expect {
-          should compile
-        }.to raise_error(Puppet::Error, /not a boolean/)
-      end
+      it { should raise_error(Puppet::Error, /not a boolean/) }
     end
     context "when a boolean" do
       let(:params) do
@@ -171,11 +147,7 @@ describe 'managedmac::softwareupdate', :type => 'class' do
       let(:params) do
         { :auto_update_apps => 'foo' }
       end
-      specify do
-        expect {
-          should compile
-        }.to raise_error(Puppet::Error, /not a boolean/)
-      end
+      it { should raise_error(Puppet::Error, /not a boolean/) }
     end
     context "when a boolean" do
       let(:params) do

@@ -6,14 +6,14 @@ describe 'managedmac::energysaver', :type => 'class' do
     let(:params) do
       { :desktop => "Icanhazstring", }
     end
-    specify { expect { should compile }.to raise_error(Puppet::Error) }
+    it { should raise_error(Puppet::Error) }
   end
 
   context "when $portable is not a Hash" do
     let(:params) do
       { :desktop => "Icanhazstring", }
     end
-    specify { expect { should compile }.to raise_error(Puppet::Error) }
+    it { should raise_error(Puppet::Error) }
   end
 
   context "when $desktop is an empty Hash" do

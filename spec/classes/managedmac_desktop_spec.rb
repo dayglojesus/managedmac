@@ -12,22 +12,14 @@ describe 'managedmac::desktop', :type => 'class' do
     let(:params) do
       { :override_picture_path => 'not a valid path', }
     end
-    specify do
-      expect {
-        should compile
-      }.to raise_error(Puppet::Error, /not an absolute path/)
-    end
+    it { should raise_error(Puppet::Error, /not an absolute path/) }
   end
 
   context "when $locked is not a Boolean" do
     let(:params) do
       { :locked => 'not a bool', }
     end
-    specify do
-      expect {
-        should compile
-      }.to raise_error(Puppet::Error, /not a boolean/)
-    end
+    it { should raise_error(Puppet::Error, /not a boolean/) }
   end
 
   context "when $override_picture_path param is valid" do

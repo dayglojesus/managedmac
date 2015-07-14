@@ -25,11 +25,7 @@ describe 'managedmac::mcx', :type => 'class' do
     let(:params) do
       { :bluetooth => 'foo' }
     end
-    specify do
-      expect {
-        should compile
-      }.to raise_error(Puppet::Error, /not a boolean/)
-    end
+    it { should raise_error(Puppet::Error, /not a boolean/) }
   end
 
   context "when $bluetooth == on" do
@@ -135,11 +131,7 @@ describe 'managedmac::mcx', :type => 'class' do
     let(:params) do
       { :loginitems => 'foo' }
     end
-    specify do
-      expect {
-        should compile
-      }.to raise_error(Puppet::Error, /not an Array/)
-    end
+    it { should raise_error(Puppet::Error, /not an Array/) }
   end
 
   context "when $suppress_icloud_setup == false" do
@@ -197,11 +189,7 @@ describe 'managedmac::mcx', :type => 'class' do
     let(:params) do
       { :hidden_preference_panes => 'foo' }
     end
-    specify do
-      expect {
-        should compile
-      }.to raise_error(Puppet::Error, /not an Array/)
-    end
+    it { should raise_error(Puppet::Error, /not an Array/) }
   end
 
 end

@@ -6,22 +6,14 @@ describe 'managedmac::ntp', :type => 'class' do
     let(:params) do
       { :enable => 'whatever' }
     end
-    specify do
-      expect {
-        should compile
-      }.to raise_error(Puppet::Error, /not a boolean/)
-    end
+    it { should raise_error(Puppet::Error, /not a boolean/) }
   end
 
   context "when $servers is invalid" do
     let(:params) do
       { :enable => 'whatever' }
     end
-    specify do
-      expect {
-        should compile
-      }.to raise_error(Puppet::Error, /not a boolean/)
-    end
+    it { should raise_error(Puppet::Error, /not a boolean/) }
   end
 
   context "when $enable == undef" do

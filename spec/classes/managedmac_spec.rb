@@ -13,7 +13,7 @@ describe 'managedmac', :type => 'class' do
     end
     # Finally, test the code
     it "should raise a Puppet:Error" do
-      expect { should compile }.to raise_error(Puppet::Error, /unsupported osfamily/)
+      should raise_error(Puppet::Error, /unsupported osfamily/)
     end
   end
 
@@ -29,7 +29,7 @@ describe 'managedmac', :type => 'class' do
     end
     # Test the Puppet fail directive
     it "should raise a Puppet:Error" do
-      expect { should compile }.to raise_error(Puppet::Error, /unsupported product version/)
+      should raise_error(Puppet::Error, /unsupported product version/)
     end
   end
 
