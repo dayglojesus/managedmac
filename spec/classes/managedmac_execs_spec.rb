@@ -6,7 +6,7 @@ describe "managedmac::execs", :type => 'class' do
     let(:params) do
       { :commands => 'This is not a Hash.' }
     end
-    specify { expect { should compile }.to raise_error(Puppet::Error) }
+    it { should raise_error(Puppet::Error) }
   end
 
   context "when $defaults is invalid" do
@@ -16,7 +16,7 @@ describe "managedmac::execs", :type => 'class' do
         :defaults => 'This is not a Hash.',
       }
     end
-    specify { expect { should compile }.to raise_error(Puppet::Error) }
+    it { should raise_error(Puppet::Error) }
   end
 
   context "when $commands is empty" do
@@ -31,7 +31,7 @@ describe "managedmac::execs", :type => 'class' do
       the_data = execs_cmds.merge({ 'bad_data' => 'Not a Hash.'})
       { :commands => the_data }
     end
-    specify { expect { should compile }.to raise_error(Puppet::Error) }
+    it { should raise_error(Puppet::Error) }
   end
 
   context "when $commands is VALID" do
