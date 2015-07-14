@@ -1,9 +1,3 @@
-GIT
-  remote: git://github.com/mmz-srf/hiera-puppet-helper.git
-  revision: 6f43f7a0cdba69161b70ee61f525a8579ac5069b
-  specs:
-    hiera-puppet-helper (2.0.1)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -62,7 +56,6 @@ DEPENDENCIES
   CFPropertyList (>= 2.2.7)
   facter (~> 2.2)
   hiera (~> 1.3)
-  hiera-puppet-helper!
   pry (>= 0.10.1)
   puppet (~> 3.7)
   puppet-lint (= 1.1.0)
