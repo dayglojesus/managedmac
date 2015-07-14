@@ -12,11 +12,7 @@ describe "managedmac::loginhook", :type => 'class' do
       let(:params) do
         { :enable => true }
       end
-      specify do
-        expect {
-          should compile
-        }.to raise_error(Puppet::Error, /not an absolute path/)
-      end
+      it { should raise_error(Puppet::Error, /not an absolute path/) }
     end
 
     context "when scripts is defined" do
@@ -38,7 +34,7 @@ describe "managedmac::loginhook", :type => 'class' do
     end
     it { should contain_managedmac__hook('login').with(
       'enable'  => false,
-      'scripts' => '',
+      'scripts' => nil,
     )}
   end
 
