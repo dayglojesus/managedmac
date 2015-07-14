@@ -46,22 +46,14 @@ describe 'managedmac::filevault', :type => 'class' do
       let(:params) do
         { :enable => true, :output_path => 'some_file' }
       end
-      specify do
-        expect {
-          should compile
-        }.to raise_error(Puppet::Error, /not an absolute path/)
-      end
+      it { should raise_error(Puppet::Error, /not an absolute path/) }
     end
 
     context "when $use_recovery_key has a BAD param" do
       let(:params) do
         { :enable => true, :use_recovery_key => 'a_string' }
       end
-      specify do
-        expect {
-          should compile
-        }.to raise_error(Puppet::Error, /not a boolean/)
-      end
+      it { should raise_error(Puppet::Error, /not a boolean/) }
     end
 
     context "when the params are GOOD" do
@@ -77,11 +69,7 @@ describe 'managedmac::filevault', :type => 'class' do
       let(:params) do
         { :enable => true, :use_keychain => true, :keychain_file => '' }
       end
-      specify do
-        expect {
-          should compile
-        }.to raise_error(Puppet::Error, /not an absolute path/)
-      end
+      it { should raise_error(Puppet::Error, /not an absolute path/) }
     end
 
     context "when $use_keychain == true and $keychain_file is a puppet path" do
