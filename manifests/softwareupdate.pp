@@ -28,7 +28,15 @@
 # [*auto_update_apps*]
 #   Whether or not to automatically install App Store app updates.
 #   Corresponds to AutoUpdate. Managed in global preferences by
-#   directly modifying the com.apple.storeagent property list.
+#   directly modifying the com.apple.storeagent or com.apple.commerce
+#   property list.
+#   Type: Boolean
+#
+# [*auto_update_restart_required*]
+#   Whether or not to automatically install OS X updates.
+#   Corresponds to AutoUpdateRestartRequired. Managed in global preferences by
+#   directly modifying the com.apple.storeagent or com.apple.commerce
+#   property list.
 #   Type: Boolean
 #
 # [*automatic_download*]
@@ -68,6 +76,7 @@
 #  managedmac::softwareupdate::automatic_download: false
 #  managedmac::softwareupdate::config_data_install: false
 #  managedmac::softwareupdate::critical_update_install: false
+#  managedmac::softwareupdate::auto_update_restart_required: false
 #
 # Then simply, create a manifest and include the class...
 #
@@ -98,6 +107,7 @@ class managedmac::softwareupdate (
   $automatic_download             = undef,
   $config_data_install            = undef,
   $critical_update_install        = undef,
+  $auto_update_restart_required   = undef,
 
 ) {
 
@@ -129,8 +139,17 @@ class managedmac::softwareupdate (
     validate_bool ($critical_update_install)
   }
 
+  unless $auto_update_restart_required == undef {
+    validate_bool ($auto_update_restart_required)
+  }
+
   $store_plist_content = {
     'AutoUpdate' => $auto_update_apps,
+  }
+
+  $commerce_plist_content = {
+    'AutoUpdate'                => $auto_update_apps,
+    'AutoUpdateRestartRequired' => $auto_update_restart_required,
   }
 
   $autoupdate_plist_path = $macosx_productversion_major ? {
@@ -138,13 +157,17 @@ class managedmac::softwareupdate (
     default => '/Library/Preferences/com.apple.commerce.plist',
   }
 
-  $store_plist_ensure = inline_template("<%= @store_plist_content.delete_if {
-    |k,v| (v.respond_to?(:empty?) and v.empty?) or v == :undef } %>")
+  $autoupdate_plist_content = $macosx_productversion_major ? {
+    '10.9'  => $store_plist_content,
+    default => $commerce_plist_content,
+  }
 
-  unless empty($store_plist_content) {
+  $autoupdate_plist_ensure = compact_hash($autoupdate_plist_content)
+
+  unless empty($autoupdate_plist_ensure) {
     propertylist { $autoupdate_plist_path:
       ensure   => present,
-      content  => $store_plist_content,
+      content  => $autoupdate_plist_content,
       owner    => 'root',
       group    => 'wheel',
       mode     => '0644',
@@ -160,8 +183,7 @@ class managedmac::softwareupdate (
     'CriticalUpdateInstall' => $critical_update_install,
   }
 
-  $swup_plist_ensure = inline_template("<%= @swup_plist_content.delete_if {
-    |k,v| (v.respond_to?(:empty?) and v.empty?) or v == :undef } %>")
+  $swup_plist_ensure = compact_hash($swup_plist_content)
 
   unless empty($swup_plist_content) {
     propertylist { '/Library/Preferences/com.apple.SoftwareUpdate.plist':
