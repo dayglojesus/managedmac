@@ -133,11 +133,16 @@ class managedmac::softwareupdate (
     'AutoUpdate' => $auto_update_apps,
   }
 
+  $autoupdate_plist_path = $macosx_productversion_major ? {
+    '10.9'  => '/Library/Preferences/com.apple.storeagent.plist',
+    default => '/Library/Preferences/com.apple.commerce.plist',
+  }
+
   $store_plist_ensure = inline_template("<%= @store_plist_content.delete_if {
     |k,v| (v.respond_to?(:empty?) and v.empty?) or v == :undef } %>")
 
   unless empty($store_plist_content) {
-    propertylist { '/Library/Preferences/com.apple.storeagent.plist':
+    propertylist { $autoupdate_plist_path:
       ensure   => present,
       content  => $store_plist_content,
       owner    => 'root',
