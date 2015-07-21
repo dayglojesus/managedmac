@@ -146,62 +146,64 @@ describe 'managedmac::softwareupdate', :type => 'class' do
 
   os_specific_mappings.each do |os_rev, plist|
 
-    let(:facts)         { { :macosx_productversion_major => os_rev } }
-    let(:store_plist)   { plist }
+    context "on #{os_rev}" do
 
-    context "when setting $auto_update_apps" do
+      let(:facts)         { { :macosx_productversion_major => os_rev } }
+      let(:store_plist)   { plist }
 
-      context "when a undef" do
-        let(:params) do
-          { :auto_update_apps => '' }
-        end
-        it { should_not contain_propertylist(store_plist) }
-      end
-      context "when not a boolean" do
-        let(:params) do
-          { :auto_update_apps => 'foo' }
-        end
-        it { should raise_error(Puppet::Error, /not a boolean/) }
-      end
-      context "when a boolean" do
-        let(:params) do
-          { :auto_update_apps => true }
-        end
-        it { should contain_propertylist(store_plist)
-          .with_ensure('present') }
-      end
-
-    end
-
-    context "when setting $auto_update_restart_required" do
-
-      if os_rev == '10.9'
-
-        let(:params) do
-          { :auto_update_restart_required => true }
-        end
-        it { should_not contain_propertylist(store_plist) }
-
-      else
-
-        context "when a undef" do
+      describe '$auto_update_apps' do
+        context "when undef" do
           let(:params) do
-            { :auto_update_restart_required => '' }
+            { :auto_update_apps => '' }
           end
           it { should_not contain_propertylist(store_plist) }
         end
         context "when not a boolean" do
           let(:params) do
-            { :auto_update_restart_required => 'foo' }
+            { :auto_update_apps => 'foo' }
           end
           it { should raise_error(Puppet::Error, /not a boolean/) }
         end
         context "when a boolean" do
           let(:params) do
-            { :auto_update_restart_required => true }
+            { :auto_update_apps => true }
           end
           it { should contain_propertylist(store_plist)
             .with_ensure('present') }
+        end
+      end
+
+      if os_rev == '10.9'
+
+        describe '$auto_update_restart_required' do
+          let(:params) do
+            { :auto_update_restart_required => true }
+          end
+          it { should_not contain_propertylist(store_plist) }
+        end
+
+      else
+
+        describe '$auto_update_restart_required' do
+          context "when undef" do
+            let(:params) do
+              { :auto_update_restart_required => '' }
+            end
+            it { should_not contain_propertylist(store_plist) }
+          end
+          context "when not a boolean" do
+            let(:params) do
+              { :auto_update_restart_required => 'foo' }
+            end
+            it { should raise_error(Puppet::Error, /not a boolean/) }
+          end
+          context "when a boolean" do
+            let(:params) do
+              { :auto_update_restart_required => true }
+            end
+            it { should contain_propertylist(store_plist)
+              .with_ensure('present') }
+          end
         end
 
       end
