@@ -139,17 +139,17 @@ describe 'managedmac::softwareupdate', :type => 'class' do
     end
   end
 
-  context "when setting $auto_update_apps" do
+  os_specific_mappings = {
+    '10.9'  => '/Library/Preferences/com.apple.storeagent.plist',
+    '10.10' => '/Library/Preferences/com.apple.commerce.plist',
+  }
 
-    os_specific_mappings = {
-      '10.9'  => '/Library/Preferences/com.apple.storeagent.plist',
-      '10.10' => '/Library/Preferences/com.apple.commerce.plist',
-    }
+  os_specific_mappings.each do |os_rev, plist|
 
-    os_specific_mappings.each do |os_rev, plist|
+    let(:facts)         { { :macosx_productversion_major => os_rev } }
+    let(:store_plist)   { plist }
 
-      let(:facts)         { { :macosx_productversion_major => os_rev } }
-      let(:store_plist)   { plist }
+    context "when setting $auto_update_apps" do
 
       context "when a undef" do
         let(:params) do
@@ -169,6 +169,41 @@ describe 'managedmac::softwareupdate', :type => 'class' do
         end
         it { should contain_propertylist(store_plist)
           .with_ensure('present') }
+      end
+
+    end
+
+    context "when setting $auto_update_restart_required" do
+
+      if os_rev == '10.9'
+
+        let(:params) do
+          { :auto_update_restart_required => true }
+        end
+        it { should_not contain_propertylist(store_plist) }
+
+      else
+
+        context "when a undef" do
+          let(:params) do
+            { :auto_update_restart_required => '' }
+          end
+          it { should_not contain_propertylist(store_plist) }
+        end
+        context "when not a boolean" do
+          let(:params) do
+            { :auto_update_restart_required => 'foo' }
+          end
+          it { should raise_error(Puppet::Error, /not a boolean/) }
+        end
+        context "when a boolean" do
+          let(:params) do
+            { :auto_update_restart_required => true }
+          end
+          it { should contain_propertylist(store_plist)
+            .with_ensure('present') }
+        end
+
       end
 
     end
