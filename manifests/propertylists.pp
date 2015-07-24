@@ -86,18 +86,8 @@ class managedmac::propertylists (
 
   unless empty ($files) {
 
-    validate_hash ($files)
+    validate_raw_constructor ($files)
     validate_hash ($defaults)
-
-    # Cheating: validate that the key for each file is an absolute path
-    $check_hash = inline_template("<%= @files.select! {
-      |k,v| Pathname.new(k).absolute? } %>")
-
-    unless empty($check_hash) {
-      fail("Propertylist Error: Failed to parse one or more file data \
-objects: ${check_hash}")
-    }
-
     create_resources(propertylist, $files, $defaults)
 
   }
