@@ -73,18 +73,8 @@ class managedmac::cron (
 
   unless empty ($jobs) {
 
-    validate_hash ($jobs)
+    validate_raw_constructor ($jobs)
     validate_hash ($defaults)
-
-    # Cheating: validate that the value for each key is itself a Hash
-    $check_hash = inline_template("<%= @jobs.reject! {
-      |x| x.respond_to? :key } %>")
-
-    unless empty($check_hash) {
-      fail("Account Error: Failed to parse one or more account data \
-commands: ${check_hash}")
-    }
-
     create_resources(cron, $jobs, $defaults)
 
   }

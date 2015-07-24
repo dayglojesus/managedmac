@@ -83,18 +83,8 @@ class managedmac::users (
 
   unless empty ($accounts) {
 
-    validate_hash ($accounts)
+    validate_raw_constructor ($accounts)
     validate_hash ($defaults)
-
-    # Cheating: validate that the value for each key is itself a Hash
-    $check_hash = inline_template("<%= @accounts.reject! {
-      |x| x.respond_to? :key } %>")
-
-    unless empty($check_hash) {
-      fail("Account Error: Failed to parse one or more account data \
-objects: ${check_hash}")
-    }
-
     create_resources(user, $accounts, $defaults)
 
   }
