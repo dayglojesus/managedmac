@@ -58,14 +58,14 @@ Puppet::Type.type(:remotemanagement).provide(:default) do
     # Try and determine if Apple Remote Desktop is already activated
     def service_active?
       # Is the VNC port open?
-      unless system("nc -z localhost 5900 > /dev/null")
+      unless system("nc -z localhost 5900 &> /dev/null")
         info("VNC port not open...")
         return false
       end
 
       # Is the Remote Management port open?
-      unless system("nc -u -z localhost 3283 > /dev/null")
-        info("VNC port not open...")
+      unless system("nc -u -z localhost 3283 &> /dev/null")
+        info("ARD port not open...")
         return false
       end
 
@@ -73,7 +73,7 @@ Puppet::Type.type(:remotemanagement).provide(:default) do
       return false unless launchd_file_exists?
 
       # Is the ARDAgent running?
-      unless system("ps axc | grep ARDAgent > /dev/null")
+      unless system("ps axc | grep -q ARDAgent")
         info("ARD agent not running...")
         return false
       end
