@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.7.3
+- IMPORTANT: requires Puppet 3.8.3
+- Plenty of bug fixes and make ready the El Capitan
+- Refactoring and optimization of some Puppet functions
+- Improves AppStore preference controls
+- Update specs to run RSpec 3
+- Thanks to helge000 for fixing issue #90
+- closed: #82, #86, #90, #92, #93
+
 ## 0.7.2
 - no changes; just need to bump the version so I can submit to the Forge
 
