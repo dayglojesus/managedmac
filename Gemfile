@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 
 gem 'CFPropertyList', '>=2.2.7'
 gem 'sqlite3', '>=1.3.7'
-gem 'puppet', '~>3.7'
+gem 'puppet', '>=3.8.3', '<4.0.0'
 gem 'facter', '~>2.2'
 gem 'hiera', '~>1.3'
 
