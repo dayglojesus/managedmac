@@ -119,11 +119,7 @@ describe 'managedmac::sshd', :type => 'class' do
             :sshd_banner => 'this is not valid'
           }
         end
-        specify do
-          expect {
-            should compile
-          }.to raise_error(Puppet::Error, /does not match/)
-        end
+        it { should raise_error(Puppet::Error, /does not match/) }
       end
 
     end

@@ -6,7 +6,7 @@ describe "managedmac::files", :type => 'class' do
     let(:params) do
       { :objects => 'This is not a Hash.' }
     end
-    specify { expect { should compile }.to raise_error(Puppet::Error) }
+    it { should raise_error(Puppet::Error) }
   end
 
   context "when $defaults is invalid" do
@@ -16,7 +16,7 @@ describe "managedmac::files", :type => 'class' do
         :defaults => 'This is not a Hash.',
       }
     end
-    specify { expect { should compile }.to raise_error(Puppet::Error) }
+    it { should raise_error(Puppet::Error) }
   end
 
   context "when $objects is empty" do
@@ -31,7 +31,7 @@ describe "managedmac::files", :type => 'class' do
       the_data = files_objects.merge({ 'bad_data' => 'Not a Hash.'})
       { :objects => the_data }
     end
-    specify { expect { should compile }.to raise_error(Puppet::Error) }
+    it { should raise_error(Puppet::Error) }
   end
 
   context "when $objects is VALID" do

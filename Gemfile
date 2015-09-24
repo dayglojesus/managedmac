@@ -8,10 +8,9 @@ gem 'facter', '~>2.2'
 gem 'hiera', '~>1.3'
 
 group :development, :test do
-  gem 'pry', '>=0.9.12.6'
-  gem 'rspec', '2.9'
-  gem 'rspec-puppet', '~>1.0'
-  gem 'puppet-lint', '~>0.3'
-  gem 'puppetlabs_spec_helper', '~>0.4'
-  gem 'hiera-puppet-helper', :git => 'git://github.com/mmz-srf/hiera-puppet-helper.git'
+  gem 'pry', '>=0.10.1'
+  gem 'rspec', '3.3.0'
+  gem 'rspec-puppet', '2.2.0'
+  gem 'puppet-lint', '1.1.0'
+  gem 'puppetlabs_spec_helper', '0.10.3'
 end

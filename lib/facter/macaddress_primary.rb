@@ -1,5 +1,8 @@
 require 'puppet'
-require 'cfpropertylist'
+
+if RUBY_PLATFORM =~ /darwin/
+  require 'cfpropertylist'
+end
 
 Facter.add("macaddress_primary") do
   confine :operatingsystem => :darwin

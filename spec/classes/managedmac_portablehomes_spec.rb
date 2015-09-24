@@ -100,11 +100,7 @@ describe "managedmac::portablehomes", :type => 'class' do
     let(:params) do
       { :enable => 'Whimmy wham wham wozzle!' }
     end
-    specify do
-      expect {
-        should compile
-      }.to raise_error(Puppet::Error, /does not match/)
-    end
+    it { should raise_error(Puppet::Error, /does not match/) }
   end
 
   context "when passed no params" do
@@ -117,66 +113,42 @@ describe "managedmac::portablehomes", :type => 'class' do
     let(:params) do
       { :enable => true, :menuextra => 'on' }
     end
-    specify do
-      expect {
-        should compile
-      }.to raise_error(Puppet::Error, /Invalid parameter/)
-    end
+    it { should raise_error(Puppet::Error, /Invalid parameter/) }
   end
 
   context "when $syncPeriodSeconds has BAD param" do
     let(:params) do
       { :enable => true, :syncPeriodSeconds => 'foobar' }
     end
-    specify do
-      expect {
-        should compile
-      }.to raise_error(Puppet::Error, /not an Integer/)
-    end
+    it { should raise_error(Puppet::Error, /not an Integer/) }
   end
 
   context "when $syncPreferencesAtLogin has BAD param" do
     let(:params) do
       { :enable => true, :syncPreferencesAtLogin => 'foobar' }
     end
-    specify do
-      expect {
-        should compile
-      }.to raise_error(Puppet::Error, /Parameter Error: invalid value/)
-    end
+    it { should raise_error(Puppet::Error, /Parameter Error: invalid value/) }
   end
 
   context "when $loginPrefSyncConflictResolution has BAD param" do
     let(:params) do
       { :enable => true, :loginPrefSyncConflictResolution => 'foobar' }
     end
-    specify do
-      expect {
-        should compile
-      }.to raise_error(Puppet::Error, /Parameter Error: invalid value/)
-    end
+    it { should raise_error(Puppet::Error, /Parameter Error: invalid value/) }
   end
 
   context "when $excludedItems has BAD param" do
     let(:params) do
       { :enable => true, :excludedItems => 'foobar' }
     end
-    specify do
-      expect {
-        should compile
-      }.to raise_error(Puppet::Error, /Wrong arg type.*String instead of Hash/)
-    end
+    it { should raise_error(Puppet::Error, /Wrong arg type.*String instead of Hash/) }
   end
 
   context "when $syncedFolders has BAD param" do
     let(:params) do
       { :enable => true, :syncedFolders => 'foobar' }
     end
-    specify do
-      expect {
-        should compile
-      }.to raise_error(Puppet::Error, /Wrong arg type.*String instead of Array/)
-    end
+    it { should raise_error(Puppet::Error, /Wrong arg type.*String instead of Array/) }
   end
 
   context "when passed good params" do

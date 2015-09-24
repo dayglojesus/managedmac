@@ -12,11 +12,7 @@ describe 'managedmac::mounts', :type => 'class' do
     let(:params) do
       { :urls => 'not a valid path', }
     end
-    specify do
-      expect {
-        should compile
-      }.to raise_error(Puppet::Error, /not an Array/)
-    end
+    it { should raise_error(Puppet::Error, /not an Array/) }
   end
 
   context "when a URLs array is specified" do

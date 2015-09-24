@@ -125,6 +125,7 @@ Energy Saver preference pane.",
         true    => 'everyone',
         default => 'admin',
       },
+      shared  => false,
       comment => "Checked by the Admin framework when making changes to the \
 Date & Time preference pane.",
     },

@@ -15,35 +15,35 @@ describe 'managedmac::loginwindow', :type => 'class' do
       let(:params) do
         { :allow_list => 'foobar' }
       end
-      specify { expect { should compile }.to raise_error(Puppet::Error) }
+      it { should raise_error(Puppet::Error) }
     end
 
     context "when $deny_list is NOT an array" do
       let(:params) do
         { :deny_list => 'foobar' }
       end
-      specify { expect { should compile }.to raise_error(Puppet::Error) }
+      it { should raise_error(Puppet::Error) }
     end
 
     context "when $disable_console_access is NOT bool" do
       let(:params) do
         { :disable_console_access => 'foobar' }
       end
-      specify { expect { should compile }.to raise_error(Puppet::Error) }
+      it { should raise_error(Puppet::Error) }
     end
 
     context "when $loginwindow_text is NOT a String" do
       let(:params) do
         { :loginwindow_text => [] }
       end
-      specify { expect { should compile }.to raise_error(Puppet::Error) }
+      it { should raise_error(Puppet::Error) }
     end
 
     context "when $retries_until_hint is NOT an Integer" do
       let(:params) do
         { :retries_until_hint => 'foobar' }
       end
-      specify { expect { should compile }.to raise_error(Puppet::Error) }
+      it { should raise_error(Puppet::Error) }
     end
 
   end
