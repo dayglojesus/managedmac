@@ -6,7 +6,7 @@ describe "managedmac::users", :type => 'class' do
     let(:params) do
       { :accounts => 'This is not a Hash.' }
     end
-    specify { expect { should compile }.to raise_error(Puppet::Error) }
+    it { should raise_error(Puppet::Error) }
   end
 
   context "when $defaults is invalid" do
@@ -16,7 +16,7 @@ describe "managedmac::users", :type => 'class' do
         :defaults => 'This is not a Hash.',
       }
     end
-    specify { expect { should compile }.to raise_error(Puppet::Error) }
+    it { should raise_error(Puppet::Error) }
   end
 
   context "when $accounts is empty" do
@@ -31,7 +31,7 @@ describe "managedmac::users", :type => 'class' do
       the_data = accounts_users.merge({ 'bad_data' => 'Not a Hash.'})
       { :accounts => the_data }
     end
-    specify { expect { should compile }.to raise_error(Puppet::Error) }
+    it { should raise_error(Puppet::Error) }
   end
 
   context "when $accounts is VALID" do

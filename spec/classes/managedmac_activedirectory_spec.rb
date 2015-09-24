@@ -12,11 +12,9 @@ describe 'managedmac::activedirectory', :type => 'class' do
       let(:params) do
         { :enable => false, :provider => 'whatever' }
       end
-      specify do
-        expect {
-          should compile
-        }.to raise_error(Puppet::Error, /Parameter :provider must be 'mobileconfig' or 'dsconfigad'/)
-      end
+      it {
+        should raise_error(Puppet::Error, /Parameter :provider must be 'mobileconfig' or 'dsconfigad'/)
+      }
     end
 
     context 'when $provider == :mobileconfig' do
@@ -97,33 +95,27 @@ describe 'managedmac::activedirectory', :type => 'class' do
       let(:params) do
         { :enable => true, :provider => 'whatever' }
       end
-      specify do
-        expect {
-          should compile
-        }.to raise_error(Puppet::Error, /Parameter :provider must be 'mobileconfig' or 'dsconfigad'/)
-      end
+      it {
+        should raise_error(Puppet::Error, /Parameter :provider must be 'mobileconfig' or 'dsconfigad'/)
+      }
     end
 
     context "when REQUIRED params are NOT set" do
       let(:params) do
         { :enable => true }
       end
-      specify do
-        expect {
-          should compile
-        }.to raise_error(Puppet::Error, /You must specify a.*param/)
-      end
+      it {
+        should raise_error(Puppet::Error, /You must specify a.*param/)
+      }
     end
 
     context "when $evaluate is INVALID" do
       let(:params) do
         { :enable => true, :evaluate => 'whatever' }
       end
-      specify do
-        expect {
-          should compile
-        }.to raise_error(Puppet::Error, /Parameter.*must be/)
-      end
+      it {
+        should raise_error(Puppet::Error, /Parameter.*must be/)
+      }
     end
 
     context 'when $provider == :mobileconfig' do

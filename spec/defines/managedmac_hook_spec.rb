@@ -2,34 +2,17 @@ require 'spec_helper'
 
 describe "managedmac::hook" do
 
-
-
   context "when passed no params" do
-
     let(:title) { 'login' }
-
-    specify do
-      expect {
-        should compile
-      }.to raise_error(Puppet::Error, /Must pass enable/)
-    end
-
+    it { should raise_error(Puppet::Error, /Must pass enable/) }
   end
 
   context "name != 'login' or 'logout'" do
-
     let(:title) { 'foo' }
-
     let(:params) do
       { :enable => true, :scripts => '/etc/loginhooks' }
     end
-
-    specify do
-      expect {
-        should compile
-      }.to raise_error(Puppet::Error, /Parameter Error: invalid :name/)
-    end
-
+    it { should raise_error(Puppet::Error, /Parameter Error: invalid :name/) }
   end
 
   context "name == 'login' or 'logout' or derivative" do
@@ -43,11 +26,7 @@ describe "managedmac::hook" do
       let(:params) do
         { :enable => 'foo', :scripts => '/' }
       end
-      specify do
-        expect {
-          should compile
-        }.to raise_error(Puppet::Error, /not a boolean/)
-      end
+      it { should raise_error(Puppet::Error, /not a boolean/) }
     end
 
     context "when enable == true" do
@@ -57,22 +36,14 @@ describe "managedmac::hook" do
       end
 
       context "when $scripts is set not set" do
-        specify do
-          expect {
-            should compile
-          }.to raise_error(Puppet::Error, /Must pass scripts/)
-        end
+        it { should raise_error(Puppet::Error, /Must pass scripts/) }
       end
 
       context "when $scripts is not an absolute path" do
         let(:params) do
           { :enable => true, :scripts => 'whatever' }
         end
-        specify do
-          expect {
-            should compile
-          }.to raise_error(Puppet::Error, /not an absolute path/)
-        end
+        it { should raise_error(Puppet::Error, /not an absolute path/) }
       end
 
       context "when $scripts is an absolute path" do
@@ -97,7 +68,6 @@ describe "managedmac::hook" do
           })
         end
         specify do
-
           should contain_file("/etc/masterhooks/#{type}hook.rb").with(
             { 'ensure' => 'file',
               'owner'  => 'root',
@@ -123,7 +93,6 @@ describe "managedmac::hook" do
         { 'ensure' => 'absent',}) }
 
       it { should contain_exec("deactivate_#{type}_hook") }
-
     end
 
   end

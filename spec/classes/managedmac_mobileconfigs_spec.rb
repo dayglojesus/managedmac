@@ -6,7 +6,7 @@ describe "managedmac::mobileconfigs", :type => 'class' do
     let(:params) do
       { :payloads => 'This is not a Hash.' }
     end
-    specify { expect { should compile }.to raise_error(Puppet::Error) }
+    it { should raise_error(Puppet::Error) }
   end
 
   context "when $defaults is invalid" do
@@ -16,7 +16,7 @@ describe "managedmac::mobileconfigs", :type => 'class' do
         :defaults => 'This is not a Hash.',
       }
     end
-    specify { expect { should compile }.to raise_error(Puppet::Error) }
+    it { should raise_error(Puppet::Error) }
   end
 
   context "when $payloads is empty" do
@@ -33,7 +33,7 @@ describe "managedmac::mobileconfigs", :type => 'class' do
       the_data = mobileconfigs_payloads.merge({ 'bad_data' => 'Not a Hash.'})
       { :payloads => the_data }
     end
-    specify { expect { should compile }.to raise_error(Puppet::Error) }
+    it { should raise_error(Puppet::Error) }
   end
 
   context "when $payloads is VALID" do

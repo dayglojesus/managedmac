@@ -49,25 +49,31 @@ Puppet::Type.type(:remotemanagement).provide(:default) do
       }.delete_if { |k,v,| v.nil? }
     end
 
+    def launchd_file_exists?
+      [ '/private/etc',
+        '/Library/Application Support/Apple/Remote Desktop',
+      ].each { |p| File.exists? File.join(p, 'RemoteManagement.launchd') }.any?
+    end
+
     # Try and determine if Apple Remote Desktop is already activated
     def service_active?
       # Is the VNC port open?
-      unless system("nc -z localhost 5900 > /dev/null")
+      unless system("nc -z localhost 5900 &> /dev/null")
         info("VNC port not open...")
         return false
       end
 
       # Is the Remote Management port open?
-      unless system("nc -u -z localhost 3283 > /dev/null")
-        info("VNC port not open...")
+      unless system("nc -u -z localhost 3283 &> /dev/null")
+        info("ARD port not open...")
         return false
       end
 
-      # Is the trigger file present?
-      return false unless File.exists? '/private/etc/RemoteManagement.launchd'
+      # Is the launchd file present?
+      return false unless launchd_file_exists?
 
       # Is the ARDAgent running?
-      unless system("ps axc | grep ARDAgent > /dev/null")
+      unless system("ps axc | grep -q ARDAgent")
         info("ARD agent not running...")
         return false
       end

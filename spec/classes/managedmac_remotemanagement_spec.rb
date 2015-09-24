@@ -10,16 +10,12 @@ describe 'managedmac::remotemanagement', :type => 'class' do
 
   context "when passed a BAD param" do
     let(:params) do
-      { 
-        :enable => true, 
-        :allow_all_users => 'a string', 
+      {
+        :enable => true,
+        :allow_all_users => 'a string',
       }
     end
-    specify do
-      expect {
-        should compile
-      }.to raise_error(Puppet::Error, /not a boolean/)
-    end
+    it { should raise_error(Puppet::Error, /not a boolean/) }
   end
 
   context "when $enable == false" do
