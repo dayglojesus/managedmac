@@ -1,7 +1,7 @@
 require File.dirname(__FILE__)
 
 Puppet::Type.type(:property_list).provide(:defaults,
-  :parent => Puppet::Type::PropertyList) do
+  :parent => Puppet::Provider::PropertyList) do
 
   commands :defaults => '/usr/bin/defaults'
 
