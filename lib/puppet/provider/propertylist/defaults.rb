@@ -1,4 +1,4 @@
-require 'puppet/provider/propertylist'
+require File.dirname(__FILE__)
 
 Puppet::Type.type(:propertylist).provide(:defaults,
   :parent => Puppet::Provider::PropertyList) do

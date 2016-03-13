@@ -1,5 +1,5 @@
 require 'cfpropertylist'
-require 'puppet/managedmac/common'
+require File.expand_path(File.join(File.dirname(__FILE__), '..', '..', 'managedmac', 'common'))
 
 Puppet::Type.type(:dsconfigad).provide(:default) do
 
