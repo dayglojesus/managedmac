@@ -171,8 +171,7 @@ class managedmac::softwareupdate (
       owner    => 'root',
       group    => 'wheel',
       mode     => '0644',
-      method   => insert,
-      provider => defaults,
+      method   => insert
     }
   }
 
@@ -192,8 +191,7 @@ class managedmac::softwareupdate (
       owner    => 'root',
       group    => 'wheel',
       mode     => '0644',
-      method   => insert,
-      provider => defaults,
+      method   => insert
     }
   }
 
