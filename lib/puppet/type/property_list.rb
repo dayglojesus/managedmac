@@ -1,6 +1,6 @@
 require File.expand_path(File.join(File.dirname(__FILE__), '..', 'managedmac', 'common'))
 
-Puppet::Type.newtype(:propertylist) do
+Puppet::Type.newtype(:property_list) do
   desc %q{Puppet type for managing OS X PropertyLists.
 
     Suitable for the creation and management of configuration files and
