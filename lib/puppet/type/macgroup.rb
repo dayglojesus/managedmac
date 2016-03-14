@@ -1,4 +1,4 @@
-require 'puppet/managedmac/common'
+require File.expand_path(File.join(File.dirname(__FILE__), '..', 'managedmac', 'common'))
 
 Puppet::Type.newtype(:macgroup) do
   @doc = %q{A drop-in replacement for the built-in Puppet Type: Group

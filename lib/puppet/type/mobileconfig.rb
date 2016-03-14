@@ -1,4 +1,4 @@
-require 'puppet/managedmac/common'
+require File.expand_path(File.join(File.dirname(__FILE__), '..', 'managedmac', 'common'))
 
 Puppet::Type.newtype(:mobileconfig) do
   @doc = %q{Dynamically create and manage OS X .mobileconfig profiles

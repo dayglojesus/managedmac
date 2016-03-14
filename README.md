@@ -18,7 +18,7 @@ This is a giant Puppet module. It abstracts all the things. It won't win any awa
 Some of this stuff is very useful, a lot of it is new, all of it is IN ONE PLACE.
 
 * Mobileconfig Type for managing OS X profiles
-* Propertylist Type for managing OS X plist and preferences
+* Property_list Type for managing OS X plist and preferences
 * Macauthdb Type for managing OS X Authorization DB
 * Macgroup Type for managing groups-in-groups
 * Manages Login/Logout Hooks globally

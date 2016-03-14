@@ -1,6 +1,6 @@
-require 'puppet/managedmac/common'
+require File.expand_path(File.join(File.dirname(__FILE__), '..', 'managedmac', 'common'))
 
-Puppet::Type.newtype(:propertylist) do
+Puppet::Type.newtype(:property_list) do
   desc %q{Puppet type for managing OS X PropertyLists.
 
     Suitable for the creation and management of configuration files and
@@ -10,9 +10,9 @@ Puppet::Type.newtype(:propertylist) do
 
       # You can transpose a PropertyList file into a Puppet resource.
 
-      `sudo puppet resource propertylist /Library/Preferences/com.apple.loginwindow.plist `
+      `sudo puppet resource property_list /Library/Preferences/com.apple.loginwindow.plist `
 
-      propertylist { '/Library/Preferences/com.apple.loginwindow.plist':
+      property_list { '/Library/Preferences/com.apple.loginwindow.plist':
         ensure  => 'present',
         content => {'MCXLaunchAfterUserLogin' => 'true',
                     'OptimizerLastRunForBuild' => '27396096',
@@ -33,7 +33,7 @@ Puppet::Type.newtype(:propertylist) do
 
       $content = { LoginwindowText => 'A message to you, Rudy.' }
 
-      propertylist { '/Library/Preferences/com.apple.loginwindow.plist':
+      property_list { '/Library/Preferences/com.apple.loginwindow.plist':
         ensure  => present,
         method  => insert,
         content => $content,
@@ -56,7 +56,7 @@ Puppet::Type.newtype(:propertylist) do
 
       $content = { LoginwindowText => 'A message to you, Rudy.' }
 
-      propertylist { '/Library/Preferences/com.apple.loginwindow.plist':
+      property_list { '/Library/Preferences/com.apple.loginwindow.plist':
         ensure   => present,
         method   => insert,
         content  => $content,
@@ -137,7 +137,7 @@ Puppet::Type.newtype(:propertylist) do
 
         $content = { LoginwindowText => 'A message to you, Rudy.' }
 
-        propertylist { '/Library/Preferences/com.apple.loginwindow.plist':
+        property_list { '/Library/Preferences/com.apple.loginwindow.plist':
           ensure  => present,
           method  => insert,
           content => $content,
@@ -213,7 +213,7 @@ Puppet::Type.newtype(:propertylist) do
   end
 
   newparam(:method) do
-    desc %q{Whether to overwrite the propertylist, or insert the specified data.
+    desc %q{Whether to overwrite the property_list, or insert the specified data.
 
       This behaviour demands a detailed explanation, because it's not as simple
       as it sounds. First, a little about PropertyLists in general...
@@ -316,7 +316,7 @@ Puppet::Type.newtype(:propertylist) do
 
         # Here is our resource declaration, but notice that we have set the
         # :method parameter to :insert
-        propertylist { '/Library/Preferences/com.apple.loginwindow.plist':
+        property_list { '/Library/Preferences/com.apple.loginwindow.plist':
           ensure  => present,
           group   => 'staff',
           mode    => '0644',
@@ -348,7 +348,7 @@ Puppet::Type.newtype(:propertylist) do
         $content = [1, 2, 3, 4, 5]
 
         # Some non-essential params removed
-        propertylist { '/Library/Preferences/com.apple.loginwindow.plist':
+        property_list { '/Library/Preferences/com.apple.loginwindow.plist':
           content => $content,
           method  => insert,
         }
@@ -383,7 +383,7 @@ Puppet::Type.newtype(:propertylist) do
 
       This array has 5 elements. Let's create a PropertyList with it.
 
-        propertylist { '/Users/Shared/foo.plist':
+        property_list { '/Users/Shared/foo.plist':
           format  => xml,
           content => $content,
           method  => insert,
@@ -406,7 +406,7 @@ Puppet::Type.newtype(:propertylist) do
 
         $content = [1, 2, 3, 5]
 
-        propertylist { '/Users/Shared/foo.plist':
+        property_list { '/Users/Shared/foo.plist':
           format  => xml,
           content => $content,
           method  => insert,

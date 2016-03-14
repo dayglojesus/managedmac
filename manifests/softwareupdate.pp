@@ -99,7 +99,6 @@
 # Copyright 2015 Simon Fraser University, unless otherwise noted.
 #
 class managedmac::softwareupdate (
-
   $catalog_url                    = undef,
   $allow_pre_release_installation = undef,
   $automatic_update_check         = undef,
@@ -107,40 +106,37 @@ class managedmac::softwareupdate (
   $automatic_download             = undef,
   $config_data_install            = undef,
   $critical_update_install        = undef,
-  $auto_update_restart_required   = undef,
-
-) {
-
+  $auto_update_restart_required   = undef,) {
   unless $allow_pre_release_installation == undef {
-    validate_bool ($allow_pre_release_installation)
+    validate_bool($allow_pre_release_installation)
   }
 
   unless $automatic_update_check == undef {
-    validate_bool ($automatic_update_check)
+    validate_bool($automatic_update_check)
   }
 
   unless empty($catalog_url) {
-    validate_re ($catalog_url, '\Ahttps?:\/\/(-*\w+-*(\.|-))+-*\w+-*\/')
+    validate_re($catalog_url, '\Ahttps?:\/\/(-*\w+-*(\.|-))+-*\w+-*\/')
   }
 
   unless $automatic_download == undef {
-    validate_bool ($automatic_download)
+    validate_bool($automatic_download)
   }
 
   unless $auto_update_apps == undef {
-    validate_bool ($auto_update_apps)
+    validate_bool($auto_update_apps)
   }
 
   unless $config_data_install == undef {
-    validate_bool ($config_data_install)
+    validate_bool($config_data_install)
   }
 
   unless $critical_update_install == undef {
-    validate_bool ($critical_update_install)
+    validate_bool($critical_update_install)
   }
 
   unless $auto_update_restart_required == undef {
-    validate_bool ($auto_update_restart_required)
+    validate_bool($auto_update_restart_required)
   }
 
   $store_plist_content = {
@@ -165,14 +161,14 @@ class managedmac::softwareupdate (
   $autoupdate_plist_ensure = compact_hash($autoupdate_plist_content)
 
   unless empty($autoupdate_plist_ensure) {
-    propertylist { $autoupdate_plist_path:
+    property_list { $autoupdate_plist_path:
       ensure   => present,
       content  => $autoupdate_plist_content,
       owner    => 'root',
       group    => 'wheel',
       mode     => '0644',
       method   => insert,
-      provider => defaults,
+      provider => defaults
     }
   }
 
@@ -186,14 +182,14 @@ class managedmac::softwareupdate (
   $swup_plist_ensure = compact_hash($swup_plist_content)
 
   unless empty($swup_plist_content) {
-    propertylist { '/Library/Preferences/com.apple.SoftwareUpdate.plist':
+    property_list { '/Library/Preferences/com.apple.SoftwareUpdate.plist':
       ensure   => present,
       content  => $swup_plist_content,
       owner    => 'root',
       group    => 'wheel',
       mode     => '0644',
       method   => insert,
-      provider => defaults,
+      provider => defaults
     }
   }
 
