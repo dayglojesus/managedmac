@@ -88,7 +88,7 @@ class managedmac::propertylists (
 
     validate_raw_constructor ($files)
     validate_hash ($defaults)
-    create_resources(propertylist, $files, $defaults)
+    create_resources(property_list, $files, $defaults)
 
   }
 
