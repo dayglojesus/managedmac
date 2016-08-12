@@ -339,7 +339,7 @@ class managedmac::loginwindow (
       'HideMobileAccounts'                         => $hide_mobile_accounts,
       'IncludeNetworkUser'                         => $show_network_users,
       'LocalUserLoginEnabled'                      => $allow_local_only_users,
-      'LoginwindowText'                            => "$loginwindow_text\n$::customer_name $::customer_site $::customer_build\npebble.it Help Desk: +44 20 3327 1081",
+      'LoginwindowText'                            => $loginwindow_text,
       'RestartDisabled'                            => $restart_disabled,
       'ShutDownDisabled'                           => $shutdown_disabled,
       'SleepDisabled'                              => $sleep_disabled,
@@ -386,7 +386,7 @@ class managedmac::loginwindow (
     strict       => $strict,
   }
 
-  $organization = hiera('managedmac::organization', 'pebble.it')
+  $organization = hiera('managedmac::organization', 'Simon Fraser University')
 
   mobileconfig { 'managedmac.loginwindow.alacarte':
     ensure       => $mobileconfig_ensure,
