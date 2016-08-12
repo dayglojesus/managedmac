@@ -133,6 +133,12 @@
 #   Disable autologin after FileVault EFI is unlocked.
 #   Type: Boolean
 #
+# [*adminhostinfo*]
+#   Show System Info, HostName, OS Version and IP Address
+#   at Login Screen using alt + click on the clock.
+#   Type: String
+#   Suggested Value: HostName
+#
 # === Variables
 #
 # Not applicable
@@ -175,6 +181,7 @@
 #  managedmac::loginwindow::auto_logout_delay: 3600
 #  managedmac::loginwindow::enable_fast_user_switching: false
 #  managedmac::loginwindow::disable_fde_autologin: true
+#  managedmac::loginwindow::adminhostinfo: HostName
 
 # Then simply, create a manifest and include the class...
 #
@@ -203,6 +210,7 @@ class managedmac::loginwindow (
   $users                         = [],
   $groups                        = [],
   $strict                        = true,
+  $adminhostinfo                 = undef,
   $allow_list                    = [],
   $deny_list                     = [],
   $disable_console_access        = undef,
@@ -229,6 +237,10 @@ class managedmac::loginwindow (
 
   validate_array ($users)
   validate_array ($groups)
+
+  if $adminhostinfo {
+    validate_string ($adminhostinfo)
+  }
 
   validate_array ($allow_list)
   validate_array ($deny_list)
@@ -315,6 +327,7 @@ class managedmac::loginwindow (
 
   $params = {
     'com.apple.loginwindow' => {
+      'AdminHostInfo'                              => $adminhostinfo,
       'AllowList'                                  => $allow_list,
       'DenyList'                                   => $deny_list,
       'DisableConsoleAccess'                       =>
@@ -326,7 +339,7 @@ class managedmac::loginwindow (
       'HideMobileAccounts'                         => $hide_mobile_accounts,
       'IncludeNetworkUser'                         => $show_network_users,
       'LocalUserLoginEnabled'                      => $allow_local_only_users,
-      'LoginwindowText'                            => $loginwindow_text,
+      'LoginwindowText'                            => "$loginwindow_text\n$::customer_name $::customer_site $::customer_build\npebble.it Help Desk: +44 20 3327 1081",
       'RestartDisabled'                            => $restart_disabled,
       'ShutDownDisabled'                           => $shutdown_disabled,
       'SleepDisabled'                              => $sleep_disabled,
@@ -373,7 +386,7 @@ class managedmac::loginwindow (
     strict       => $strict,
   }
 
-  $organization = hiera('managedmac::organization', 'Simon Fraser University')
+  $organization = hiera('managedmac::organization', 'pebble.it')
 
   mobileconfig { 'managedmac.loginwindow.alacarte':
     ensure       => $mobileconfig_ensure,
