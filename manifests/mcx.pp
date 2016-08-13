@@ -77,7 +77,7 @@
 #
 # === Copyright
 #
-# Copyright 2015 Simon Fraser University, unless otherwise noted.
+# Copyright 2015 branch.io, unless otherwise noted.
 #
 class managedmac::mcx (
 
@@ -128,7 +128,7 @@ ${bluetooth}",
     default => present,
   }
 
-  $organization = hiera('managedmac::organization', 'Simon Fraser University')
+  $organization = hiera('managedmac::organization', 'branch.io')
 
   mobileconfig { 'managedmac.mcx.alacarte':
     ensure            => $ensure,

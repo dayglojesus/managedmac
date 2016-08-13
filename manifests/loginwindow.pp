@@ -183,6 +183,7 @@
 #  managedmac::loginwindow::disable_fde_autologin: true
 #  managedmac::loginwindow::adminhostinfo: HostName
 
+
 # Then simply, create a manifest and include the class...
 #
 #  # Example: my_manifest.pp
@@ -203,7 +204,7 @@
 #
 # === Copyright
 #
-# Copyright 2015 Simon Fraser University, unless otherwise noted.
+# Copyright 2015 branch.io, unless otherwise noted.
 #
 class managedmac::loginwindow (
 
@@ -386,7 +387,7 @@ class managedmac::loginwindow (
     strict       => $strict,
   }
 
-  $organization = hiera('managedmac::organization', 'Simon Fraser University')
+  $organization = hiera('managedmac::organization', 'branch.io')
 
   mobileconfig { 'managedmac.loginwindow.alacarte':
     ensure       => $mobileconfig_ensure,

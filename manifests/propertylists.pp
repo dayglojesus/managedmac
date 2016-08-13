@@ -75,7 +75,7 @@
 #
 # === Copyright
 #
-# Copyright 2015 Simon Fraser University, unless otherwise noted.
+# Copyright 2015 branch.io, unless otherwise noted.
 #
 class managedmac::propertylists (
 
@@ -88,7 +88,7 @@ class managedmac::propertylists (
 
     validate_raw_constructor ($files)
     validate_hash ($defaults)
-    create_resources(propertylist, $files, $defaults)
+    create_resources(property_list, $files, $defaults)
 
   }
 

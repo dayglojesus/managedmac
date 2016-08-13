@@ -1,5 +1,5 @@
 require 'cfpropertylist'
-require 'puppet/provider/mobileconfig'
+require File.expand_path(File.join(File.dirname(__FILE__), '..', '..', 'provider', 'mobileconfig'))
 
 Puppet::Type.type(:macgroup).provide(:default) do
 

@@ -82,7 +82,7 @@
 #
 # === Copyright
 #
-# Copyright 2015 Simon Fraser University, unless otherwise noted.
+# Copyright 2015 branch.io, unless otherwise noted.
 #
 class managedmac::filevault (
 
@@ -166,7 +166,7 @@ class managedmac::filevault (
     $content = process_mobileconfig_params($params)
 
     $organization = hiera('managedmac::organization',
-      'Simon Fraser University')
+      'branch.io')
 
     $ensure = $enable ? {
       true     => present,

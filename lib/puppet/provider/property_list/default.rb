@@ -1,6 +1,6 @@
-require 'puppet/provider/propertylist'
+require File.dirname(__FILE__)
 
-Puppet::Type.type(:propertylist).provide(:default,
+Puppet::Type.type(:property_list).provide(:default,
   :parent => Puppet::Provider::PropertyList) do
 
   defaultfor :operatingsystem  => :darwin
