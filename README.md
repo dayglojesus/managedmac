@@ -1,6 +1,6 @@
 # managedmac
 
-Copyright 2015, branch.io.
+Copyright 2015, SFU.
 
 ## Overview
 

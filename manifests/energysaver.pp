@@ -124,7 +124,7 @@
 #
 # === Copyright
 #
-# Copyright 2015 branch.io, unless otherwise noted.
+# Copyright 2015 SFU, unless otherwise noted.
 #
 class managedmac::energysaver (
 
@@ -159,7 +159,7 @@ class managedmac::energysaver (
     false => present,
   }
 
-  $organization = hiera('managedmac::organization', 'branch.io')
+  $organization = hiera('managedmac::organization', 'SFU')
 
   mobileconfig { 'managedmac.energysaver.alacarte':
     ensure       => $ensure,

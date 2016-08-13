@@ -58,7 +58,7 @@
 #
 # === Copyright
 #
-# Copyright 2015 branch.io, unless otherwise noted.
+# Copyright 2015 SFU, unless otherwise noted.
 #
 class managedmac::desktop (
 
@@ -90,7 +90,7 @@ class managedmac::desktop (
     false => 'present',
   }
 
-  $organization = hiera('managedmac::organization', 'branch.io')
+  $organization = hiera('managedmac::organization', 'SFU')
 
   mobileconfig { 'managedmac.desktop.alacarte':
     ensure       => $mobileconfig_ensure,

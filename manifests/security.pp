@@ -90,7 +90,7 @@
 #
 # === Copyright
 #
-# Copyright 2015 branch.io, unless otherwise noted.
+# Copyright 2015 SFU, unless otherwise noted.
 #
 class managedmac::security (
 
@@ -170,7 +170,7 @@ class managedmac::security (
     false => 'present',
   }
 
-  $organization = hiera('managedmac::organization', 'branch.io')
+  $organization = hiera('managedmac::organization', 'SFU')
 
   mobileconfig { 'managedmac.security.alacarte':
     ensure       => $mobileconfig_ensure,

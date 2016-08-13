@@ -96,7 +96,7 @@
 #
 # === Copyright
 #
-# Copyright 2015 branch.io, unless otherwise noted.
+# Copyright 2015 SFU, unless otherwise noted.
 #
 class managedmac::softwareupdate (
   $catalog_url                    = undef,
@@ -207,7 +207,7 @@ class managedmac::softwareupdate (
     false => 'present',
   }
 
-  $organization = hiera('managedmac::organization', 'branch.io')
+  $organization = hiera('managedmac::organization', 'SFU')
 
   mobileconfig { 'managedmac.softwareupdate.alacarte':
     ensure       => $mobileconfig_ensure,

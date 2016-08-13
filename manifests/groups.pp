@@ -68,7 +68,7 @@
 #
 # === Copyright
 #
-# Copyright 2015 branch.io, unless otherwise noted.
+# Copyright 2015 SFU, unless otherwise noted.
 #
 class managedmac::groups (
 

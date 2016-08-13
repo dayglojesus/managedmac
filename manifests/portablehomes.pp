@@ -382,7 +382,7 @@
 #
 # === Copyright
 #
-# Copyright 2015 branch.io, unless otherwise noted.
+# Copyright 2015 SFU, unless otherwise noted.
 #
 class managedmac::portablehomes (
 
@@ -710,7 +710,7 @@ ${syncBackgroundSetInBackground}")
     'alertOnFailedMounts'                  => $alertOnFailedMounts,
   }
 
-  $organization = hiera('managedmac::organization', 'branch.io')
+  $organization = hiera('managedmac::organization', 'SFU')
 
   mobileconfig { 'managedmac.portablehomes.alacarte':
     ensure       => $ensure,

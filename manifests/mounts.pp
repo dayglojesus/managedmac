@@ -45,7 +45,7 @@
 #
 # === Copyright
 #
-# Copyright 2015 branch.io, unless otherwise noted.
+# Copyright 2015 SFU, unless otherwise noted.
 #
 class managedmac::mounts ($urls = []) {
 
@@ -61,7 +61,7 @@ class managedmac::mounts ($urls = []) {
 
   $compiled_options = process_mounts($urls)
 
-  $organization = hiera('managedmac::organization', 'branch.io')
+  $organization = hiera('managedmac::organization', 'SFU')
 
   mobileconfig { 'managedmac.mounts.alacarte':
     ensure       => $ensure,

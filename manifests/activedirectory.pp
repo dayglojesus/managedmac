@@ -282,7 +282,7 @@
 #
 # === Copyright
 #
-# Copyright 2015 branch.io, unless otherwise noted.
+# Copyright 2015 SFU, unless otherwise noted.
 #
 class managedmac::activedirectory (
 
@@ -515,7 +515,7 @@ ${trust_change_pass_interval_days}")
       $options = process_mobileconfig_params($params)
 
       $organization = hiera('managedmac::organization',
-        'branch.io')
+        'SFU')
 
       if $safe {
 
